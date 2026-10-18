@@ -1,14 +1,35 @@
 {
   "site": {
     "name": "Mukunda Vittala",
-    "kn": "ಮುಕುಂದ ವಿಠ್ಠಲ",
-    "offering": "ಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು",
+    "kn": "ಮುಕುಂದ ವಿಠಲ",
+    "offering": "ಮಧ್ವಹೃದಿಸ್ಥಿತ ಮುಕುಂದ ಪ್ರೀಯತಾಮ್",
     "tagline": "Small offerings at the feet of Hari.\nWritten with little learning, and much hope.",
-    "footer": "Please forgive any errors. · ತಪ್ಪುಗಳನ್ನು ಕ್ಷಮಿಸಿ",
+    "footer": "ಮುಕುಂದಾರ್ಪಣಮಸ್ತು • Please forgive any errors • ತಪ್ಪುಗಳನ್ನು ಕ್ಷಮಿಸಿ",
     "copyrightYear": "2026",
     "licenseName": "CC BY-NC-ND 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-    "licenseNote": "These kritis may be shared with credit to Mukunda Vittala, unchanged and not for sale."
+    "licenseNote": "These kritis may be shared with credit to Mukunda Vittala, unchanged and not for sale.",
+    "theme": {
+      "accent": "#a4562b",
+      "paper": "cream",
+      "size": "m",
+      "font": "serif"
+    },
+    "defaultLang": "en",
+    "types": [
+      {
+        "name": "Kriti",
+        "layout": "kriti"
+      },
+      {
+        "name": "Ugabhoga",
+        "layout": "kriti"
+      },
+      {
+        "name": "Tattva Blog",
+        "layout": "article"
+      }
+    ]
   },
   "works": [
     {

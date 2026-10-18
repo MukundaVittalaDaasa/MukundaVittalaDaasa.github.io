@@ -49,7 +49,7 @@ The website loads only the light list first and opens a piece's own file when it
 Open the editor once and press **Publish**. It moves your existing works from `data.json` into the `data/` folders. Keep `data.json` as a backup.
 
 ### What visitors see
-The website opens on **About**. Kritis, Ugabhoga and Tattva Chintane are buttons in the menu; a list appears only when a button is tapped.
+The website opens on a quiet first page with four buttons: **About**, **Kritis**, **Ugabhoga** and **Tattva Chintane**. A list appears only when a button is tapped. Tap the name at the top of any page to return.
 
 ### Site tab
 Title, description, About page, colours, text size, letter style, footer, license, the list of types ("Name | layout | Button name | Kannada subtitle" per line; layouts are kriti, verses, article; each type becomes a button on the website) and every word on the site can be changed here. Press **Save site settings**, then **Publish**.

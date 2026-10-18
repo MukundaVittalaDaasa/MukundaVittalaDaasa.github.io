@@ -88,6 +88,12 @@ audio{width:100%;margin-top:1.5rem}
 .md img{max-width:100%}
 .md figure{margin:1.4rem 0}
 .md figcaption{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.4rem}
+.landing{min-height:62vh;display:flex;flex-direction:column;justify-content:center}
+.menu{display:grid;gap:.75rem;width:100%;max-width:20rem;margin:2.6rem auto 0}
+.menu a{display:block;text-align:center;padding:.9rem 1rem;border:1px solid var(--line);color:var(--fg);text-decoration:none;transition:border-color .15s,background .15s}
+.menu a:hover,.menu a:focus{border-color:var(--accent);background:var(--soft)}
+.menu b{display:block;font-family:var(--head);font-size:1.2rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.menu small{display:block;color:var(--muted);font-family:var(--kn);font-size:.8rem;margin-top:.1rem}
 .cards{display:grid;gap:.6rem;margin-top:2rem}
 .card{display:flex;justify-content:space-between;align-items:center;gap:1rem;border:1px solid var(--line);padding:.9rem 1.1rem;color:inherit;text-decoration:none}
 .card:hover{border-color:var(--accent)}
@@ -120,6 +126,7 @@ var LABEL_DEFS=[
 ["showMore","Show more","Button that shows more items in a long list"],
 ["aboutEmpty","This page is being written.","Shown on the About page until you write it"],
 ["loading","Loading…","Shown while a piece is loading"],
+["aboutSub","ಪರಿಚಯ","Small line under the About button on the first page"],
 ["search","Search","Search box hint"],
 ["countOne","{n} piece","Shown when there is 1 item ({n} = the number)"],
 ["countMany","{n} pieces","Shown when there are several items"],
@@ -249,7 +256,7 @@ function header(parent,small){
   }
 }
 function navLinks(ts,active){
-  var out=[["about",aboutLabel(),"#/"]];
+  var out=[["about",aboutLabel(),"#/about"]];
   ts.forEach(function(t){out.push([t.slug,t.label,"#/t/"+t.slug]);});
   return out.map(function(x){return{key:x[0],label:x[1],href:x[2],on:x[0]===active};});
 }
@@ -257,10 +264,10 @@ function tabsBar(parent,ts,active){
   var nav=el("nav","nav",null,parent);nav.setAttribute("aria-label","Sections");
   navLinks(ts,active).forEach(function(n){var a=el("a",n.on?"on":"",n.label,nav);a.href=n.href;if(n.on)a.setAttribute("aria-current","page");});
 }
-function footer(parent){
+function footer(parent,noNav){
   var f=el("footer","",null,parent);
-  var fn=el("nav","fnav",null,f);
-  navLinks(availableTabs(),"").forEach(function(n){var a=el("a","",n.label,fn);a.href=n.href;});
+  if(!noNav){var fn=el("nav","fnav",null,f);
+  navLinks(availableTabs(),"").forEach(function(n){var a=el("a","",n.label,fn);a.href=n.href;});}
   if(SITE.footer)el("div","ft",SITE.footer,f);
   var start=SITE.copyrightYear||"",now=String(new Date().getFullYear());
   var years=start&&start!==now&&now>start?start+"–"+now:(start||now);
@@ -284,22 +291,24 @@ function item(parent,w,n){
     else el("div","pallavi",(lay==="kriti"?L("pallavi")+": ":"")+w.first,c);
   }
 }
-function renderAbout(ts){
+function renderAbout(){
   el("h2","pt",aboutLabel(),app);
   md((SITE.about&&SITE.about.trim())?SITE.about:DEFAULT_ABOUT,el("div","md",null,app));
-  var cards=el("div","cards",null,app);
-  ts.forEach(function(t){
-    var a=el("a","card",null,cards);a.href="#/t/"+t.slug;
-    var l=el("div","",null,a);el("b","",t.label,l);if(t.sub)el("small","",t.sub,l);
-    el("span","",t.count?t.count+" ›":"›",a);
-  });
 }
 function renderHome(tabSlug){
   var ts=availableTabs();
-  if(tabSlug!=="about"&&!ts.some(function(t){return t.slug===tabSlug;}))tabSlug="about";
+  if(tabSlug!==""&&tabSlug!=="about"&&!ts.some(function(t){return t.slug===tabSlug;}))tabSlug="";
   if(state.tab!==tabSlug){state.tab=tabSlug;state.q="";state.tag="";state.shown=PAGE;}
-  app.innerHTML="";header(app,false);tabsBar(app,ts,tabSlug);
-  if(tabSlug==="about"){renderAbout(ts);footer(app);window.scrollTo(0,0);return;}
+  app.innerHTML="";
+  if(tabSlug===""){
+    var land=el("div","landing",null,app);header(land,false);
+    var menu=el("nav","menu",null,land);menu.setAttribute("aria-label","Sections");
+    var items=[{label:aboutLabel(),sub:L("aboutSub"),href:"#/about"}].concat(ts.map(function(t){return{label:t.label,sub:t.sub,href:"#/t/"+t.slug};}));
+    items.forEach(function(it){var a=el("a","",null,menu);a.href=it.href;el("b","",it.label,a);if(it.sub)el("small","",it.sub,a);});
+    footer(app,true);window.scrollTo(0,0);return;
+  }
+  header(app,true);tabsBar(app,ts,tabSlug);
+  if(tabSlug==="about"){renderAbout();footer(app);window.scrollTo(0,0);return;}
   var tab=ts.filter(function(t){return t.slug===tabSlug;})[0],list=ofType(tab.name);
   el("h2","pt",tab.label,app);if(tab.sub)el("div","sub",tab.sub,app);
   var tagset={};list.forEach(function(w){(w.tags||[]).forEach(function(t){tagset[t]=1;});});
@@ -404,12 +413,12 @@ function showWork(w,entry){
 }
 function route(){
   var h=location.hash||"";
-  if(!h||h==="#"||h==="#/")return renderHome("about");
+  if(!h||h==="#"||h==="#/")return renderHome("");
   var t=h.match(/^#\/t\/(.+)$/);
   if(t)return renderHome(decodeURIComponent(t[1]));
   var m=h.match(/^#\/(.+)$/),k=m?decodeURIComponent(m[1]):"";
   if(k==="about")return renderHome("about");
-  if(k==="writings")return renderHome("about");
+  if(k==="writings")return renderHome("");
   renderWork(k);
 }
 function shade(hex,p){

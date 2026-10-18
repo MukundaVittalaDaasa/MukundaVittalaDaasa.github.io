@@ -14,6 +14,7 @@
     "paper": "cream",
     "font": "serif",
     "z": {
+      "all": 115,
       "home": 90,
       "nav": 160,
       "head": 90,

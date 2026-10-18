@@ -174,7 +174,7 @@ ol.sub li{margin-bottom:.3rem}
   </details>
 
   <details class="card"><summary>About page</summary>
-    <p class="hint">Your experience and your understanding of tattva, about the author, etc. Leave empty to hide the About tab.</p>
+    <p class="hint">Your experience and your understanding of tattva, about the author, etc. This page opens first on the website. A starter text is filled in for you: please read it and make it yours.</p>
     <label>Tab / page title</label><input id="s_aboutTitle" placeholder="About">
     <label>Text</label><div id="aboutTools"></div>
     <textarea id="s_about" style="min-height:14rem"></textarea>
@@ -182,7 +182,7 @@ ol.sub li{margin-bottom:.3rem}
   </details>
 
   <details class="card"><summary>Types of pieces (the buttons on the website)</summary>
-    <p class="hint">One per line as <b>Name | layout | Button name</b>. Layouts: <b>kriti</b> (pallavi, anupallavi, charanas), <b>verses</b> (no pallavi, for ugabhoga), <b>article</b> (blog writing). Each type becomes its own button on the website. Example: <i>Suladi | verses | Suladis</i>.</p>
+    <p class="hint">One per line as <b>Name | layout | Button name | Kannada subtitle</b>. Layouts: <b>kriti</b> (pallavi, anupallavi, charanas), <b>verses</b> (no pallavi, for ugabhoga), <b>article</b> (blog writing). Each type becomes its own button on the website. Example: <i>Suladi | verses | Suladis | ಸುಳಾದಿ</i>.</p>
     <textarea id="s_types" rows="5"></textarea>
   </details>
 
@@ -228,7 +228,10 @@ ol.sub li{margin-bottom:.3rem}
       </ol>
       <label>GitHub username</label><input id="g_owner">
       <label>Repository name</label><input id="g_repo">
-      <label>Branch</label><input id="g_branch" placeholder="main">
+      <div class="row">
+        <div><label>Branch</label><input id="g_branch" placeholder="main"></div>
+        <div><label>Data file</label><input id="g_path" placeholder="data.json"></div>
+      </div>
       <label>Access token (kept only in this browser)</label><input id="g_token" type="password" autocomplete="off">
       <div class="btns"><button id="btnGh" class="primary">Save connection</button><button id="btnTest">Test connection</button></div>
     </details>
@@ -267,7 +270,6 @@ var LABEL_DEFS=[
 var DEFAULT_LABELS={};LABEL_DEFS.forEach(function(d){DEFAULT_LABELS[d[0]]=d[1];});
 var LANGS=[["en","English"],["kn","ಕನ್ನಡ"],["hi","हिन्दी"]];
 var LAYOUTS=["kriti","verses","article"];
-var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhogas"},{name:"Blog",layout:"article",plural:"Blogs"}];
 var KNOWN=["id","title","type","status","date","tags","ankita","raga","tala","pallavi","anupallavi","charanas","verses","body","meanings","summary","notes","link","audio"];
 /* state: site settings, light index of every piece, only the pieces changed on this device (dirty) */
 var site={},index=[],dirty={},deleted={},fresh={},legacy=false,editing=null,shown=PAGE;
@@ -312,6 +314,9 @@ function firstOf(w,lay){
   var s=w.summary&&(w.summary.en||w.summary.kn||w.summary.hi);
   return String(s||stripMd(w.body||"")).replace(/\s+/g," ").slice(0,150);
 }
+
+var DEFAULT_ABOUT="## About this collection\n\nThis is a humble collection of devotional compositions in Kannada, written in the tradition of the Haridasa sahitya and rooted in the Dvaita (Madhwa) philosophy of Sri Madhvacharya. They are composed under the ankita **Mukunda Vittala** and offered at the feet of Sri Hari.\n\n### The collection\n\n- **Kritis**: songs with pallavi, anupallavi and charanas.\n- **Ugabhoga**: short verses of devotion, without pallavi and anupallavi.\n- **Tattva Chintane**: reflections on tattva, written from experience and understanding.\n\nThe pallavi, charanas and verses can be tapped to read their meaning in English, ಕನ್ನಡ or हिन्दी.\n\n### An offering\n\nThese are small offerings, written with little learning and much hope. Please forgive any errors.\n\nಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು";
+var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis",sub:"ಕೃತಿಗಳು"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga",sub:"ಉಗಾಭೋಗ"},{name:"Blog",layout:"article",plural:"Tattva Chintane",sub:"ತತ್ತ್ವ ಚಿಂತನೆ"}];
 
 function msg(t,err){var m=$("msg");m.textContent=t;m.className=err?"err":"";m.style.display="block";clearTimeout(msg.t);msg.t=setTimeout(function(){m.style.display="none";},12000);}
 function persist(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify({site:site,index:index,dirty:dirty,deleted:deleted,fresh:fresh,legacy:legacy}));}catch(e){}}
@@ -550,13 +555,13 @@ toolbar($("bodyTools"),$("f_body"),$("bodyPrev"));
 toolbar($("aboutTools"),$("s_about"),$("aboutPrev"));
 
 /* ---------- site settings ---------- */
-function typesText(){return types().map(function(t){return t.name+" | "+t.layout+" | "+(t.plural||t.name+"s");}).join("\n");}
+function typesText(){return types().map(function(t){return t.name+" | "+t.layout+" | "+(t.plural||t.name+"s")+" | "+(t.sub||"");}).join("\n");}
 function parseTypes(txt){
   var out=[];
   txt.split("\n").forEach(function(line){
     var p=line.split("|"),name=p[0].trim();if(!name)return;
     var lay=(p[1]||"kriti").trim().toLowerCase();if(LAYOUTS.indexOf(lay)<0)lay="kriti";
-    out.push({name:name,layout:lay,plural:(p[2]||"").trim()||name+"s"});
+    var o={name:name,layout:lay,plural:(p[2]||"").trim()||name+"s"};if((p[3]||"").trim())o.sub=p[3].trim();out.push(o);
   });
   return out.length?out:DEFAULT_TYPES;
 }
@@ -576,7 +581,7 @@ function renderSite(){
   $("s_accent").value=/^#[0-9a-f]{6}$/i.test(t.accent||"")?t.accent:"#a4562b";
   $("s_paper").value=t.paper||"cream";$("s_size").value=t.size||"m";$("s_font").value=t.font||"serif";
   $("s_lang").value=s.defaultLang||"en";
-  $("s_aboutTitle").value=s.aboutTitle||"";$("s_about").value=s.about||"";
+  $("s_aboutTitle").value=s.aboutTitle||"";$("s_about").value=s.about||DEFAULT_ABOUT;
   $("s_types").value=typesText();
   $("s_footer").value=s.footer||"";$("s_year").value=s.copyrightYear||"";
   $("s_lname").value=s.licenseName||"";$("s_lurl").value=s.licenseUrl||"";$("s_lnote").value=s.licenseNote||"";

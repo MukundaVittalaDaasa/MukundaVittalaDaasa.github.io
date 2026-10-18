@@ -62,12 +62,9 @@ ol.sub li{margin-bottom:.3rem}
 <div class="card">
   <div class="btns" style="margin-top:0">
     <button class="primary" id="btnPublish">Publish</button>
-    <button id="btnDownload">Download data.json</button>
-    <button id="btnOpen">Open a file…</button>
     <button id="btnDiscard">Discard changes</button>
     <a class="btn" href="./" target="_blank" rel="noopener">View site</a>
   </div>
-  <input type="file" id="file" accept=".json,application/json" hidden>
 </div>
 
 <div class="tabbar" id="tabbar">
@@ -79,7 +76,10 @@ ol.sub li{margin-bottom:.3rem}
 
 <!-- ============ WORKS ============ -->
 <section id="tab_works">
+  <div class="row" style="margin-bottom:.6rem"><input id="wsearch" type="search" placeholder="Search your pieces"><select id="wtype"></select></div>
   <div class="card" id="list"></div>
+  <button id="btnMore" class="small" hidden style="margin-bottom:.8rem">Show more</button>
+  <p class="sub" id="pending"></p>
   <button id="btnNew">+ New piece</button>
 
   <div class="card" id="formCard" hidden style="margin-top:1rem">
@@ -147,10 +147,10 @@ ol.sub li{margin-bottom:.3rem}
   <p class="sub">Everything visible on the website can be changed here. Press <b>Save site settings</b> at the bottom, then <b>Publish</b>.</p>
 
   <details class="card" open><summary>Header</summary>
-    <label>Dedication line (top)</label><input id="s_offering">
+    <label>Dedication / lines above the name (several lines allowed)</label><textarea id="s_offering" rows="2"></textarea>
     <div class="row"><div><label>Name</label><input id="s_name"></div><div><label>Name in Kannada</label><input id="s_kn"></div></div>
-    <label>Tagline</label><textarea id="s_tagline" rows="2"></textarea>
-    <label>Short introduction (optional, shown under the tagline)</label><textarea id="s_intro" rows="3"></textarea>
+    <label>Tagline (several lines allowed)</label><textarea id="s_tagline" rows="3"></textarea>
+    <label>Short introduction (optional, several lines allowed)</label><textarea id="s_intro" rows="3"></textarea>
   </details>
 
   <details class="card"><summary>Search engines &amp; sharing</summary>
@@ -181,13 +181,13 @@ ol.sub li{margin-bottom:.3rem}
     <div id="aboutPrev" class="preview" hidden></div>
   </details>
 
-  <details class="card"><summary>Types of pieces</summary>
-    <p class="hint">One per line as <b>Name | layout</b>. Layouts: <b>kriti</b> (pallavi, anupallavi, charanas), <b>verses</b> (no pallavi, for ugabhoga), <b>article</b> (blog writing). You can add more, for example <i>Suladi | verses</i>.</p>
+  <details class="card"><summary>Types of pieces (the buttons on the website)</summary>
+    <p class="hint">One per line as <b>Name | layout | Button name</b>. Layouts: <b>kriti</b> (pallavi, anupallavi, charanas), <b>verses</b> (no pallavi, for ugabhoga), <b>article</b> (blog writing). Each type becomes its own button on the website. Example: <i>Suladi | verses | Suladis</i>.</p>
     <textarea id="s_types" rows="5"></textarea>
   </details>
 
   <details class="card"><summary>Footer &amp; license</summary>
-    <label>Footer line</label><input id="s_footer">
+    <label>Footer lines (several lines allowed)</label><textarea id="s_footer" rows="3"></textarea>
     <div class="row"><div><label>Copyright since (year)</label><input id="s_year" placeholder="2026"></div><div><label>License name</label><input id="s_lname" placeholder="CC BY-NC-ND 4.0"></div></div>
     <label>License link</label><input id="s_lurl" placeholder="https://creativecommons.org/licenses/by-nc-nd/4.0/">
     <label>License note (one line)</label><textarea id="s_lnote" rows="2"></textarea>
@@ -228,10 +228,7 @@ ol.sub li{margin-bottom:.3rem}
       </ol>
       <label>GitHub username</label><input id="g_owner">
       <label>Repository name</label><input id="g_repo">
-      <div class="row">
-        <div><label>Branch</label><input id="g_branch" placeholder="main"></div>
-        <div><label>Data file</label><input id="g_path" placeholder="data.json"></div>
-      </div>
+      <label>Branch</label><input id="g_branch" placeholder="main">
       <label>Access token (kept only in this browser)</label><input id="g_token" type="password" autocomplete="off">
       <div class="btns"><button id="btnGh" class="primary">Save connection</button><button id="btnTest">Test connection</button></div>
     </details>
@@ -240,11 +237,12 @@ ol.sub li{margin-bottom:.3rem}
 </main>
 
 <script>
-var DRAFT_KEY="kriti-draft-v2",GH_KEY="kriti-gh-v1";
+var DRAFT_KEY="kriti-draft-v3",GH_KEY="kriti-gh-v1",PAGE=40;
 var LABEL_DEFS=[
-["navWorks","Compositions","Tab name for kritis and ugabhogas"],
-["navWritings","Tattva writings","Tab name for blog-style writings"],
 ["navAbout","About","Tab name for the About page (if no About title is set)"],
+["showMore","Show more","Button that shows more items in a long list"],
+["aboutEmpty","This page is being written.","Shown on the About page until you write it"],
+["loading","Loading…","Shown while a piece is loading"],
 ["search","Search","Search box hint"],
 ["countOne","{n} piece","Shown when there is 1 item ({n} = the number)"],
 ["countMany","{n} pieces","Shown when there are several items"],
@@ -269,9 +267,10 @@ var LABEL_DEFS=[
 var DEFAULT_LABELS={};LABEL_DEFS.forEach(function(d){DEFAULT_LABELS[d[0]]=d[1];});
 var LANGS=[["en","English"],["kn","ಕನ್ನಡ"],["hi","हिन्दी"]];
 var LAYOUTS=["kriti","verses","article"];
-var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti"},{name:"Ugabhoga",layout:"verses"},{name:"Tattva writing",layout:"article"}];
+var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhogas"},{name:"Blog",layout:"article",plural:"Blogs"}];
 var KNOWN=["id","title","type","status","date","tags","ankita","raga","tala","pallavi","anupallavi","charanas","verses","body","meanings","summary","notes","link","audio"];
-var data={site:{},works:[]},editing=null;
+/* state: site settings, light index of every piece, only the pieces changed on this device (dirty) */
+var site={},index=[],dirty={},deleted={},fresh={},legacy=false,editing=null,shown=PAGE;
 var $=function(id){return document.getElementById(id);};
 function el(tag,cls,text,parent){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
 function safeUrl(u){u=(u||"").trim();if(/^(https?:\/\/|mailto:)/i.test(u))return u;if(/^[a-z][a-z0-9+.\-]*:/i.test(u))return "";return u;}
@@ -306,12 +305,29 @@ function md(src,parent){
 }
 function stripMd(s){return String(s||"").replace(/!\[[^\]]*\]\([^)]*\)/g,"").replace(/\[([^\]]+)\]\([^)]*\)/g,"$1").replace(/[#>*_`]/g,"").replace(/\s+/g," ").trim();}
 
+function slug(s){var x=String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");return x||"other";}
+function firstOf(w,lay){
+  if(lay==="kriti")return(w.pallavi||"").split("\n")[0];
+  if(lay==="verses")return((w.verses||[])[0]||"").split("\n")[0];
+  var s=w.summary&&(w.summary.en||w.summary.kn||w.summary.hi);
+  return String(s||stripMd(w.body||"")).replace(/\s+/g," ").slice(0,150);
+}
+
 function msg(t,err){var m=$("msg");m.textContent=t;m.className=err?"err":"";m.style.display="block";clearTimeout(msg.t);msg.t=setTimeout(function(){m.style.display="none";},12000);}
-function persist(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify(data));}catch(e){}}
+function persist(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify({site:site,index:index,dirty:dirty,deleted:deleted,fresh:fresh,legacy:legacy}));}catch(e){}}
 function today(){return new Date().toISOString().slice(0,10);}
-function types(){var t=data.site&&data.site.types;return(t&&t.length)?t:DEFAULT_TYPES;}
+function types(){var t=site&&site.types;return(t&&t.length)?t:DEFAULT_TYPES;}
 function layoutOfType(n){var t=types().filter(function(x){return x.name===n;})[0];return t?t.layout:"kriti";}
 function layoutOfWork(w){var t=types().filter(function(x){return x.name===w.type;})[0];if(t)return t.layout;if(w.body)return"article";if(w.verses)return"verses";return"kriti";}
+function entryOf(id){return index.filter(function(e){return e.id===id;})[0];}
+function mkEntry(w,oldf){
+  var lay=layoutOfWork(w);
+  var e={id:w.id,title:w.title,type:w.type,l:lay,status:w.status||"complete",first:firstOf(w,lay),f:oldf||("data/"+slug(w.type)+"/"+w.id+".json")};
+  if(w.date)e.date=w.date;
+  if(w.tags&&w.tags.length)e.tags=w.tags;
+  if(w.link)e.link=1;
+  return e;
+}
 
 /* ---------- tabs ---------- */
 function showTab(n){
@@ -320,23 +336,44 @@ function showTab(n){
 }
 Array.from($("tabbar").children).forEach(function(b){b.onclick=function(){showTab(b.dataset.t);};});
 
-/* ---------- list ---------- */
+/* ---------- list (works with 1000s of pieces: search + paging) ---------- */
+function fillTypeFilter(){
+  var s=$("wtype"),cur=s.value;s.innerHTML="";
+  el("option","","All types",s).value="";
+  var seen={};types().forEach(function(t){seen[t.name]=1;el("option","",t.name,s).value=t.name;});
+  index.forEach(function(e){if(!seen[e.type]){seen[e.type]=1;el("option","",e.type,s).value=e.type;}});
+  s.value=cur;
+}
 function renderList(){
   var box=$("list");box.innerHTML="";
-  var rows=data.works.slice().sort(function(a,b){return(b.date||"").localeCompare(a.date||"");});
-  if(!rows.length)box.textContent="No pieces yet.";
-  rows.forEach(function(w){
+  var term=$("wsearch").value.trim().toLowerCase(),ty=$("wtype").value;
+  var rows=index.filter(function(e){
+    return(!ty||e.type===ty)&&(!term||(e.title+" "+(e.first||"")+" "+(e.tags||[]).join(" ")).toLowerCase().indexOf(term)>-1);
+  }).sort(function(a,b){return(b.date||"").localeCompare(a.date||"");});
+  if(!rows.length)box.textContent=index.length?"No match.":"No pieces yet.";
+  rows.slice(0,shown).forEach(function(w){
     var d=el("div","w",null,box),l=el("div","",null,d);
     el("b","",w.title,l);
-    el("small","",[w.type,w.date,w.status==="draft"?"draft":""].filter(Boolean).join(" · "),l);
+    el("small","",[w.type,w.date,w.status==="draft"?"draft":"",dirty[w.id]?"unpublished":""].filter(Boolean).join(" · "),l);
     var r=el("div","",null,d);
     var e=el("button","small","Edit",r);e.onclick=function(){openForm(w.id);};
     var x=el("button","small danger","Delete",r);x.style.marginLeft=".4rem";
     x.onclick=function(){
-      if(confirm("Delete “"+w.title+"”?")){data.works=data.works.filter(function(k){return k.id!==w.id;});persist();renderList();msg("Deleted (not yet published)");}
+      if(!confirm("Delete “"+w.title+"”?"))return;
+      var en=entryOf(w.id);index=index.filter(function(k){return k.id!==w.id;});
+      delete dirty[w.id];
+      if(!fresh[w.id]&&en&&en.f)deleted[w.id]=en.f;
+      delete fresh[w.id];
+      persist();renderList();msg("Deleted (not yet published)");
     };
   });
+  $("btnMore").hidden=rows.length<=shown;
+  var n=Object.keys(dirty).length+Object.keys(deleted).length;
+  $("pending").textContent=index.length+" pieces"+(n?" · "+n+" change"+(n>1?"s":"")+" not yet published":"")+(legacy?" · your existing works will move into the new data/ folders when you Publish":"");
 }
+$("wsearch").oninput=function(){shown=PAGE;renderList();};
+$("wtype").onchange=function(){shown=PAGE;renderList();};
+$("btnMore").onclick=function(){shown+=PAGE;renderList();};
 
 /* ---------- toolbar for markdown fields ---------- */
 function wrapSel(ta,pre,post,ph){
@@ -412,8 +449,8 @@ function collect(container){
 /* ---------- work form ---------- */
 function fillTypes(sel){
   var s=$("f_type");s.innerHTML="";
-  types().forEach(function(t){var o=el("option","",t.name,s);o.value=t.name;});
-  if(sel&&!types().some(function(t){return t.name===sel;})){var o=el("option","",sel,s);o.value=sel;}
+  types().forEach(function(t){el("option","",t.name,s).value=t.name;});
+  if(sel&&!types().some(function(t){return t.name===sel;}))el("option","",sel,s).value=sel;
   s.value=sel||types()[0].name;
 }
 function applyLayout(){
@@ -429,14 +466,25 @@ $("f_type").onchange=applyLayout;
 $("btnAddCharana").onclick=function(){addRepeat($("charanas"),"",null);};
 $("btnAddVerse").onclick=function(){addRepeat($("verses"),"",null);};
 
+/* read one piece: unsaved local copy first, otherwise its own small file */
+function getWork(id){
+  if(dirty[id])return Promise.resolve(dirty[id]);
+  var en=entryOf(id);
+  if(!en||!en.f)return Promise.reject(new Error("not found"));
+  return readAny(en.f).then(function(t){return JSON.parse(t);});
+}
 function openForm(id){
-  editing=id||null;
-  var w=(id&&data.works.filter(function(k){return k.id===id;})[0])||{},M=w.meanings||{};
+  if(!id)return fillForm(null,{});
+  getWork(id).then(function(w){fillForm(id,w);}).catch(function(e){msg("Could not load this piece ("+e.message+"). Check your connection.",true);});
+}
+function fillForm(id,w){
+  editing=id;
+  var M=w.meanings||{};
   fillTypes(w.type);
   $("formTitle").textContent=id?"Edit piece":"New piece";
   $("f_title").value=w.title||"";$("f_status").value=w.status||"complete";
   $("f_date").value=w.date||today();$("f_tags").value=(w.tags||[]).join(", ");
-  $("f_ankita").value=id?(w.ankita||""):((data.site&&data.site.name)||"");
+  $("f_ankita").value=id?(w.ankita||""):((site&&site.name)||"");
   $("f_raga").value=w.raga||"";$("f_tala").value=w.tala||"";
   $("pallaviBox").innerHTML="";$("pallaviBox").appendChild(secBox({label:"Pallavi",text:w.pallavi,mean:M.pallavi,rows:3}));
   $("anupallaviBox").innerHTML="";$("anupallaviBox").appendChild(secBox({label:"Anupallavi",text:w.anupallavi,mean:M.anupallavi,rows:3}));
@@ -452,16 +500,17 @@ function openForm(id){
 function makeId(title){
   var s=title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
   if(s.length<3)s="w"+Date.now().toString(36);
-  if(s==="writings"||s==="about")s+="-1";
+  if(s==="writings"||s==="about"||s==="t")s+="-1";
   var base=s,n=2;
-  while(data.works.some(function(k){return k.id===s;}))s=base+"-"+(n++);
+  while(entryOf(s))s=base+"-"+(n++);
   return s;
 }
 function saveWork(){
   var title=$("f_title").value.trim();
   if(!title){msg("Title is required",true);return;}
   var type=$("f_type").value,lay=layoutOfType(type);
-  var old=editing?(data.works.filter(function(k){return k.id===editing;})[0]||{}):{};
+  var oldEntry=editing?entryOf(editing):null;
+  var old=editing?(dirty[editing]||{}):{};
   var w={id:editing||makeId(title)};
   Object.keys(old).forEach(function(k){if(KNOWN.indexOf(k)<0)w[k]=old[k];});
   w.title=title;w.type=type;w.status=$("f_status").value;w.date=$("f_date").value;
@@ -484,9 +533,13 @@ function saveWork(){
   if(Object.keys(sm).length)w.summary=sm;
   w.notes=$("f_notes").value.trim();w.link=$("f_link").value.trim();w.audio=$("f_audio").value.trim();
   Object.keys(w).forEach(function(k){var x=w[k];if(x===""||x==null||(Array.isArray(x)&&!x.length))delete w[k];});
-  var i=data.works.findIndex(function(k){return k.id===w.id;});
-  if(i>-1)data.works[i]=w;else data.works.push(w);
-  persist();renderList();$("formCard").hidden=true;editing=null;
+  var e=mkEntry(w,oldEntry&&oldEntry.f);
+  if(!oldEntry)fresh[w.id]=1;
+  delete deleted[w.id];
+  var i=index.findIndex(function(k){return k.id===w.id;});
+  if(i>-1)index[i]=e;else index.push(e);
+  dirty[w.id]=w;
+  persist();fillTypeFilter();renderList();$("formCard").hidden=true;editing=null;
   msg("Saved on this device. Press Publish to put it online.");
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -497,13 +550,13 @@ toolbar($("bodyTools"),$("f_body"),$("bodyPrev"));
 toolbar($("aboutTools"),$("s_about"),$("aboutPrev"));
 
 /* ---------- site settings ---------- */
-function typesText(){return types().map(function(t){return t.name+" | "+t.layout;}).join("\n");}
+function typesText(){return types().map(function(t){return t.name+" | "+t.layout+" | "+(t.plural||t.name+"s");}).join("\n");}
 function parseTypes(txt){
   var out=[];
   txt.split("\n").forEach(function(line){
     var p=line.split("|"),name=p[0].trim();if(!name)return;
     var lay=(p[1]||"kriti").trim().toLowerCase();if(LAYOUTS.indexOf(lay)<0)lay="kriti";
-    out.push({name:name,layout:lay});
+    out.push({name:name,layout:lay,plural:(p[2]||"").trim()||name+"s"});
   });
   return out.length?out:DEFAULT_TYPES;
 }
@@ -512,11 +565,11 @@ function buildLabels(){
   LABEL_DEFS.forEach(function(d){
     el("label","",d[2],box);
     var i=el("input","",null,box);i.id="lab_"+d[0];i.placeholder=d[1];
-    i.value=(data.site.labels&&data.site.labels[d[0]])||"";
+    i.value=(site.labels&&site.labels[d[0]])||"";
   });
 }
 function renderSite(){
-  var s=data.site||{},t=s.theme||{};
+  var s=site||{},t=s.theme||{};
   $("s_offering").value=s.offering||"";$("s_name").value=s.name||"";$("s_kn").value=s.kn||"";
   $("s_tagline").value=s.tagline||"";$("s_intro").value=s.intro||"";
   $("s_title").value=s.title||"";$("s_desc").value=s.description||"";$("s_url").value=s.url||"";
@@ -530,7 +583,7 @@ function renderSite(){
   buildLabels();
 }
 function saveSite(){
-  var s=Object.assign({},data.site);
+  var s=Object.assign({},site);
   function set(k,v){if(v===""||v==null)delete s[k];else s[k]=v;}
   set("offering",$("s_offering").value.trim());set("name",$("s_name").value.trim());set("kn",$("s_kn").value.trim());
   set("tagline",$("s_tagline").value.trim());set("intro",$("s_intro").value.trim());
@@ -544,7 +597,7 @@ function saveSite(){
   var labs={};
   LABEL_DEFS.forEach(function(d){var v=$("lab_"+d[0]).value.trim();if(v&&v!==d[1])labs[d[0]]=v;});
   if(Object.keys(labs).length)s.labels=labs;else delete s.labels;
-  data.site=s;persist();fillTypes($("f_type").value);
+  site=s;persist();fillTypes($("f_type").value);fillTypeFilter();
   msg("Site settings saved on this device. Press Publish to put them online.");
 }
 $("btnSite").onclick=saveSite;
@@ -552,7 +605,7 @@ $("btnSite").onclick=saveSite;
 /* ---------- GitHub ---------- */
 function gh(){
   var g={};try{g=JSON.parse(localStorage.getItem(GH_KEY))||{};}catch(e){g={};}
-  g.owner=g.owner||"MukundaVittalaDaasa";g.repo=g.repo||"MukundaVittalaDaasa.github.io";g.branch=g.branch||"main";g.path=g.path||"data.json";
+  g.owner=g.owner||"MukundaVittalaDaasa";g.repo=g.repo||"MukundaVittalaDaasa.github.io";g.branch=g.branch||"main";
   return g;
 }
 function ghHeaders(g){return{Authorization:"Bearer "+g.token,Accept:"application/vnd.github+json"};}
@@ -562,8 +615,13 @@ function ghCheck(r,label){
     throw new Error(label+" ("+r.status+"): "+(j.message||"no details")+(r.status===403||r.status===404?". The token probably lacks write access to this repo.":""));
   });
 }
+function repoUrl(g,p){return"https://api.github.com/repos/"+g.owner+"/"+g.repo+p;}
+function gj(g,path,method,body){
+  return fetch(repoUrl(g,path),{method:method||"GET",headers:ghHeaders(g),body:body?JSON.stringify(body):undefined,cache:"no-store"})
+    .then(function(r){return ghCheck(r,(method||"GET")+" "+path.split("?")[0]);});
+}
 function saveGh(silent){
-  var g={owner:$("g_owner").value.trim(),repo:$("g_repo").value.trim(),branch:$("g_branch").value.trim()||"main",path:$("g_path").value.trim()||"data.json",token:$("g_token").value.trim()};
+  var g={owner:$("g_owner").value.trim(),repo:$("g_repo").value.trim(),branch:$("g_branch").value.trim()||"main",token:$("g_token").value.trim()};
   localStorage.setItem(GH_KEY,JSON.stringify(g));
   $("connNote").textContent=g.token?"Connected to GitHub on this device.":"";
   if(silent!==true)msg("Connection saved on this device");
@@ -571,7 +629,7 @@ function saveGh(silent){
 function testGh(){
   saveGh(true);var g=gh();
   if(!g.token){msg("Paste your token first",true);return;}
-  fetch("https://api.github.com/repos/"+g.owner+"/"+g.repo,{headers:ghHeaders(g)})
+  fetch(repoUrl(g,""),{headers:ghHeaders(g)})
     .then(function(r){
       if(r.status===401)throw new Error("Token not accepted. Make a new one and paste it again.");
       if(r.status===404)throw new Error("Repository not found. Check the username and repo name.");
@@ -580,8 +638,7 @@ function testGh(){
     }).catch(function(e){msg(e.message,true);});
 }
 function b64(str){return btoa(unescape(encodeURIComponent(str)));}
-function unb64(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,""))));}
-function fileUrl(g,path){return"https://api.github.com/repos/"+g.owner+"/"+g.repo+"/contents/"+path;}
+function fileUrl(g,path){return repoUrl(g,"/contents/"+path);}
 function getFile(g,path){
   return fetch(fileUrl(g,path)+"?ref="+encodeURIComponent(g.branch)+"&t="+Date.now(),{headers:ghHeaders(g),cache:"no-store"})
     .then(function(r){if(r.status===404)return{};if(!r.ok)throw new Error("Could not read "+path+" ("+r.status+")");return r.json();});
@@ -592,12 +649,20 @@ function putFile(g,path,contentB64,message){
     return fetch(fileUrl(g,path),{method:"PUT",headers:ghHeaders(g),body:JSON.stringify(body)});
   }).then(function(r){return ghCheck(r,"Could not save "+path);});
 }
-function jsonText(){return JSON.stringify(data,null,2)+"\n";}
+/* read a text file from the repo (token: always-fresh via API; otherwise the public site) */
+function staticGet(path){return fetch(path+"?v="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error(String(r.status));return r.text();});}
+function readAny(path){
+  var g=gh();
+  if(!g.token)return staticGet(path);
+  return fetch(fileUrl(g,path)+"?ref="+encodeURIComponent(g.branch)+"&t="+Date.now(),{headers:{Authorization:"Bearer "+g.token,Accept:"application/vnd.github.raw+json"},cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error(String(r.status));return r.text();})
+    .catch(function(){return staticGet(path);});
+}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function metaBlock(site){
-  var title=site.title||((site.name||"")+(site.kn?" · "+site.kn:""))||"Kritis";
-  var desc=site.description||(site.tagline||"").replace(/\s*\n\s*/g," ");
-  var url=site.url||(location.protocol==="https:"?location.origin+"/":"");
+function metaBlock(s){
+  var title=s.title||((s.name||"")+(s.kn?" · "+s.kn:""))||"Kritis";
+  var desc=s.description||(s.tagline||"").replace(/\s*\n\s*/g," ");
+  var url=s.url||(location.protocol==="https:"?location.origin+"/":"");
   var out=["<title>"+esc(title)+"</title>"];
   if(desc)out.push('<meta name="description" content="'+esc(desc)+'">');
   if(url)out.push('<link rel="canonical" href="'+esc(url)+'">');
@@ -606,24 +671,41 @@ function metaBlock(site){
   if(url)out.push('<meta property="og:url" content="'+esc(url)+'">');
   return"<!--META-START-->\n"+out.join("\n")+"\n<!--META-END-->";
 }
-function updateMeta(g){
-  return getFile(g,"index.html").then(function(cur){
-    if(!cur.sha||!cur.content)return"";
-    var html=unb64(cur.content),re=/<!--META-START-->[\s\S]*?<!--META-END-->/;
-    if(!re.test(html))return"(Your index.html is an older version, so the link-preview text was not updated.) ";
-    var next=html.replace(re,function(){return metaBlock(data.site);});
-    if(next===html)return"";
-    return putFile(g,"index.html",b64(next),"Update page title and description").then(function(){return"Link-preview details updated. ";});
-  }).catch(function(e){return"(Link-preview update failed: "+e.message+") ";});
+function indexText(){
+  return'{"v":'+Date.now()+',"works":[\n'+index.map(function(e){return JSON.stringify(e);}).join(",\n")+"\n]}\n";
 }
+/* one atomic commit: changed pieces + site.json + index.json (+ page title/description) */
 function publish(){
   var g=gh();
   if(!g.owner||!g.repo||!g.token){msg("Connect to GitHub first (Connection tab)",true);showTab("conn");return;}
   msg("Publishing…");
-  putFile(g,g.path,b64(jsonText()),"Update works")
-    .then(function(){return updateMeta(g);})
-    .then(function(note){try{localStorage.removeItem(DRAFT_KEY);}catch(e){}msg("Published. "+note+"The site updates in about a minute.");})
-    .catch(function(e){msg(e.message,true);});
+  var head,base,tree=[],note="";
+  function add(path,text){tree.push({path:path,mode:"100644",type:"blob",content:text});}
+  gj(g,"/git/ref/heads/"+encodeURIComponent(g.branch)).then(function(ref){
+    head=ref.object.sha;return gj(g,"/git/commits/"+head);
+  }).then(function(c){
+    base=c.tree.sha;
+    var written={};
+    Object.keys(dirty).forEach(function(id){var e=entryOf(id);if(!e)return;written[e.f]=1;add(e.f,JSON.stringify(dirty[id],null,2)+"\n");});
+    Object.keys(deleted).forEach(function(id){if(!written[deleted[id]])tree.push({path:deleted[id],mode:"100644",type:"blob",sha:null});});
+    add("data/site.json",JSON.stringify(site,null,2)+"\n");
+    add("data/index.json",indexText());
+    return readAny("index.html").catch(function(){return"";});
+  }).then(function(html){
+    var re=/<!--META-START-->[\s\S]*?<!--META-END-->/;
+    if(html&&re.test(html)){
+      var next=html.replace(re,function(){return metaBlock(site);});
+      if(next!==html){add("index.html",next);note="Link-preview details updated. ";}
+    }else if(html){note="(Your index.html is an older version, so the link-preview text was not updated.) ";}
+    return gj(g,"/git/trees","POST",{base_tree:base,tree:tree});
+  }).then(function(nt){
+    return gj(g,"/git/commits","POST",{message:"Update works",tree:nt.sha,parents:[head]});
+  }).then(function(nc){
+    return gj(g,"/git/refs/heads/"+encodeURIComponent(g.branch),"PATCH",{sha:nc.sha});
+  }).then(function(){
+    dirty={};deleted={};fresh={};legacy=false;persist();renderList();
+    msg("Published. "+note+"The site updates in about a minute.");
+  }).catch(function(e){msg(e.message,true);});
 }
 function safeName(n){
   var dot=n.lastIndexOf("."),ext=dot>-1?n.slice(dot).toLowerCase().replace(/[^.a-z0-9]/g,""):"";
@@ -649,41 +731,45 @@ $("btnUpload").onclick=function(){uploadFrom($("f_file"),function(p){$("f_link")
 $("btnUpload2").onclick=function(){uploadFrom($("u_file"),function(p){
   $("u_path").textContent=p;$("u_md").textContent="![description]("+p+")";$("u_result").hidden=false;msg("Uploaded as "+p);
 });};
-function siteData(){return fetch("data.json?v="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();});}
+
+/* ---------- loading ---------- */
 function loadRemote(){
-  var g=gh();
-  if(!g.token)return siteData();
-  return fetch(fileUrl(g,g.path)+"?ref="+encodeURIComponent(g.branch)+"&t="+Date.now(),{headers:{Authorization:"Bearer "+g.token,Accept:"application/vnd.github.raw+json"},cache:"no-store"})
-    .then(function(r){if(!r.ok)throw new Error("api");return r.json();}).catch(function(){return siteData();});
+  return readAny("data/site.json").then(function(st){
+    return readAny("data/index.json").then(function(it){
+      return{site:JSON.parse(st),index:JSON.parse(it).works||[],dirty:{},deleted:{},fresh:{},legacy:false};
+    });
+  }).catch(function(e){
+    if(String(e.message)!=="404")throw e;
+    /* older single-file layout: bring every work in; Publish will move them into data/ */
+    return readAny("data.json").then(function(t){
+      var d=JSON.parse(t),ix=[],dr={},fr={};
+      site=d.site||{};
+      (d.works||[]).forEach(function(w){var en=mkEntry(w);ix.push(en);dr[w.id]=w;fr[w.id]=1;});
+      return{site:d.site||{},index:ix,dirty:dr,deleted:{},fresh:fr,legacy:true};
+    });
+  });
 }
-function start(d){data=d;data.site=data.site||{};data.works=data.works||[];renderList();renderSite();fillTypes();}
+function start(s){
+  site=s.site||{};index=s.index||[];dirty=s.dirty||{};deleted=s.deleted||{};fresh=s.fresh||{};legacy=!!s.legacy;
+  shown=PAGE;fillTypes();fillTypeFilter();renderList();renderSite();
+}
 $("btnGh").onclick=function(){saveGh();};
 $("btnTest").onclick=testGh;
 $("btnPublish").onclick=publish;
-$("btnDownload").onclick=function(){
-  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([jsonText()],{type:"application/json"}));
-  a.download="data.json";document.body.appendChild(a);a.click();a.remove();
-  msg("Downloaded. Replace data.json in your repo with this file.");
-};
-$("btnOpen").onclick=function(){$("file").click();};
-$("file").onchange=function(){
-  var f=this.files[0];if(!f)return;var r=new FileReader();
-  r.onload=function(){try{start(JSON.parse(r.result));persist();msg("File loaded");}catch(e){msg("Not a valid data.json",true);}};
-  r.readAsText(f);
-};
 $("btnDiscard").onclick=function(){
   if(!confirm("Discard unpublished changes and reload the live content?"))return;
   try{localStorage.removeItem(DRAFT_KEY);}catch(e){}
-  loadRemote().then(start).then(function(){$("formCard").hidden=true;msg("Reloaded the live content");}).catch(function(){msg("Could not load data.json",true);});
+  loadRemote().then(function(s){start(s);if(s.legacy)persist();$("formCard").hidden=true;msg("Reloaded the live content");}).catch(function(){msg("Could not load the content",true);});
 };
 (function init(){
   var g=gh();
-  $("g_owner").value=g.owner;$("g_repo").value=g.repo;$("g_branch").value=g.branch;$("g_path").value=g.path;$("g_token").value=g.token||"";
+  $("g_owner").value=g.owner;$("g_repo").value=g.repo;$("g_branch").value=g.branch;$("g_token").value=g.token||"";
   if(!g.token){$("ghBox").open=true;$("connNote").textContent="Not connected yet: open the Connection tab and set it up once.";}
   else $("connNote").textContent="Connected to GitHub on this device.";
   var draft=null;try{draft=localStorage.getItem(DRAFT_KEY);}catch(e){}
   if(draft){try{start(JSON.parse(draft));msg("Restored your unpublished changes");return;}catch(e){}}
-  loadRemote().then(start).catch(function(){start({site:{},works:[]});msg("Couldn't load data.json. Use “Open a file…”",true);});
+  loadRemote().then(function(s){start(s);if(s.legacy){persist();msg("Your existing works were loaded. Press Publish once to move them into the new data/ structure.");}})
+    .catch(function(e){start({site:{},index:[]});msg("Couldn't load the content ("+e.message+"). Check your connection and reload.",true);});
 })();
 </script>
 </body>

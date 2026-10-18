@@ -29,6 +29,161 @@
         "k": "tiro"
       }
     },
+    "el": {
+      "h_offer": {
+        "f": "lora",
+        "k": "sans",
+        "s": 80,
+        "w": "n",
+        "i": "n",
+        "c": "c"
+      },
+      "h_name": {
+        "f": "lora",
+        "k": "sans",
+        "s": 85,
+        "w": "n",
+        "i": "n",
+        "c": "c"
+      },
+      "h_kn": {
+        "k": "sans",
+        "s": 85,
+        "w": "n",
+        "i": "n",
+        "c": "n"
+      },
+      "h_tag": {
+        "s": 75,
+        "i": "i"
+      },
+      "n_home": {
+        "f": "lora",
+        "s": 60,
+        "w": "n",
+        "i": "n",
+        "c": "c"
+      },
+      "n_links": {
+        "f": "lora",
+        "s": 60,
+        "w": "n",
+        "i": "n",
+        "c": "c"
+      },
+      "h_btn": {
+        "f": "lora",
+        "s": 65,
+        "w": "n",
+        "i": "n",
+        "c": "c"
+      },
+      "h_btnsub": {
+        "f": "lora",
+        "s": 65,
+        "w": "n",
+        "i": "n",
+        "c": "c"
+      },
+      "n_back": {
+        "s": 90,
+        "c": "c"
+      },
+      "a_title": {
+        "f": "lora",
+        "s": 80
+      },
+      "a_text": {
+        "f": "lora",
+        "s": 75
+      },
+      "a_h2": {
+        "f": "lora",
+        "s": 80,
+        "w": "n"
+      },
+      "a_h3": {
+        "f": "lora",
+        "c": "c"
+      },
+      "kriti.t_title": {
+        "f": "lora",
+        "k": "sans",
+        "s": 90
+      },
+      "kriti.t_intro": {
+        "f": "lora",
+        "k": "sans"
+      },
+      "kriti.t_item": {
+        "f": "lora",
+        "k": "sans"
+      },
+      "kriti.t_first": {
+        "f": "lora",
+        "k": "sans"
+      },
+      "kriti.t_meta": {
+        "f": "lora",
+        "k": "sans",
+        "s": 85
+      },
+      "kriti.p_title": {
+        "f": "lora",
+        "k": "sans",
+        "s": 90
+      },
+      "kriti.p_meta": {
+        "f": "lora",
+        "k": "sans",
+        "s": 85
+      },
+      "ugabhoga.p_btn": {
+        "f": "lora",
+        "k": "sans",
+        "s": 95,
+        "w": "n",
+        "i": "i",
+        "c": "c"
+      },
+      "ugabhoga.p_title": {
+        "f": "lora",
+        "k": "sans",
+        "s": 90
+      },
+      "ugabhoga.p_meta": {
+        "f": "lora",
+        "k": "sans",
+        "s": 95
+      },
+      "ugabhoga.p_pal": {
+        "f": "lora",
+        "k": "sans"
+      },
+      "ugabhoga.p_anu": {
+        "f": "lora",
+        "k": "sans"
+      },
+      "ugabhoga.p_cha": {
+        "f": "lora",
+        "k": "sans"
+      },
+      "ugabhoga.p_note": {
+        "f": "source",
+        "k": "sans",
+        "i": "i"
+      },
+      "f_text": {
+        "f": "lora",
+        "k": "sans",
+        "s": 95
+      },
+      "f_copy": {
+        "f": "lora",
+        "k": "sans",
+        "s": 90
+      }
+    },
     "mItalic": "all",
     "mTone": "muted",
     "mFrame": "rule"

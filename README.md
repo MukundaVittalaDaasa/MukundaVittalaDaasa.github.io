@@ -54,6 +54,8 @@ The website opens on **About**. Kritis, Ugabhoga and Tattva Chintane are buttons
 ### Site tab
 Title, description, About page, colours, text size, letter style, footer, license, the list of types ("Name | layout | Button name | Kannada subtitle" per line; layouts are kriti, verses, article; each type becomes a button on the website) and every word on the site can be changed here. Press **Save site settings**, then **Publish**.
 
+The **Look** section also controls how meanings and summaries appear: italics, size, colour and frame, with a live preview.
+
 ### Files tab
 Upload photos (go to `images/`) or PDFs (go to `kritis/`) and copy the path it shows.
 

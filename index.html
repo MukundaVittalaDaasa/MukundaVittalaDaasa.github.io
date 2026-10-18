@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!--META-START-->
-<title>Mukunda Vittala · ಮುಕುಂದ ವಿಠಲ</title>
-<meta name="description" content="Small offerings at the feet of Hari. Written with little learning, and much hope.">
+<title>Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ</title>
+<meta name="description" content="Kannada kritis, ugabhogas and reflections on tattva in praise of Hari, with the ankita Mukunda Vittala.">
 <link rel="canonical" href="https://mukundavittaladaasa.github.io/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Mukunda Vittala · ಮುಕುಂದ ವಿಠಲ">
-<meta property="og:description" content="Small offerings at the feet of Hari. Written with little learning, and much hope.">
+<meta property="og:title" content="Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ">
+<meta property="og:description" content="Kannada kritis, ugabhogas and reflections on tattva in praise of Hari.">
 <meta property="og:url" content="https://mukundavittaladaasa.github.io/">
 <!--META-END-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,9 +71,9 @@ a{color:var(--accent)}
 .info{background:none;border:1px solid var(--line);color:var(--accent);border-radius:50%;width:1.6rem;height:1.6rem;font-size:.85rem;line-height:1;cursor:pointer;padding:0}
 .verse{font-family:var(--kn);font-size:1.02rem;line-height:2;white-space:pre-line}
 .verse.tap{cursor:pointer}
-.mean{background:var(--soft);border-left:2px solid var(--accent);padding:.6rem .9rem;margin-top:.5rem;font-size:.95rem;line-height:1.7;white-space:pre-line;font-family:var(--kn)}
+.mean{margin-top:.5rem;line-height:1.7;white-space:pre-line;font-family:var(--kn);background:none;border-left:2px solid var(--accent);padding:.3rem .9rem;font-size:.88rem;color:var(--muted);font-style:italic}
 .fb{font-size:.75rem;color:var(--muted);margin-top:.3rem;font-style:italic}
-.sum{background:var(--soft);border-top:2px solid var(--accent);padding:.8rem 1rem;margin-top:1.3rem;font-family:var(--kn);font-size:.96rem;line-height:1.7;white-space:pre-line}
+.sum{margin-top:1.3rem;line-height:1.7;white-space:pre-line;font-family:var(--kn);background:none;border-left:2px solid var(--accent);padding:.3rem .9rem;font-size:.88rem;color:var(--muted);font-style:italic}
 .sum .lbl{margin-bottom:.3rem}
 .hint{font-size:.8rem;color:var(--muted);margin-top:.6rem}
 .note{font-style:italic;color:var(--muted);margin-top:1.8rem}
@@ -195,6 +195,21 @@ function firstOf(w,lay){
 
 var DEFAULT_ABOUT="## About this collection\n\nThis is a humble collection of devotional compositions in Kannada, written in the tradition of the Haridasa sahitya and rooted in the Dvaita (Madhwa) philosophy of Sri Madhvacharya. They are composed under the ankita **Mukunda Vittala** and offered at the feet of Sri Hari.\n\n### The collection\n\n- **Kritis**: songs with pallavi, anupallavi and charanas.\n- **Ugabhoga**: short verses of devotion, without pallavi and anupallavi.\n- **Tattva Chintane**: reflections on tattva, written from experience and understanding.\n\nThe pallavi, charanas and verses can be tapped to read their meaning in English, ಕನ್ನಡ or हिन्दी.\n\n### An offering\n\nThese are small offerings, written with little learning and much hope. Please forgive any errors.\n\nಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು";
 var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis",sub:"ಕೃತಿಗಳು"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga",sub:"ಉಗಾಭೋಗ"},{name:"Blog",layout:"article",plural:"Tattva Chintane",sub:"ತತ್ತ್ವ ಚಿಂತನೆ"}];
+
+function meanCss(t,pre){
+  t=t||{};pre=pre||"";
+  function S(list){return list.split(",").map(function(x){return(pre?pre+" ":"")+x.trim();}).join(",");}
+  var it=t.mItalic||"all",sz={s:".88rem",m:".95rem",l:"1.06rem"}[t.mSize||"s"]||".88rem";
+  var tone=t.mTone==="normal"?"var(--fg)":"var(--muted)",fr=t.mFrame||"rule";
+  var frame=fr==="box"?"background:var(--soft);border:0;border-left:2px solid var(--accent);padding:.6rem .9rem":
+            fr==="none"?"background:none;border:0;padding:.3rem 0":
+            "background:none;border:0;border-left:2px solid var(--accent);padding:.3rem .9rem";
+  var css=S(".mean,.sum")+"{font-size:"+sz+";color:"+tone+";font-style:"+(it==="all"?"italic":"normal")+";"+frame+"}";
+  css+=S(".mean [data-l=en],.sum [data-l=en]")+"{font-family:var(--body);font-style:"+(it==="off"?"normal":"italic")+"}";
+  css+=S(".mean [data-l=kn],.mean [data-l=hi],.sum [data-l=kn],.sum [data-l=hi]")+"{font-style:"+(it==="all"?"italic":"normal")+"}";
+  css+=S(".sum .lbl,.mean .fb,.sum .fb")+"{font-style:normal}";
+  return css;
+}
 
 function baseTypes(){return(SITE.types&&SITE.types.length)?SITE.types:DEFAULT_TYPES;}
 function types(){
@@ -339,7 +354,7 @@ function showWork(w,entry){
   if(hasAny(w.summary)){
     var sb=el("div","sum",null,app);el("div","lbl",L("summary"),sb);
     var st=el("div","",null,sb),sf=el("div","fb",null,sb);
-    refresh.push(function(){var p=pick(w.summary);st.textContent=p?p.text:"";sf.textContent=p&&p.fallback?"("+L("shownIn",{lang:langName(p.lang)})+")":"";});
+    refresh.push(function(){var p=pick(w.summary);st.textContent=p?p.text:"";st.setAttribute("data-l",p?p.lang:"");sf.textContent=p&&p.fallback?"("+L("shownIn",{lang:langName(p.lang)})+")":"";});
   }
   function sec(label,text,m){
     var wrap=el("div","sec",null,app),head=el("div","sechead",null,wrap);
@@ -351,7 +366,7 @@ function showWork(w,entry){
     var txt=el("div","",null,panel),fb=el("div","fb",null,panel);
     var toggle=function(){panel.hidden=!panel.hidden;btn.setAttribute("aria-expanded",String(!panel.hidden));};
     btn.onclick=toggle;body.onclick=toggle;
-    refresh.push(function(){var p=pick(m);txt.textContent=p?p.text:"";fb.textContent=p&&p.fallback?"("+L("shownIn",{lang:langName(p.lang)})+")":"";});
+    refresh.push(function(){var p=pick(m);txt.textContent=p?p.text:"";txt.setAttribute("data-l",p?p.lang:"");fb.textContent=p&&p.fallback?"("+L("shownIn",{lang:langName(p.lang)})+")":"";});
   }
   if(lay==="kriti"){
     if(w.pallavi)sec(L("pallavi"),w.pallavi,M.pallavi);
@@ -410,7 +425,7 @@ function applyTheme(){
   if(t.font==="sans")root+="--body:system-ui,-apple-system,\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;--kn:\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;";
   var fs={s:"15px",l:"18px"}[t.size];
   if(t.font==="sans")root+="--head:system-ui,-apple-system,\"Noto Sans Kannada\",sans-serif;";
-  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"");
+  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"");
   document.getElementById("themeStyle").textContent=out;
 }
 function getJson(u){

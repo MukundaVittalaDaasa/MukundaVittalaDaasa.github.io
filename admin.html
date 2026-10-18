@@ -7,8 +7,8 @@
 <title>Editor</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  --bg:#faf7f0;--fg:#2b2622;--muted:#8a8177;--line:#e4ddcf;--accent:#a4562b;--card:#fffdf8}
-@media (prefers-color-scheme:dark){:root{--bg:#1a1714;--fg:#ece5d8;--muted:#9a9083;--line:#2f2a24;--accent:#d08a5b;--card:#211d19}}
+  --soft:rgba(60,40,20,.05);--body:system-ui,sans-serif;--bg:#faf7f0;--fg:#2b2622;--muted:#8a8177;--line:#e4ddcf;--accent:#a4562b;--card:#fffdf8}
+@media (prefers-color-scheme:dark){:root{--soft:rgba(255,255,255,.05);--bg:#1a1714;--fg:#ece5d8;--muted:#9a9083;--line:#2f2a24;--accent:#d08a5b;--card:#211d19}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Noto Sans Kannada","Noto Sans Devanagari",sans-serif;font-size:16px;line-height:1.5}
@@ -50,6 +50,7 @@ details>summary{cursor:pointer;font-weight:600}
 .preview img{max-width:100%}
 .path{font-family:ui-monospace,monospace;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.3rem .5rem;word-break:break-all;margin-top:.5rem}
 ol.sub li{margin-bottom:.3rem}
+#mprev .mean{margin-top:.5rem;line-height:1.7;white-space:pre-line}
 </style>
 </head>
 <body>
@@ -169,6 +170,19 @@ ol.sub li{margin-bottom:.3rem}
       <div><label>Text size</label><select id="s_size"><option value="s">Small</option><option value="m">Medium</option><option value="l">Large</option></select></div>
       <div><label>Letter style</label><select id="s_font"><option value="serif">Serif (classic)</option><option value="sans">Sans (modern)</option></select></div>
     </div>
+    <h3>Meanings and summaries</h3>
+    <div class="row">
+      <div><label>Italics</label><select id="s_mItalic"><option value="all">All languages</option><option value="en">English only</option><option value="off">None</option></select></div>
+      <div><label>Text size</label><select id="s_mSize"><option value="s">Small</option><option value="m">Medium</option><option value="l">Large</option></select></div>
+    </div>
+    <div class="row">
+      <div><label>Text colour</label><select id="s_mTone"><option value="muted">Soft grey</option><option value="normal">Same as the verses</option></select></div>
+      <div><label>Frame</label><select id="s_mFrame"><option value="rule">Thin line on the left</option><option value="box">Soft box</option><option value="none">None</option></select></div>
+    </div>
+    <p class="hint">Preview (Kannada and Hindi have no true italic, so the browser slants them: choose “English only” if that looks odd):</p>
+    <div id="mprev"><div class="mean"><div data-l="en">This is how a meaning in English will look.</div></div>
+    <div class="mean"><div data-l="kn">ಕನ್ನಡದಲ್ಲಿ ಅರ್ಥ ಹೀಗೆ ಕಾಣುತ್ತದೆ.</div></div>
+    <div class="mean"><div data-l="hi">हिन्दी में अर्थ ऐसे दिखेगा।</div></div></div>
     <label>Default language for meanings</label>
     <select id="s_lang"><option value="en">English</option><option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option></select>
   </details>
@@ -317,6 +331,21 @@ function firstOf(w,lay){
 
 var DEFAULT_ABOUT="## About this collection\n\nThis is a humble collection of devotional compositions in Kannada, written in the tradition of the Haridasa sahitya and rooted in the Dvaita (Madhwa) philosophy of Sri Madhvacharya. They are composed under the ankita **Mukunda Vittala** and offered at the feet of Sri Hari.\n\n### The collection\n\n- **Kritis**: songs with pallavi, anupallavi and charanas.\n- **Ugabhoga**: short verses of devotion, without pallavi and anupallavi.\n- **Tattva Chintane**: reflections on tattva, written from experience and understanding.\n\nThe pallavi, charanas and verses can be tapped to read their meaning in English, ಕನ್ನಡ or हिन्दी.\n\n### An offering\n\nThese are small offerings, written with little learning and much hope. Please forgive any errors.\n\nಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು";
 var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis",sub:"ಕೃತಿಗಳು"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga",sub:"ಉಗಾಭೋಗ"},{name:"Blog",layout:"article",plural:"Tattva Chintane",sub:"ತತ್ತ್ವ ಚಿಂತನೆ"}];
+
+function meanCss(t,pre){
+  t=t||{};pre=pre||"";
+  function S(list){return list.split(",").map(function(x){return(pre?pre+" ":"")+x.trim();}).join(",");}
+  var it=t.mItalic||"all",sz={s:".88rem",m:".95rem",l:"1.06rem"}[t.mSize||"s"]||".88rem";
+  var tone=t.mTone==="normal"?"var(--fg)":"var(--muted)",fr=t.mFrame||"rule";
+  var frame=fr==="box"?"background:var(--soft);border:0;border-left:2px solid var(--accent);padding:.6rem .9rem":
+            fr==="none"?"background:none;border:0;padding:.3rem 0":
+            "background:none;border:0;border-left:2px solid var(--accent);padding:.3rem .9rem";
+  var css=S(".mean,.sum")+"{font-size:"+sz+";color:"+tone+";font-style:"+(it==="all"?"italic":"normal")+";"+frame+"}";
+  css+=S(".mean [data-l=en],.sum [data-l=en]")+"{font-family:var(--body);font-style:"+(it==="off"?"normal":"italic")+"}";
+  css+=S(".mean [data-l=kn],.mean [data-l=hi],.sum [data-l=kn],.sum [data-l=hi]")+"{font-style:"+(it==="all"?"italic":"normal")+"}";
+  css+=S(".sum .lbl,.mean .fb,.sum .fb")+"{font-style:normal}";
+  return css;
+}
 
 function msg(t,err){var m=$("msg");m.textContent=t;m.className=err?"err":"";m.style.display="block";clearTimeout(msg.t);msg.t=setTimeout(function(){m.style.display="none";},12000);}
 function persist(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify({site:site,index:index,dirty:dirty,deleted:deleted,fresh:fresh,legacy:legacy}));}catch(e){}}
@@ -581,6 +610,8 @@ function renderSite(){
   $("s_accent").value=/^#[0-9a-f]{6}$/i.test(t.accent||"")?t.accent:"#a4562b";
   $("s_paper").value=t.paper||"cream";$("s_size").value=t.size||"m";$("s_font").value=t.font||"serif";
   $("s_lang").value=s.defaultLang||"en";
+  $("s_mItalic").value=t.mItalic||"all";$("s_mSize").value=t.mSize||"s";$("s_mTone").value=t.mTone||"muted";$("s_mFrame").value=t.mFrame||"rule";
+  mPreview();
   $("s_aboutTitle").value=s.aboutTitle||"";$("s_about").value=s.about||DEFAULT_ABOUT;
   $("s_types").value=typesText();
   $("s_footer").value=s.footer||"";$("s_year").value=s.copyrightYear||"";
@@ -593,7 +624,7 @@ function saveSite(){
   set("offering",$("s_offering").value.trim());set("name",$("s_name").value.trim());set("kn",$("s_kn").value.trim());
   set("tagline",$("s_tagline").value.trim());set("intro",$("s_intro").value.trim());
   set("title",$("s_title").value.trim());set("description",$("s_desc").value.trim());set("url",$("s_url").value.trim());
-  s.theme={accent:$("s_accent").value,paper:$("s_paper").value,size:$("s_size").value,font:$("s_font").value};
+  s.theme={accent:$("s_accent").value,paper:$("s_paper").value,size:$("s_size").value,font:$("s_font").value,mItalic:$("s_mItalic").value,mSize:$("s_mSize").value,mTone:$("s_mTone").value,mFrame:$("s_mFrame").value};
   set("defaultLang",$("s_lang").value);
   set("aboutTitle",$("s_aboutTitle").value.trim());set("about",$("s_about").value.trim());
   s.types=parseTypes($("s_types").value);
@@ -605,6 +636,12 @@ function saveSite(){
   site=s;persist();fillTypes($("f_type").value);fillTypeFilter();
   msg("Site settings saved on this device. Press Publish to put them online.");
 }
+function mPreview(){
+  var t={mItalic:$("s_mItalic").value,mSize:$("s_mSize").value,mTone:$("s_mTone").value,mFrame:$("s_mFrame").value};
+  var st=$("mprevStyle");if(!st){st=document.createElement("style");st.id="mprevStyle";document.head.appendChild(st);}
+  st.textContent=meanCss(t,"#mprev");
+}
+["s_mItalic","s_mSize","s_mTone","s_mFrame"].forEach(function(id){$(id).onchange=mPreview;});
 $("btnSite").onclick=saveSite;
 
 /* ---------- GitHub ---------- */

@@ -39,6 +39,7 @@ hr { border:0; border-top:1px solid var(--line); width:3rem; margin:2.5rem auto;
 .verse { font-family:"Noto Serif Kannada",serif; font-size:1rem; line-height:2; white-space:pre-line; }
 .note { font-style:italic; color:var(--muted); margin-top:1.8rem; }
 audio { width:100%; margin-top:1.5rem; }
+.readbtn { display:inline-block; margin-top:1.4rem; padding:.55rem 1.1rem; border:1px solid var(--accent); border-radius:99px; color:var(--accent); text-decoration:none; font-size:.95rem; }
 .pn { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; font-size:.9rem; }
 .pn a { color:var(--muted); text-decoration:none; }
 footer { text-align:center; color:var(--muted); font-size:.85rem; margin-top:3rem; }
@@ -110,7 +111,7 @@ function renderHome() {
     rows.forEach(function (w) {
       var a = el("a", "item", null, list); a.href = "#/" + w.id;
       el("div", "title", w.title, a);
-      var bits = [w.type, w.ankita ? "Ankita: " + w.ankita : "", w.status === "draft" ? "in progress" : ""].filter(Boolean).join(" · ");
+      var bits = [w.type, w.ankita ? "Ankita: " + w.ankita : "", w.status === "draft" ? "in progress" : "", w.link ? "full text ↗" : ""].filter(Boolean).join(" · ");
       el("div", "meta" + (w.status === "draft" ? " draft" : ""), bits, a);
       if (w.pallavi) el("div", "pallavi", "ಪಲ್ಲವಿ: " + w.pallavi, a);
     });
@@ -129,6 +130,10 @@ function renderWork(id) {
   el("div", "dt", w.title, app);
   el("div", "meta", [w.type, w.ankita ? "Ankita: " + w.ankita : "", w.raga ? "Raga: " + w.raga : "", w.tala ? "Tala: " + w.tala : "", w.date || ""].filter(Boolean).join(" · "), app);
   if (w.audio) { var au = el("audio", "", null, app); au.controls = true; au.src = w.audio; }
+  if (w.link) {
+    var rb = el("a", "readbtn", "Read the full kriti ↗", app); rb.href = w.link;
+    if (/^https?:/i.test(w.link)) { rb.target = "_blank"; rb.rel = "noopener"; }
+  }
   if (w.pallavi) { el("div", "lbl", "ಪಲ್ಲವಿ", app); el("div", "verse", w.pallavi, app); }
   if (w.anupallavi) { el("div", "lbl", "ಅನುಪಲ್ಲವಿ", app); el("div", "verse", w.anupallavi, app); }
   (w.charanas || []).forEach(function (c, k) { el("div", "lbl", "ಚರಣ " + (k + 1), app); el("div", "verse", c, app); });

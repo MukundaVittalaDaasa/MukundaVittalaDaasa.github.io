@@ -9,18 +9,27 @@
   "licenseUrl": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
   "licenseNote": "These kritis may be shared with credit to Mukunda Vittala, unchanged and not for sale.",
   "theme": {
+    "mSize": "s",
     "accent": "#a4562b",
     "paper": "cream",
-    "z": {
-      "nav": 90,
-      "head": 95,
-      "verse": 95,
-      "mean": 85,
-      "small": 85
-    },
     "font": "serif",
+    "z": {
+      "home": 90,
+      "nav": 110,
+      "head": 90,
+      "small": 95
+    },
+    "fonts": {
+      "home": {
+        "l": "lora",
+        "k": "tiro"
+      },
+      "nav": {
+        "l": "lora",
+        "k": "tiro"
+      }
+    },
     "mItalic": "all",
-    "mSize": "s",
     "mTone": "muted",
     "mFrame": "rule"
   },
@@ -41,6 +50,5 @@
       "layout": "article",
       "plural": "Tattva Blogs"
     }
-  ],
-  "about": "## About this collection\n\nThis is a humble collection of devotional compositions in Kannada, written in the tradition of the Haridasa sahitya and rooted in the Dvaita (Madhwa) philosophy of Sri Madhvacharya. They are composed under the ankita **Mukunda Vittala** and offered at the feet of Sri Hari.\n\n### The collection\n\n- **Kritis**: songs with pallavi, anupallavi and charanas.\n- **Ugabhoga**: short verses of devotion, without pallavi and anupallavi.\n- **Tattva Chintane**: reflections on tattva, written from experience and understanding.\n\nThe pallavi, charanas and verses can be tapped to read their meaning in English, ಕನ್ನಡ or हिन्दी.\n\n### An offering\n\nThese are small offerings, written with little learning and much hope. Please forgive any errors.\n\nಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು"
+  ]
 }

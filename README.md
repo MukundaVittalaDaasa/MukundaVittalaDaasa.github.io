@@ -30,9 +30,18 @@ Small offerings at the feet of Hari, written with little learning and much hope.
 
 ### Everyday routine
 1. Open `https://mukundavittaladaasa.github.io/admin.html` on any device.
-2. **+ New work**: type or paste the song (blank line between charanas). To attach a PDF, tap **Upload file**; the link fills in by itself.
-3. **Save work**, then **Publish to GitHub**. The site updates in about a minute.
-To change a song, tap **Edit** next to it, then Save and Publish.
+2. **Works → + New piece**. Choose the type:
+   - **Kriti**: pallavi, anupallavi (optional, leave empty to skip), charanas.
+   - **Ugabhoga**: verses only, no pallavi or anupallavi.
+   - **Tattva writing**: a blog-style article (headings, bold, quotes, links, pictures).
+3. Under every pallavi, charana or verse, open **Meaning / summary** and type it in English, ಕನ್ನಡ and/or हिन्दी. Readers tap ⓘ (or the lines) and choose their language.
+4. **Save piece**, then **Publish**. The site updates in about a minute.
+
+### Site tab
+Title, description, About page, colours, text size, letter style, footer, license, the list of types ("Name | layout" per line; layouts are kriti, verses, article) and every word on the site can be changed here. Press **Save site settings**, then **Publish**.
+
+### Files tab
+Upload photos (go to `images/`) or PDFs (go to `kritis/`) and copy the path it shows.
 
 ### One-time connection (token)
 1. Open `github.com/settings/tokens/new` (choose **Tokens (classic)**), name it `kriti-editor`, set the longest expiry, tick only **`public_repo`**, and generate it.

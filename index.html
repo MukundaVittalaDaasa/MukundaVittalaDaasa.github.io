@@ -72,6 +72,10 @@ a{color:var(--accent)}
 .verse{font-family:var(--kn);font-size:1.02rem;line-height:2;white-space:pre-line}
 .verse.tap{cursor:pointer}
 .mean{margin-top:.5rem;line-height:1.7;white-space:pre-line;font-family:var(--kn);background:none;border-left:2px solid var(--accent);padding:.3rem .9rem;font-size:.88rem;color:var(--muted);font-style:italic}
+.tbtn{display:inline-block;background:none;border:0;padding:0;margin-top:.1rem;color:var(--accent);font:inherit;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.lchips{display:flex;flex-wrap:wrap;margin-bottom:.3rem}
+.lc{background:none;border:0;border-bottom:1px solid transparent;color:var(--muted);font:inherit;font-size:.72rem;letter-spacing:.06em;padding:0;margin-right:.9rem;cursor:pointer}
+.lc.on{color:var(--accent);border-bottom-color:var(--accent)}
 .fb{font-size:.75rem;color:var(--muted);margin-top:.3rem;font-style:italic}
 .sum{margin-top:1.3rem;line-height:1.7;white-space:pre-line;font-family:var(--kn);background:none;border-left:2px solid var(--accent);padding:.3rem .9rem;font-size:.88rem;color:var(--muted);font-style:italic}
 .sum .lbl{margin-bottom:.3rem}
@@ -136,9 +140,9 @@ var LABEL_DEFS=[
 ["fullTag","full text ↗","Small tag in the list when a full text link exists"],
 ["inProgress","in progress","Marks an unfinished piece"],
 ["summary","Summary","Heading of the summary box"],
-["tapHint","Tap a section to see its meaning","Hint shown above sections that have meanings"],
-["showAll","Show all meanings","Button text"],
-["hideAll","Hide all meanings","Button text"],
+["transBtn","Translation","Small button below each verse that opens its meaning"],
+["showAll","Show all translations","Button text"],
+["hideAll","Hide all translations","Button text"],
 ["shownIn","shown in {lang}","Note shown when the chosen language is missing"],
 ["ankita","Ankita","Label before the ankita"],
 ["raga","Raga","Label before the raga"],
@@ -214,8 +218,43 @@ function meanCss(t,pre){
   var css=S(".mean,.sum")+"{font-size:"+sz+";color:"+tone+";font-style:"+(it==="all"?"italic":"normal")+";"+frame+"}";
   css+=S(".mean [data-l=en],.sum [data-l=en]")+"{font-family:var(--body);font-style:"+(it==="off"?"normal":"italic")+"}";
   css+=S(".mean [data-l=kn],.mean [data-l=hi],.sum [data-l=kn],.sum [data-l=hi]")+"{font-style:"+(it==="all"?"italic":"normal")+"}";
-  css+=S(".sum .lbl,.mean .fb,.sum .fb")+"{font-style:normal}";
+  css+=S(".sum .lbl,.mean .fb,.sum .fb,.mean .lc,.sum .lc")+"{font-style:normal}";
   return css;
+}
+
+var HOME_FONTS={
+  cormorant:["Cormorant Garamond","Cormorant+Garamond:ital,wght@0,500;0,700;1,500","Cormorant Garamond (classic)"],
+  playfair:["Playfair Display","Playfair+Display:ital,wght@0,500;0,700;1,500","Playfair Display (high contrast)"],
+  cinzel:["Cinzel","Cinzel:wght@500;700","Cinzel (carved capitals)"],
+  garamond:["EB Garamond","EB+Garamond:ital,wght@0,400;0,700;1,400","EB Garamond (bookish)"],
+  lora:["Lora","Lora:ital,wght@0,400;0,700;1,400","Lora (warm)"],
+  inter:["Inter","Inter:wght@400;600","Inter (clean modern)"]
+};
+var KN_FONTS={
+  noto:["Noto Serif Kannada","Noto+Serif+Kannada:wght@400;600","Noto Serif Kannada (default)"],
+  sans:["Noto Sans Kannada","Noto+Sans+Kannada:wght@400;600","Noto Sans Kannada (plain)"],
+  tiro:["Tiro Kannada","Tiro+Kannada:ital@0;1","Tiro Kannada (book style)"],
+  hubballi:["Hubballi","Hubballi","Hubballi (soft)"]
+};
+function loadFonts(specs){
+  specs.forEach(function(sp){
+    var href="https://fonts.googleapis.com/css2?family="+sp+"&display=swap";
+    if(document.querySelector('link[href="'+href+'"]'))return;
+    var l=document.createElement("link");l.rel="stylesheet";l.href=href;document.head.appendChild(l);
+  });
+}
+/* font for the first (home) page only; nothing is applied until a font is chosen */
+function homeFontCss(t,pre){
+  t=t||{};
+  if(!t.homeFont&&!t.homeKn)return"";
+  var f=HOME_FONTS[t.homeFont],k=KN_FONTS[t.homeKn]||KN_FONTS.noto;
+  var specs=[k[1]];if(f)specs.push(f[1]);loadFonts(specs);
+  var kfam='"'+k[0]+'","Noto Serif Devanagari",serif';
+  var lfam=(f?'"'+f[0]+'",':"")+kfam;
+  var p=(pre?pre+" ":"")+".landing";
+  return p+"{font-family:"+lfam+"}"+
+    p+" h1,"+p+" .menu b{font-family:"+lfam+"}"+
+    p+" .knname,"+p+" .offer,"+p+" .menu small{font-family:"+kfam+"}";
 }
 
 function baseTypes(){return(SITE.types&&SITE.types.length)?SITE.types:DEFAULT_TYPES;}
@@ -360,22 +399,34 @@ function showWork(w,entry){
   if(w.audio){var au=el("audio","",null,app);au.controls=true;au.src=w.audio;}
   if(w.link){var rb=el("a","readbtn",L("readFull"),app);rb.href=w.link;if(/^https?:/i.test(w.link)){rb.target="_blank";rb.rel="noopener";}}
   var bar=el("div","bar",null,app);
+  function langBox(o,box){
+    var avail=LANGS.filter(function(l){return o&&o[l[0]];}),chips=el("div","lchips",null,box),txt=el("div","",null,box);
+    var btns=avail.map(function(l){
+      var b=el("button","lc",l[1],chips);b.type="button";
+      b.onclick=function(e){e.stopPropagation();state.lang=l[0];lsSet("kriti-lang",l[0]);refresh.forEach(function(f){f();});};
+      return[b,l[0]];
+    });
+    if(avail.length<2)chips.hidden=true;
+    return function(){
+      var k=o[state.lang]?state.lang:avail[0][0];
+      txt.textContent=o[k];txt.setAttribute("data-l",k);
+      btns.forEach(function(c){c[0].className="lc"+(c[1]===k?" on":"");});
+    };
+  }
   if(hasAny(w.summary)){
     var sb=el("div","sum",null,app);el("div","lbl",L("summary"),sb);
-    var st=el("div","",null,sb),sf=el("div","fb",null,sb);
-    refresh.push(function(){var p=pick(w.summary);st.textContent=p?p.text:"";st.setAttribute("data-l",p?p.lang:"");sf.textContent=p&&p.fallback?"("+L("shownIn",{lang:langName(p.lang)})+")":"";});
+    refresh.push(langBox(w.summary,sb));
   }
   function sec(label,text,m){
-    var wrap=el("div","sec",null,app),head=el("div","sechead",null,wrap);
-    el("span","lbl",label,head);
+    var wrap=el("div","sec",null,app);
+    if(label)el("div","lbl",label,wrap);
     var has=hasAny(m),body=el("div","verse"+(has?" tap":""),text,wrap);
     if(!has)return;
-    var btn=el("button","info","ⓘ",head);btn.type="button";btn.setAttribute("aria-label",L("summary"));btn.setAttribute("aria-expanded","false");
+    var btn=el("button","tbtn","ⓘ "+L("transBtn"),wrap);btn.type="button";btn.setAttribute("aria-expanded","false");
     var panel=el("div","mean",null,wrap);panel.hidden=true;panels.push(panel);
-    var txt=el("div","",null,panel),fb=el("div","fb",null,panel);
     var toggle=function(){panel.hidden=!panel.hidden;btn.setAttribute("aria-expanded",String(!panel.hidden));};
     btn.onclick=toggle;body.onclick=toggle;
-    refresh.push(function(){var p=pick(m);txt.textContent=p?p.text:"";txt.setAttribute("data-l",p?p.lang:"");fb.textContent=p&&p.fallback?"("+L("shownIn",{lang:langName(p.lang)})+")":"";});
+    refresh.push(langBox(m,panel));
   }
   if(lay==="kriti"){
     if(w.pallavi)sec(L("pallavi"),w.pallavi,M.pallavi);
@@ -387,22 +438,9 @@ function showWork(w,entry){
   }else{
     md(w.body,el("div","md",null,app));
   }
-  var avail=LANGS.map(function(l){return l[0];}).filter(function(k){
-    if(w.summary&&w.summary[k])return true;
-    var all=[M.pallavi,M.anupallavi].concat(M.charanas||[]).concat(M.verses||[]);
-    return all.some(function(o){return o&&o[k];});
-  });
-  var chipEls=[];
-  if(avail.length>1)LANGS.forEach(function(l){
-    if(avail.indexOf(l[0])<0)return;
-    var b=el("button","chip"+(state.lang===l[0]?" on":""),l[1],bar);
-    b.onclick=function(){state.lang=l[0];lsSet("kriti-lang",l[0]);chipEls.forEach(function(c){c[0].className="chip"+(c[1]===state.lang?" on":"");});refresh.forEach(function(f){f();});};
-    chipEls.push([b,l[0]]);
-  });
   if(panels.length){
     var all=el("button","chip",L("showAll"),bar),open=false;
     all.onclick=function(){open=!open;panels.forEach(function(p){p.hidden=!open;});all.textContent=open?L("hideAll"):L("showAll");};
-    var hint=el("div","hint",L("tapHint"),app);app.insertBefore(hint,bar.nextSibling);
   }
   refresh.forEach(function(f){f();});
   if(w.notes)el("div","note",w.notes,app);
@@ -434,7 +472,7 @@ function applyTheme(){
   if(t.font==="sans")root+="--body:system-ui,-apple-system,\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;--kn:\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;";
   var fs={s:"15px",l:"18px"}[t.size];
   if(t.font==="sans")root+="--head:system-ui,-apple-system,\"Noto Sans Kannada\",sans-serif;";
-  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"");
+  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"")+homeFontCss(t,"");
   document.getElementById("themeStyle").textContent=out;
 }
 function getJson(u){

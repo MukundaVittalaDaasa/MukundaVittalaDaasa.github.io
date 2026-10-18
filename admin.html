@@ -51,6 +51,10 @@ details>summary{cursor:pointer;font-weight:600}
 .path{font-family:ui-monospace,monospace;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.3rem .5rem;word-break:break-all;margin-top:.5rem}
 ol.sub li{margin-bottom:.3rem}
 #mprev .mean{margin-top:.5rem;line-height:1.7;white-space:pre-line}
+#fprev .mast{text-align:center}#fprev h1{font-size:1.5rem;letter-spacing:.12em;text-transform:uppercase;margin:.5rem 0 0;line-height:1.2}
+#fprev .knname{display:block;color:var(--accent);font-size:1rem;text-transform:none;letter-spacing:0}#fprev .offer{color:var(--muted);font-size:.8rem}
+#fprev .tag{font-style:italic;color:var(--muted);margin:.4rem 0 0}#fprev .menu a{display:block;text-align:center;border:1px solid var(--line);padding:.5rem;margin-top:.8rem}
+#fprev .menu b{display:block;letter-spacing:.14em;text-transform:uppercase}#fprev .menu small{color:var(--muted);font-size:.8rem}
 </style>
 </head>
 <body>
@@ -170,6 +174,12 @@ ol.sub li{margin-bottom:.3rem}
       <div><label>Text size</label><select id="s_size"><option value="s">Small</option><option value="m">Medium</option><option value="l">Large</option></select></div>
       <div><label>Letter style</label><select id="s_font"><option value="serif">Serif (classic)</option><option value="sans">Sans (modern)</option></select></div>
     </div>
+    <h3>First page fonts</h3>
+    <div class="row">
+      <div><label>English letters</label><select id="s_hFont"><option value="">Default</option><option value="cormorant">Cormorant Garamond (classic)</option><option value="playfair">Playfair Display (high contrast)</option><option value="cinzel">Cinzel (carved capitals)</option><option value="garamond">EB Garamond (bookish)</option><option value="lora">Lora (warm)</option><option value="inter">Inter (clean modern)</option></select></div>
+      <div><label>ಕನ್ನಡ</label><select id="s_hKn"><option value="">Default</option><option value="noto">Noto Serif Kannada (default)</option><option value="sans">Noto Sans Kannada (plain)</option><option value="tiro">Tiro Kannada (book style)</option><option value="hubballi">Hubballi (soft)</option></select></div>
+    </div>
+    <div id="fprev" class="preview"><div class="landing" style="min-height:0"><div class="mast"><div class="offer">ಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು</div><h1>Mukunda Vittala<span class="knname">ಮುಕುಂದ ವಿಠ್ಠಲ</span></h1><p class="tag">Small offerings at the feet of Hari.</p></div><div class="menu"><a><b>Kritis</b><small>ಕೃತಿಗಳು</small></a></div></div></div>
     <h3>Meanings and summaries</h3>
     <div class="row">
       <div><label>Italics</label><select id="s_mItalic"><option value="all">All languages</option><option value="en">English only</option><option value="off">None</option></select></div>
@@ -270,9 +280,9 @@ var LABEL_DEFS=[
 ["fullTag","full text ↗","Small tag in the list when a full text link exists"],
 ["inProgress","in progress","Marks an unfinished piece"],
 ["summary","Summary","Heading of the summary box"],
-["tapHint","Tap a section to see its meaning","Hint shown above sections that have meanings"],
-["showAll","Show all meanings","Button text"],
-["hideAll","Hide all meanings","Button text"],
+["transBtn","Translation","Small button below each verse that opens its meaning"],
+["showAll","Show all translations","Button text"],
+["hideAll","Hide all translations","Button text"],
 ["shownIn","shown in {lang}","Note shown when the chosen language is missing"],
 ["ankita","Ankita","Label before the ankita"],
 ["raga","Raga","Label before the raga"],
@@ -344,8 +354,43 @@ function meanCss(t,pre){
   var css=S(".mean,.sum")+"{font-size:"+sz+";color:"+tone+";font-style:"+(it==="all"?"italic":"normal")+";"+frame+"}";
   css+=S(".mean [data-l=en],.sum [data-l=en]")+"{font-family:var(--body);font-style:"+(it==="off"?"normal":"italic")+"}";
   css+=S(".mean [data-l=kn],.mean [data-l=hi],.sum [data-l=kn],.sum [data-l=hi]")+"{font-style:"+(it==="all"?"italic":"normal")+"}";
-  css+=S(".sum .lbl,.mean .fb,.sum .fb")+"{font-style:normal}";
+  css+=S(".sum .lbl,.mean .fb,.sum .fb,.mean .lc,.sum .lc")+"{font-style:normal}";
   return css;
+}
+
+var HOME_FONTS={
+  cormorant:["Cormorant Garamond","Cormorant+Garamond:ital,wght@0,500;0,700;1,500","Cormorant Garamond (classic)"],
+  playfair:["Playfair Display","Playfair+Display:ital,wght@0,500;0,700;1,500","Playfair Display (high contrast)"],
+  cinzel:["Cinzel","Cinzel:wght@500;700","Cinzel (carved capitals)"],
+  garamond:["EB Garamond","EB+Garamond:ital,wght@0,400;0,700;1,400","EB Garamond (bookish)"],
+  lora:["Lora","Lora:ital,wght@0,400;0,700;1,400","Lora (warm)"],
+  inter:["Inter","Inter:wght@400;600","Inter (clean modern)"]
+};
+var KN_FONTS={
+  noto:["Noto Serif Kannada","Noto+Serif+Kannada:wght@400;600","Noto Serif Kannada (default)"],
+  sans:["Noto Sans Kannada","Noto+Sans+Kannada:wght@400;600","Noto Sans Kannada (plain)"],
+  tiro:["Tiro Kannada","Tiro+Kannada:ital@0;1","Tiro Kannada (book style)"],
+  hubballi:["Hubballi","Hubballi","Hubballi (soft)"]
+};
+function loadFonts(specs){
+  specs.forEach(function(sp){
+    var href="https://fonts.googleapis.com/css2?family="+sp+"&display=swap";
+    if(document.querySelector('link[href="'+href+'"]'))return;
+    var l=document.createElement("link");l.rel="stylesheet";l.href=href;document.head.appendChild(l);
+  });
+}
+/* font for the first (home) page only; nothing is applied until a font is chosen */
+function homeFontCss(t,pre){
+  t=t||{};
+  if(!t.homeFont&&!t.homeKn)return"";
+  var f=HOME_FONTS[t.homeFont],k=KN_FONTS[t.homeKn]||KN_FONTS.noto;
+  var specs=[k[1]];if(f)specs.push(f[1]);loadFonts(specs);
+  var kfam='"'+k[0]+'","Noto Serif Devanagari",serif';
+  var lfam=(f?'"'+f[0]+'",':"")+kfam;
+  var p=(pre?pre+" ":"")+".landing";
+  return p+"{font-family:"+lfam+"}"+
+    p+" h1,"+p+" .menu b{font-family:"+lfam+"}"+
+    p+" .knname,"+p+" .offer,"+p+" .menu small{font-family:"+kfam+"}";
 }
 
 function msg(t,err){var m=$("msg");m.textContent=t;m.className=err?"err":"";m.style.display="block";clearTimeout(msg.t);msg.t=setTimeout(function(){m.style.display="none";},12000);}
@@ -611,8 +656,8 @@ function renderSite(){
   $("s_accent").value=/^#[0-9a-f]{6}$/i.test(t.accent||"")?t.accent:"#a4562b";
   $("s_paper").value=t.paper||"cream";$("s_size").value=t.size||"m";$("s_font").value=t.font||"serif";
   $("s_lang").value=s.defaultLang||"en";
-  $("s_mItalic").value=t.mItalic||"all";$("s_mSize").value=t.mSize||"s";$("s_mTone").value=t.mTone||"muted";$("s_mFrame").value=t.mFrame||"rule";
-  mPreview();
+  $("s_hFont").value=t.homeFont||"";$("s_hKn").value=t.homeKn||"";$("s_mItalic").value=t.mItalic||"all";$("s_mSize").value=t.mSize||"s";$("s_mTone").value=t.mTone||"muted";$("s_mFrame").value=t.mFrame||"rule";
+  mPreview();fPreview();
   $("s_aboutTitle").value=s.aboutTitle||"";$("s_about").value=s.about||DEFAULT_ABOUT;
   $("s_types").value=typesText();
   $("s_footer").value=s.footer||"";$("s_year").value=s.copyrightYear||"";
@@ -625,7 +670,7 @@ function saveSite(){
   set("offering",$("s_offering").value.trim());set("name",$("s_name").value.trim());set("kn",$("s_kn").value.trim());
   set("tagline",$("s_tagline").value.trim());set("intro",$("s_intro").value.trim());
   set("title",$("s_title").value.trim());set("description",$("s_desc").value.trim());set("url",$("s_url").value.trim());
-  s.theme={accent:$("s_accent").value,paper:$("s_paper").value,size:$("s_size").value,font:$("s_font").value,mItalic:$("s_mItalic").value,mSize:$("s_mSize").value,mTone:$("s_mTone").value,mFrame:$("s_mFrame").value};
+  s.theme={accent:$("s_accent").value,paper:$("s_paper").value,size:$("s_size").value,font:$("s_font").value,mItalic:$("s_mItalic").value,homeFont:$("s_hFont").value,homeKn:$("s_hKn").value,mSize:$("s_mSize").value,mTone:$("s_mTone").value,mFrame:$("s_mFrame").value};
   set("defaultLang",$("s_lang").value);
   set("aboutTitle",$("s_aboutTitle").value.trim());set("about",$("s_about").value.trim());
   s.types=parseTypes($("s_types").value);
@@ -634,11 +679,18 @@ function saveSite(){
   var labs={};
   LABEL_DEFS.forEach(function(d){var v=$("lab_"+d[0]).value.trim();if(v&&v!==d[1])labs[d[0]]=v;});
   if(Object.keys(labs).length)s.labels=labs;else delete s.labels;
+  Object.keys(s.theme).forEach(function(k){if(s.theme[k]==="")delete s.theme[k];});
   site=s;persist();fillTypes($("f_type").value);fillTypeFilter();
   msg("Site settings saved on this device. Press Publish to put them online.");
 }
+function fPreview(){
+  var t={homeFont:$("s_hFont").value,homeKn:$("s_hKn").value};
+  var st=$("fprevStyle");if(!st){st=document.createElement("style");st.id="fprevStyle";document.head.appendChild(st);}
+  st.textContent=homeFontCss(t,"#fprev");
+}
+["s_hFont","s_hKn"].forEach(function(id){$(id).onchange=fPreview;});
 function mPreview(){
-  var t={mItalic:$("s_mItalic").value,mSize:$("s_mSize").value,mTone:$("s_mTone").value,mFrame:$("s_mFrame").value};
+  var t={mItalic:$("s_mItalic").value,homeFont:$("s_hFont").value,homeKn:$("s_hKn").value,mSize:$("s_mSize").value,mTone:$("s_mTone").value,mFrame:$("s_mFrame").value};
   var st=$("mprevStyle");if(!st){st=document.createElement("style");st.id="mprevStyle";document.head.appendChild(st);}
   st.textContent=meanCss(t,"#mprev");
 }

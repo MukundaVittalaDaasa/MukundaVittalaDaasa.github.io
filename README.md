@@ -1,65 +1,49 @@
-# Your kriti website
+# Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ
 
-Three files:
+ಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು
 
-- `index.html`  – the public site (you never edit this)
-- `data.json`   – all your content (site details + every work)
-- `admin.html`  – a private-ish editor that edits `data.json` for you
+Kritis and devotional compositions in praise of Hari, written in Kannada with the ankita **Mukunda Vittala**.
 
-## One-time setup (free, about 10 minutes, works from a phone)
+**Read them on the website: https://mukundavittaladaasa.github.io**
 
-1. Create a free account at github.com and make a **new public repository** (e.g. `kritis`).
-2. Upload all three files (Add file → Upload files).
-3. Repo **Settings → Pages** → Source: *Deploy from a branch* → Branch: `main` / root → Save.
-4. After a minute your site is live at `https://<username>.github.io/kritis/`
-   and your editor is at `https://<username>.github.io/kritis/admin.html`.
+## About
 
-## Let the editor publish for you (recommended)
+Small offerings at the feet of Hari, written with little learning and much hope. This repository holds the website above and is the permanent archive of the works.
 
-1. GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate.
-2. Repository access: *Only select repositories* → your `kritis` repo.
-3. Permissions → Repository permissions → **Contents: Read and write**. Generate and copy the token.
-4. Open `admin.html` → "GitHub connection" → enter username, repo, branch (`main`), path (`data.json`), token → Save connection.
+## What is here
 
-The token stays only in that browser. Never paste it anywhere else.
+| File | Purpose |
+|---|---|
+| `data.json` | All the works: text, raga, tala, dates |
+| `index.html` | The public website |
+| `admin.html` | The editor used to add and change works |
+| `LICENSE.md` | Terms of use |
 
-## Everyday use
+## License
 
-1. Open `admin.html`.
-2. Tap **+ New work**, fill the form (blank line between charanas), **Save work**.
-3. Tap **Publish to GitHub**. The site updates in about a minute.
+© 2026 Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ. Licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/): the works may be shared with credit to Mukunda Vittala, unchanged and not for sale. For any other use, please ask the author. See `LICENSE.md`.
 
-No GitHub token? Tap **Download data.json** instead, then upload it to the repo to replace the old one.
+---
 
-## Notes
+<details>
+<summary>Owner's guide: how to update the site</summary>
 
-- Unpublished edits are kept on your device, so nothing is lost if you close the tab.
-- `admin.html` is public but cannot change anything without your token. To hide it, rename it to something private (e.g. `edit-7x2k.html`).
-- Alternative hosts: Netlify Drop (drag the folder onto app.netlify.com/drop) or Cloudflare Pages. Publish-to-GitHub only works with the GitHub route.
-- Audio: upload an mp3 to the repo (e.g. `audio/dasanadeno.mp3`) and paste `audio/dasanadeno.mp3` in the Audio field.
-- Previewing locally: opening the files by double-click won't load `data.json`; use hosting, or run `python3 -m http.server` in the folder.
+### Everyday routine
+1. Open `https://mukundavittaladaasa.github.io/admin.html` on any device.
+2. **+ New work**: type or paste the song (blank line between charanas). To attach a PDF, tap **Upload file**; the link fills in by itself.
+3. **Save work**, then **Publish to GitHub**. The site updates in about a minute.
+To change a song, tap **Edit** next to it, then Save and Publish.
 
-## Copyright and license
+### One-time connection (token)
+1. Open `github.com/settings/tokens/new` (choose **Tokens (classic)**), name it `kriti-editor`, set the longest expiry, tick only **`public_repo`**, and generate it.
+2. In the editor, open **GitHub connection**, paste the token, tap **Save connection**, then **Test connection**.
+3. When the token expires, make a new one the same way. Never share it with anyone.
 
-- The footer shows "© year Name" and the license, all editable in `admin.html` → Site details (or in `data.json` under `site`).
-- `LICENSE.md` holds the plain-language terms. The default is **CC BY-NC-ND 4.0**: others may share your kritis with credit, unchanged and not for sale.
-- To change the license, edit the name, link and note in Site details, and update `LICENSE.md` to match.
-- Upload `LICENSE.md` to the repo along with the other files. I'm not a lawyer, so check the wording if the works are ever published or sold.
+### Good to know
+- File names must stay exactly `index.html`, `admin.html`, `data.json`, `LICENSE.md`, `README.md`. If a phone adds `-1` or `-2` to an upload, delete the old file on GitHub and rename the new one.
+- Full text can also live in a PDF: upload it to a `kritis/` folder (the editor does this for you) and link it from the work.
+- Copyright, license and footer text are editable in the editor under **Site details**.
+- Backup: use **Code → Download ZIP** on GitHub now and then, and keep a copy in your own cloud storage.
+- Own address later: buy `mukundavittala.com` (or `.in`) with auto-renew on, then add it under **Settings → Pages → Custom domain**.
 
-## Linking to the full text
-
-Each work has an optional **Link to full text** field. When set, the song page shows a "Read the full kriti ↗" button.
-
-- **Best for permanence:** save the kriti as a PDF, upload it to a `kritis/` folder in the repo, and put `kritis/name.pdf` in the field. It then lives and is backed up with the site.
-- **Google Doc or Drive file:** set sharing to "Anyone with the link can view", then paste the link. Easy to edit, but the link breaks if the file is deleted or moved.
-- Keep the file names simple (no spaces), for example `dasanadeno.pdf`.
-
-## Easiest routine (everything from `admin.html`, no Claude needed)
-
-1. One time only: in the editor, open **GitHub connection**, follow the 5 steps, then **Save connection** and **Test connection**.
-2. Open `mukundavittaladaasa.github.io/admin.html` on any device.
-3. **+ New work** → type or paste the song (blank line between charanas). Optional: tap **Upload file** to attach a PDF; the link fills in by itself.
-4. **Save work** → **Publish to GitHub**. The site updates in about a minute.
-
-To edit an existing song, tap **Edit** next to it, change it, Save, Publish. When connected, the editor always loads the newest copy straight from GitHub.
-If your token expires, make a new one (same steps) and paste it into the connection box.
+</details>

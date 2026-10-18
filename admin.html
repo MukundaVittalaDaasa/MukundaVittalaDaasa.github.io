@@ -151,11 +151,24 @@ button.danger,.danger{color:var(--bad)}
   <section id="v_pages" class="view" hidden><div class="wrap">
     <p class="hint">Every page of your website, one card each. Changes apply as you type; press <b>Publish</b> (top right) when you are happy.</p>
 
-    <details class="card" open><summary>First page <small>name, dedication, tagline</small></summary>
+    <h3>On every page</h3>
+    <details class="card" open><summary>Header <small>dedication, name, tagline</small></summary>
       <label>Lines above the name (dedication; several lines allowed)</label><textarea id="p_offering" rows="2"></textarea>
       <div class="row"><div><label>Name</label><input id="p_name"></div><div><label>Name in Kannada</label><input id="p_kn"></div></div>
       <label>Tagline (several lines allowed)</label><textarea id="p_tagline" rows="3"></textarea>
-      <label>Short introduction (optional)</label><textarea id="p_intro" rows="3"></textarea>
+      <p class="hint">The menu under the header is made from the pages below (Home, About and each section).</p>
+    </details>
+    <details class="card"><summary>Footer and licence <small>shown at the bottom of every page</small></summary>
+      <label>Footer lines (several lines allowed)</label><textarea id="p_footer" rows="3"></textarea>
+      <div class="row"><div><label>Copyright since</label><input id="p_year" placeholder="2026"></div><div><label>Licence name</label><input id="p_lname" placeholder="CC BY-NC-ND 4.0"></div></div>
+      <label>Licence link</label><input id="p_lurl" placeholder="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+      <label>Licence note</label><textarea id="p_lnote" rows="2"></textarea>
+    </details>
+
+    <h3>Pages</h3>
+    <details class="card"><summary>Home page <small>introduction and section buttons</small></summary>
+      <label>Introduction (optional; several lines allowed)</label><textarea id="p_intro" rows="3"></textarea>
+      <p class="hint">Below it, one button per section appears automatically.</p>
     </details>
 
     <details class="card"><summary>About page <small>your story and understanding</small></summary>
@@ -166,18 +179,11 @@ button.danger,.danger{color:var(--bad)}
       <p class="hint">A starter text is filled in for you. Please make it your own.</p>
     </details>
 
-    <h3>Sections of your website</h3>
+    <h3>Section pages</h3>
     <p class="hint">Each section becomes a button on the first page. Kriti-style has pallavi, anupallavi and charanas; Verses has no pallavi (ugabhoga); Article is a blog.</p>
     <div id="typeCards"></div>
     <button class="btn" id="btnAddType">+ Add a section</button>
 
-    <h3>Bottom of every page</h3>
-    <details class="card"><summary>Footer and license</summary>
-      <label>Footer lines (several lines allowed)</label><textarea id="p_footer" rows="3"></textarea>
-      <div class="row"><div><label>Copyright since</label><input id="p_year" placeholder="2026"></div><div><label>License name</label><input id="p_lname" placeholder="CC BY-NC-ND 4.0"></div></div>
-      <label>License link</label><input id="p_lurl" placeholder="https://creativecommons.org/licenses/by-nc-nd/4.0/">
-      <label>License note</label><textarea id="p_lnote" rows="2"></textarea>
-    </details>
     <details class="card"><summary>Browser tab and sharing <small>title, description, address</small></summary>
       <label>Browser tab title</label><input id="p_title" placeholder="Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ">
       <label>Description (one or two sentences)</label><textarea id="p_desc" rows="3"></textarea>
@@ -466,8 +472,8 @@ function fontsCss(t,pre){
 
 var ZDEFS=[
   ["all","All text together","Scales the whole site at once"],
-  ["home","First page","Name, Kannada name, tagline and the four buttons"],
-  ["nav","Menu and links","Top menu, footer menu, back links"],
+  ["home","Header and home page","Name, tagline, introduction and the section buttons"],
+  ["nav","Menu and links","Menu bar, back links"],
   ["head","Titles and headings","Page titles, list titles, headings in writings"],
   ["verse","Verses","Pallavi, anupallavi, charanas and ugabhoga lines"],
   ["mean","Meanings and summaries","The translation text"],
@@ -475,8 +481,8 @@ var ZDEFS=[
   ["small","Small text","Labels, dates, tags, footer, buttons"]
 ];
 var ZSEL={
-  home:[[".landing .mast h1","clamp(1.35rem,6.2vw,2rem)"],[".landing .knname","1.1rem"],[".landing .offer",".78rem"],[".landing .tag",".98rem"],[".landing .intro",".98rem"],[".landing .menu b","1.2rem"],[".landing .menu small",".8rem"]],
-  nav:[[".mast.small h1","1.2rem"],[".mast.small .knname",".9rem"],[".nav a",".7rem"],["footer .fnav a",".74rem"],[".back",".82rem"],[".pn",".88rem"]],
+  home:[[".mast h1","clamp(1.35rem,6.2vw,2rem)"],[".mast .knname","1.1rem"],[".mast .offer",".78rem"],[".mast .tag",".98rem"],[".landing .intro",".98rem"],[".landing .menu b","1.2rem"],[".landing .menu small",".8rem"]],
+  nav:[[".nav a",".7rem"],[".back",".82rem"],[".pn",".88rem"]],
   head:[[".pt","1.7rem"],[".dt","1.55rem"],[".md h2","1.4rem"],[".md h3",".8rem"],[".title","1.05rem"]],
   verse:[[".verse","1.02rem"]],
   body:[[".md","1.02rem"],[".exc",".92rem"],[".note","1.02rem"],[".tintro",".95rem"]],
@@ -509,19 +515,17 @@ var CASES={u:["uppercase","UPPERCASE"],c:["capitalize","Capitalize Each Word"],l
 function elDefs(types){
   var D=[];
   function add(page,key,label,g,sels,o){D.push(Object.assign({page:page,key:key,label:label,g:g,sels:sels},o||{}));}
-  add("Home page","h_offer","Dedication line (top)","home",[[".landing .offer",".78rem"]]);
-  add("Home page","h_name","Name","home",[[".landing .mast h1","clamp(1.35rem,6.2vw,2rem)"]]);
-  add("Home page","h_kn","Kannada name","home",[[".landing .knname","1.1rem"]]);
-  add("Home page","h_tag","Tagline","home",[[".landing .tag",".98rem"]]);
-  add("Home page","h_intro","Short introduction","home",[[".landing .intro",".98rem"]]);
-  add("Home page","h_btn","Buttons: About, Kritis, Ugabhoga, Tattva Chintane","home",[[".landing .menu b","1.2rem"]]);
+  add("Header (same on every page)","h_offer","Dedication line","home",[[".mast .offer",".78rem"]]);
+  add("Header (same on every page)","h_name","Name","home",[[".mast h1","clamp(1.35rem,6.2vw,2rem)"]]);
+  add("Header (same on every page)","h_kn","Kannada name","home",[[".mast .knname","1.1rem"]]);
+  add("Header (same on every page)","h_tag","Tagline","home",[[".mast .tag",".98rem"]]);
+  add("Header (same on every page)","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
+  add("Header (same on every page)","n_links","Menu links (About, Kritis…)","nav",[[".nav a",".7rem"]]);
+  add("Home page","h_intro","Introduction","home",[[".landing .intro",".98rem"]]);
+  add("Home page","h_btn","Section buttons","home",[[".landing .menu b","1.2rem"]]);
   add("Home page","h_btnsub","Small line under each button","home",[[".landing .menu small",".8rem"]]);
-  add("Top of every page","n_name","Name (small, at the top)","nav",[[".mast.small h1","1.2rem"]]);
-  add("Top of every page","n_kn","Kannada name (small)","nav",[[".mast.small .knname",".9rem"]]);
-  add("Top of every page","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
-  add("Top of every page","n_links","Menu links","nav",[[".nav a",".7rem"]]);
-  add("Top of every page","n_back","Back link","nav",[[".back",".82rem"]]);
-  add("Top of every page","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
+  add("Links inside pages","n_back","Back link","nav",[[".back",".82rem"]]);
+  add("Links inside pages","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
   add("About page","a_title","Page title","head",[[".pt","1.7rem"]],{sc:"about"});
   add("About page","a_text","Paragraphs","body",[[".md","1.02rem"]],{sc:"about",dl:0});
   add("About page","a_h2","Large headings","head",[[".md h2","1.4rem"]],{sc:"about"});
@@ -553,9 +557,8 @@ function elDefs(types){
     a("p_btn","Small buttons (Translation, Listen)","small",[[".tbtn",".72rem"]]);
     a("p_note","Closing note","body",[[".note","1.02rem"]]);
   });
-  add("Footer","f_nav","Footer menu","nav",[["footer .fnav a",".74rem"]]);
-  add("Footer","f_text","Footer lines","small",[["footer .ft",".82rem"]]);
-  add("Footer","f_copy","Copyright and licence","small",[["footer .copy",".76rem"]]);
+  add("Footer (same on every page)","f_text","Footer lines","small",[["footer .ft",".82rem"]]);
+  add("Footer (same on every page)","f_copy","Copyright and licence","small",[["footer .copy",".76rem"]]);
   return D;
 }
 function meanBase(t){return({s:".88rem",m:".95rem",l:"1.06rem"})[(t&&t.mSize)||"s"]||".88rem";}

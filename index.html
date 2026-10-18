@@ -27,7 +27,7 @@
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:1.02rem;line-height:1.75}
-main{max-width:40rem;margin:0 auto;padding:3.2rem 1.4rem 3rem}
+main{max-width:40rem;margin:0 auto;padding:3rem 1.4rem 3rem}
 a{color:var(--accent)}
 .kn{font-family:var(--kn)}
 .mast{text-align:center}
@@ -36,9 +36,7 @@ a{color:var(--accent)}
 .mast h1 a{color:inherit;text-decoration:none}
 .mast .knname{display:block;font-family:var(--kn);font-size:1.1rem;color:var(--accent);margin-top:.25rem}
 .tag{font-style:italic;color:var(--muted);margin:.9rem 0 0;white-space:pre-line;font-size:.98rem}
-.intro{margin:.9rem 0 0;white-space:pre-line;font-size:.98rem}
-.mast.small h1{font-size:1.2rem;margin:.2rem 0 0}
-.mast.small .knname{font-size:.9rem;margin-top:.1rem}
+.intro{margin:0 0 1.6rem;text-align:center;white-space:pre-line;font-size:.98rem}
 .nav{display:flex;justify-content:center;flex-wrap:wrap;border-top:3px double var(--line);border-bottom:1px solid var(--line);margin:1.5rem 0 2rem}
 .nav a{padding:.8rem .6rem;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px}
 .nav a:hover{color:var(--fg)}
@@ -96,8 +94,8 @@ audio{width:100%;margin-top:1.5rem}
 .md img{max-width:100%}
 .md figure{margin:1.4rem 0}
 .md figcaption{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.4rem}
-.landing{min-height:62vh;display:flex;flex-direction:column;justify-content:center}
-.menu{display:grid;gap:.75rem;width:100%;max-width:20rem;margin:2.6rem auto 0}
+.landing{padding-top:.4rem}
+.menu{display:grid;gap:.75rem;width:100%;max-width:20rem;margin:0 auto}
 .menu a{display:block;text-align:center;padding:.9rem 1rem;border:1px solid var(--line);color:var(--fg);text-decoration:none;transition:border-color .15s,background .15s}
 .menu a:hover,.menu a:focus{border-color:var(--accent);background:var(--soft)}
 .menu b{display:block;font-family:var(--head);font-size:1.2rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
@@ -273,8 +271,8 @@ function fontsCss(t,pre){
 
 var ZDEFS=[
   ["all","All text together","Scales the whole site at once"],
-  ["home","First page","Name, Kannada name, tagline and the four buttons"],
-  ["nav","Menu and links","Top menu, footer menu, back links"],
+  ["home","Header and home page","Name, tagline, introduction and the section buttons"],
+  ["nav","Menu and links","Menu bar, back links"],
   ["head","Titles and headings","Page titles, list titles, headings in writings"],
   ["verse","Verses","Pallavi, anupallavi, charanas and ugabhoga lines"],
   ["mean","Meanings and summaries","The translation text"],
@@ -282,8 +280,8 @@ var ZDEFS=[
   ["small","Small text","Labels, dates, tags, footer, buttons"]
 ];
 var ZSEL={
-  home:[[".landing .mast h1","clamp(1.35rem,6.2vw,2rem)"],[".landing .knname","1.1rem"],[".landing .offer",".78rem"],[".landing .tag",".98rem"],[".landing .intro",".98rem"],[".landing .menu b","1.2rem"],[".landing .menu small",".8rem"]],
-  nav:[[".mast.small h1","1.2rem"],[".mast.small .knname",".9rem"],[".nav a",".7rem"],["footer .fnav a",".74rem"],[".back",".82rem"],[".pn",".88rem"]],
+  home:[[".mast h1","clamp(1.35rem,6.2vw,2rem)"],[".mast .knname","1.1rem"],[".mast .offer",".78rem"],[".mast .tag",".98rem"],[".landing .intro",".98rem"],[".landing .menu b","1.2rem"],[".landing .menu small",".8rem"]],
+  nav:[[".nav a",".7rem"],[".back",".82rem"],[".pn",".88rem"]],
   head:[[".pt","1.7rem"],[".dt","1.55rem"],[".md h2","1.4rem"],[".md h3",".8rem"],[".title","1.05rem"]],
   verse:[[".verse","1.02rem"]],
   body:[[".md","1.02rem"],[".exc",".92rem"],[".note","1.02rem"],[".tintro",".95rem"]],
@@ -316,19 +314,17 @@ var CASES={u:["uppercase","UPPERCASE"],c:["capitalize","Capitalize Each Word"],l
 function elDefs(types){
   var D=[];
   function add(page,key,label,g,sels,o){D.push(Object.assign({page:page,key:key,label:label,g:g,sels:sels},o||{}));}
-  add("Home page","h_offer","Dedication line (top)","home",[[".landing .offer",".78rem"]]);
-  add("Home page","h_name","Name","home",[[".landing .mast h1","clamp(1.35rem,6.2vw,2rem)"]]);
-  add("Home page","h_kn","Kannada name","home",[[".landing .knname","1.1rem"]]);
-  add("Home page","h_tag","Tagline","home",[[".landing .tag",".98rem"]]);
-  add("Home page","h_intro","Short introduction","home",[[".landing .intro",".98rem"]]);
-  add("Home page","h_btn","Buttons: About, Kritis, Ugabhoga, Tattva Chintane","home",[[".landing .menu b","1.2rem"]]);
+  add("Header (same on every page)","h_offer","Dedication line","home",[[".mast .offer",".78rem"]]);
+  add("Header (same on every page)","h_name","Name","home",[[".mast h1","clamp(1.35rem,6.2vw,2rem)"]]);
+  add("Header (same on every page)","h_kn","Kannada name","home",[[".mast .knname","1.1rem"]]);
+  add("Header (same on every page)","h_tag","Tagline","home",[[".mast .tag",".98rem"]]);
+  add("Header (same on every page)","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
+  add("Header (same on every page)","n_links","Menu links (About, Kritis…)","nav",[[".nav a",".7rem"]]);
+  add("Home page","h_intro","Introduction","home",[[".landing .intro",".98rem"]]);
+  add("Home page","h_btn","Section buttons","home",[[".landing .menu b","1.2rem"]]);
   add("Home page","h_btnsub","Small line under each button","home",[[".landing .menu small",".8rem"]]);
-  add("Top of every page","n_name","Name (small, at the top)","nav",[[".mast.small h1","1.2rem"]]);
-  add("Top of every page","n_kn","Kannada name (small)","nav",[[".mast.small .knname",".9rem"]]);
-  add("Top of every page","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
-  add("Top of every page","n_links","Menu links","nav",[[".nav a",".7rem"]]);
-  add("Top of every page","n_back","Back link","nav",[[".back",".82rem"]]);
-  add("Top of every page","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
+  add("Links inside pages","n_back","Back link","nav",[[".back",".82rem"]]);
+  add("Links inside pages","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
   add("About page","a_title","Page title","head",[[".pt","1.7rem"]],{sc:"about"});
   add("About page","a_text","Paragraphs","body",[[".md","1.02rem"]],{sc:"about",dl:0});
   add("About page","a_h2","Large headings","head",[[".md h2","1.4rem"]],{sc:"about"});
@@ -360,9 +356,8 @@ function elDefs(types){
     a("p_btn","Small buttons (Translation, Listen)","small",[[".tbtn",".72rem"]]);
     a("p_note","Closing note","body",[[".note","1.02rem"]]);
   });
-  add("Footer","f_nav","Footer menu","nav",[["footer .fnav a",".74rem"]]);
-  add("Footer","f_text","Footer lines","small",[["footer .ft",".82rem"]]);
-  add("Footer","f_copy","Copyright and licence","small",[["footer .copy",".76rem"]]);
+  add("Footer (same on every page)","f_text","Footer lines","small",[["footer .ft",".82rem"]]);
+  add("Footer (same on every page)","f_copy","Copyright and licence","small",[["footer .copy",".76rem"]]);
   return D;
 }
 function meanBase(t){return({s:".88rem",m:".95rem",l:"1.06rem"})[(t&&t.mSize)||"s"]||".88rem";}
@@ -432,15 +427,14 @@ function pick(o){
 function hasAny(o){return!!(o&&(o.en||o.kn||o.hi));}
 
 function aboutLabel(){return SITE.aboutTitle||L("navAbout");}
-function header(parent,small){
-  var m=el("div","mast"+(small?" small":""),null,parent);
-  if(!small&&SITE.offering)el("div","offer",SITE.offering,m);
+/* the same header on every page: dedication, name, tagline, then the menu */
+function header(parent,active){
+  var m=el("div","mast",null,parent);
+  if(SITE.offering)el("div","offer",SITE.offering,m);
   var h=el("h1","",null,m),a=el("a","",SITE.name||"",h);a.href="#/";
   if(SITE.kn)el("span","knname",SITE.kn,h);
-  if(!small){
-    if(SITE.tagline)el("p","tag",SITE.tagline,m);
-    if(SITE.intro)el("p","intro",SITE.intro,m);
-  }
+  if(SITE.tagline)el("p","tag",SITE.tagline,m);
+  tabsBar(parent,availableTabs(),active);
 }
 function navLinks(ts,active){
   var out=[["home",L("homeBtn"),"#/"],["about",aboutLabel(),"#/about"]];
@@ -451,10 +445,8 @@ function tabsBar(parent,ts,active){
   var nav=el("nav","nav",null,parent);nav.setAttribute("aria-label","Sections");
   navLinks(ts,active).forEach(function(n){var a=el("a",(n.on?"on":"")+(n.key==="home"?" homebtn":""),n.label,nav);a.href=n.href;if(n.on)a.setAttribute("aria-current","page");});
 }
-function footer(parent,noNav){
+function footer(parent){
   var f=el("footer","",null,parent);
-  if(!noNav){var fn=el("nav","fnav",null,f);
-  navLinks(availableTabs(),"").forEach(function(n){var a=el("a","",n.label,fn);a.href=n.href;});}
   if(SITE.footer)el("div","ft",SITE.footer,f);
   var start=SITE.copyrightYear||"",now=String(new Date().getFullYear());
   var years=start&&start!==now&&now>start?start+"–"+now:(start||now);
@@ -488,13 +480,15 @@ function renderHome(tabSlug){
   if(state.tab!==tabSlug){state.tab=tabSlug;state.q="";state.tag="";state.shown=PAGE;}
   app.innerHTML="";document.body.setAttribute("data-ty",tabSlug);
   if(tabSlug===""){
-    var land=el("div","landing",null,app);header(land,false);
+    header(app,"home");
+    var land=el("div","landing",null,app);
+    if(SITE.intro)el("p","intro",SITE.intro,land);
     var menu=el("nav","menu",null,land);menu.setAttribute("aria-label","Sections");
     var items=[{label:aboutLabel(),sub:L("aboutSub"),href:"#/about"}].concat(ts.map(function(t){return{label:t.label,sub:t.sub,href:"#/t/"+t.slug};}));
     items.forEach(function(it){var a=el("a","",null,menu);a.href=it.href;el("b","",it.label,a);if(it.sub)el("small","",it.sub,a);});
-    footer(app,true);window.scrollTo(0,0);return;
+    footer(app);window.scrollTo(0,0);return;
   }
-  header(app,true);tabsBar(app,ts,tabSlug);
+  header(app,tabSlug);
   if(tabSlug==="about"){renderAbout();footer(app);window.scrollTo(0,0);return;}
   var tab=ts.filter(function(t){return t.slug===tabSlug;})[0],list=ofType(tab.name);
   el("h2","pt",tab.label,app);if(tab.sub)el("div","sub",tab.sub,app);if(tab.intro)el("p","tintro",tab.intro,app);
@@ -532,14 +526,14 @@ function renderWork(id){
   var entry=sorted().filter(function(k){return k.id===id;})[0];
   if(!entry){location.hash="";return;}
   var my=++state.rid;
-  app.innerHTML="";header(app,true);tabsBar(app,availableTabs(),slug(entry.type));el("p","empty",L("loading"),app);window.scrollTo(0,0);
+  app.innerHTML="";header(app,slug(entry.type));el("p","empty",L("loading"),app);window.scrollTo(0,0);
   loadWork(entry).then(function(w){if(my===state.rid)showWork(w,entry);})
   .catch(function(){if(my!==state.rid)return;app.innerHTML="";el("p","empty",L("loadError"),app);});
 }
 function showWork(w,entry){
   var lay=layoutOf(w),list=ofType(w.type),i=list.indexOf(entry);
   var M=w.meanings||{},A=w.audios||{},refresh=[],panels=[];
-  app.innerHTML="";document.body.setAttribute("data-ty",slug(w.type));header(app,true);tabsBar(app,availableTabs(),slug(w.type));
+  app.innerHTML="";document.body.setAttribute("data-ty",slug(w.type));header(app,slug(w.type));
   var ti=typeInfo(w.type),back=el("a","back","← "+(ti&&ti.plural?ti.plural:L("back")),app);back.href="#/t/"+slug(w.type);
   el("div","dt",w.title,app);
   var meta=[w.type];

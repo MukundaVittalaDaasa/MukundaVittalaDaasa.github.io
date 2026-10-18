@@ -11,22 +11,36 @@
   "theme": {
     "accent": "#a4562b",
     "paper": "cream",
-    "size": "m",
-    "font": "serif"
+    "z": {
+      "nav": 90,
+      "head": 95,
+      "verse": 95,
+      "mean": 85,
+      "small": 85
+    },
+    "font": "serif",
+    "mItalic": "all",
+    "mSize": "s",
+    "mTone": "muted",
+    "mFrame": "rule"
   },
   "defaultLang": "en",
   "types": [
     {
       "name": "Kriti",
-      "layout": "kriti"
+      "layout": "kriti",
+      "plural": "Kritis"
     },
     {
       "name": "Ugabhoga",
-      "layout": "kriti"
+      "layout": "kriti",
+      "plural": "Ugabhogas"
     },
     {
       "name": "Tattva Blog",
-      "layout": "article"
+      "layout": "article",
+      "plural": "Tattva Blogs"
     }
-  ]
+  ],
+  "about": "## About this collection\n\nThis is a humble collection of devotional compositions in Kannada, written in the tradition of the Haridasa sahitya and rooted in the Dvaita (Madhwa) philosophy of Sri Madhvacharya. They are composed under the ankita **Mukunda Vittala** and offered at the feet of Sri Hari.\n\n### The collection\n\n- **Kritis**: songs with pallavi, anupallavi and charanas.\n- **Ugabhoga**: short verses of devotion, without pallavi and anupallavi.\n- **Tattva Chintane**: reflections on tattva, written from experience and understanding.\n\nThe pallavi, charanas and verses can be tapped to read their meaning in English, ಕನ್ನಡ or हिन्दी.\n\n### An offering\n\nThese are small offerings, written with little learning and much hope. Please forgive any errors.\n\nಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು"
 }

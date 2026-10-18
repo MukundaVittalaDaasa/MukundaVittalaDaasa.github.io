@@ -15,23 +15,43 @@
       "id": "dasanadeno",
       "title": "ದಾಸನಾದೆನೋ ಹರಿ ದಾಸನಾದೆ",
       "type": "Kriti",
-      "tags": ["guru-parampara", "dasa-sahitya"],
+      "status": "complete",
       "ankita": "Mukunda Vittala",
       "date": "2026-09-28",
-      "status": "complete",
+      "tags": [
+        "guru-parampara",
+        "dasa-sahitya"
+      ],
       "pallavi": "ದಾಸನಾದೆನೋ ಹರಿ ದಾಸನಾದೆ",
-      "charanas": [],
-      "notes": "In praise of the gurus, yatis and dasas of the Madhwa sampradaya. Full text coming soon."
+      "anupallavi": "ಸಾಸಿರ-ನಾಮನ ಪಾದಕಮಲದ ಲೀಲೆಯ ಸೂಸಿದವರ ಪದದ",
+      "charanas": [
+        "ಅಸುರಕುಲದಿ ಜನಿಸಿ ಅಸುರಾರಿಯ ಪಾದ ಭಜಿಸಿದ\nಅಸೂಯೆಕೋಪದಿ ಹಿರಣ್ಯಕ ಹಸುಗೂಸನು ಕೊಲಲೆಳಸಿದ\nಬಿಸುಟನು ಗಜ ಸರ್ಪ ಗಿರಿ ಸಾಗರ (ವಿಷ) ಬೆಂಕಿಗ್ಹೂಡಿದ ನರ\nಸಿಂಹ ಬಂದ ಕಂಬದಿಂದ ಪ್ರಹ್ಲಾದನ ಮೊರೆ ಕೇಳಿ ||",
+        "||ಭುವಿಗಿಳಿದರು ಪ್ರಹ್ಲಾದ ಮುನಿವರೇಣ್ಯ ಶ್ರೀವ್ಯಾಸ ತೀರ್ಥ\nಭುವಿಪತಿಯ ಕುಹುಯೋಗವ ಗುರುರಾಜನಾಗಿ ಹರಿಸಿದ\nಸವಿಯುತ ಶ್ರೀಕೃಷ್ಣಾಂಕಿತದಿ ವ್ಯಾಸತ್ರಯವ ರಚಿಸಿದ\nರವಿಯಂತೆ ಸಲಹಿದ ವಾದಿರಾಜ ಕನಕ ಪುರಂದರಗೆ||",
+        "||ವಿದ್ಯಾನಿಧಿ ಸುಧೀಂದ್ರ ಶಿಷ್ಯ ಪ್ರಹ್ಲಾದರೇ ಪರಿಮಳಾಚಾರ್ಯ\nವೈದ್ಯರು ಭವರೋಗ ಕಳೆವ ಮಂತ್ರಾಲಯದಿ ನೆಲೆಸಿಹ ವೇದ-\n-ವೇದ್ಯ ಮೂಲ ರಾಮರ ಭಕ್ತಿಯ ಸೂಸಿ ಹಾಡಿದ ಗುರುರಾಯ\nವಂದ್ಯರು ಜಗನ್ನಾಥ ವಿಜಯ ಗೋಪಾಲ *ಮುಕುಂದ ವಿಠಲ* ದಾಸರ||"
+      ],
+      "notes": "In praise of the avatara traya - Bhaktharaja Prahlada, Shri Vyasathirtha, Shri Raghavendra thirtha."
     },
     {
       "id": "avatara-traya",
       "title": "Avatara-traya prarthane",
       "type": "Kriti",
-      "tags": ["avatara-traya", "prarthane"],
+      "status": "complete",
       "ankita": "Mukunda Vittala",
       "date": "2026-09-27",
-      "status": "draft",
-      "notes": "A plea to Hanuma, Bheema and Madhwa to show the mercy of Mukunda Vittala. In progress."
+      "raga": "Bageshri",
+      "tala": "Bhajan (175bpm)",
+      "tags": [
+        "avatara-traya",
+        "prarthane"
+      ],
+      "pallavi": "ವಿಠಲ ವಿಠಲ ವಿಠಲನ ತೋರಿರೈ",
+      "anupallavi": "ಹನುಮ ಭೀಮ ಸುಖ ತೀರ್ಥ ಗುರುಗಳೊಳಿದ್ದು\nಅನುದಿನ ಸಲಹುವ ಮುದ್ದು ಮುಕುಂದ",
+      "charanas": [
+        "ನಿಗಮಾತೀತ ಶ್ರೀರಾಮನಾಗ್ನೆಯ ತಾಳಿ\nಸಾಗರ ಲಂಘಿಸಿ ಲೀಲೆಯಿಂ ದಾಟಿ\nಜಗದಂಬೆಯಳರಸುತ್ತ ಲಂಕೆಯ ಸುಟ್ಟಿ\nಮಂಗಳಾಂಗ ನಿಜಭಕ್ತ ಹನುಮನೆ ಕರುಣದಿ",
+        "ಚಂಡವಿಕ್ರಮ ಭೀಮ ಕೀಚಕನ ಅಡಗಿಸಿದೆ\nಭಂಡ ದುಶ್ಯಾಸನನ ಎದೆಯ ಬಗೆದೆ ಪ್ರ-\n-ಚಂಡ ಪಾಂಡವನೆ ಮಾಗಧನನ ಸೀಳಿದೆ ಭೂ-\n-ಮಂಡಲದಿ ನರಹರಿಯ ಲೀಲೆ ತೋರಿದ ವೃಕೋದರನೆ",
+        "ಸತ್ಯವತಿಸುತರ ಕೃಪೆ ಬದರಿಯಲಿ ಪಡೆದ\nಸತ್ಯಧರ್ಮದ ಸಾರ ಭಾಷ್ಯವ ರಚಿಸಿದ\nನಿತ್ಯ ಹರಿ ರಮೆಯರಲಿ ಮನವಿರಿಸಿದ ಎ-\n-ನ್ನಂತ್ಯ ಕಾಲದಿ ಮಧ್ವಹೃದಿಸ್ಥಿತ ಮುಕುಂದ"
+      ],
+      "notes": "A plea to Hanuma, Bheema and Madhwa to show the mercy of Mukunda Vittala."
     }
   ]
 }

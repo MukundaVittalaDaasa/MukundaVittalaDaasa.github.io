@@ -197,16 +197,20 @@ button.danger,.danger{color:var(--bad)}
       <p class="hint" style="margin-top:.4rem">Live preview. Tap any text in it to jump to its style controls.</p>
     </div>
     <div>
-      <div class="card">
-        <b>Quick size</b>
-        <div class="seg small" style="margin-top:.5rem"><button data-zp="90">Smaller</button><button data-zp="100">Normal</button><button data-zp="115">Larger</button><button data-zp="130">Largest</button><button id="zReset">Reset all</button></div>
-      </div>
       <details class="card" open><summary>Colours and style</summary>
         <div class="row"><div><label>Accent colour</label><input type="color" id="d_accent" value="#7a2f1f"></div><div><label>Page colour</label><select id="d_paper"><option value="">Default</option><option value="cream">Cream</option><option value="white">White</option><option value="grey">Soft grey</option><option value="sage">Soft green</option></select></div></div>
         <div class="row"><div><label>Letter style</label><select id="d_font"><option value="serif">Serif (classic)</option><option value="sans">Sans (modern)</option></select></div><div><label>Default language for meanings</label><select id="d_lang"><option value="en">English</option><option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option></select></div></div>
       </details>
-      <h3>Each kind of text</h3>
+      <h3>Style each piece of text</h3>
+      <p class="hint">Open a page, then pick the font, size, weight, slant and capitals for each part. You can also tap any text in the preview to jump straight to it. Leave a setting on “Default” to keep the original.</p>
+      <div id="elTree"></div>
+      <details class="card"><summary>Broad sizes <small>change a whole group at once</small></summary>
+      <div class="card">
+        <b>Quick size</b>
+        <div class="seg small" style="margin-top:.5rem"><button data-zp="90">Smaller</button><button data-zp="100">Normal</button><button data-zp="115">Larger</button><button data-zp="130">Largest</button><button id="zReset">Reset all</button></div>
+      </div>
       <div id="elCards"></div>
+      </details>
     </div>
   </div></div></section>
 
@@ -238,6 +242,11 @@ button.danger,.danger{color:var(--bad)}
       <label>Branch</label><input id="g_branch" placeholder="main">
       <label>Access token (kept only in this browser)</label><input id="g_token" type="password" autocomplete="off">
       <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="primary" id="btnGh">Save connection</button><button class="btn" id="btnTest">Test connection</button></div>
+    </div>
+    <div class="card">
+      <b>Where audio is stored</b>
+      <p class="hint">Small audio files travel with the website. Large ones go to your repository's <b>Releases</b> area (up to 2 GB each, no effect on the website size) and play from there.</p>
+      <select id="a_mode"><option value="smart">Smart: files up to 25 MB with the site, larger ones in Releases</option><option value="release">Always use Releases</option><option value="site">Always with the site (up to 60 MB)</option></select>
     </div>
     <div class="card">
       <b>Unpublished changes</b>
@@ -301,9 +310,25 @@ button.danger,.danger{color:var(--bad)}
   <div class="phone"><iframe id="pvFrame2" title="Piece preview"></iframe></div>
 </div>
 <div id="toast"></div>
+
+<style>
+.pgcard>summary{font-size:1rem}
+.erow{border-top:1px solid var(--line);padding:.6rem 0}
+.erow:first-child{border-top:0}
+.erow>b{display:flex;justify-content:space-between;gap:.6rem;font-size:.92rem}
+.erow>b i{font-style:normal;color:var(--accent);font-size:.75rem;font-weight:400;display:none}
+.erow.set>b i{display:inline}
+.erow .grid4{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin-top:.4rem}
+.erow .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin-top:.4rem}
+.erow label{font-size:.72rem}
+.erow select{width:100%}
+.erow.flash{outline:2px solid var(--accent);animation:fl 1.2s}
+@media(max-width:560px){.erow .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
 <script>
 var DRAFT_KEY="kriti-draft-v3",GH_KEY="kriti-gh-v1",PAGE=40;
 var LABEL_DEFS=[
+["homeBtn","⌂ Home","Home button on every inner page"],
 ["navAbout","About","Tab name for the About page (if no About title is set)"],
 ["showMore","Show more","Button that shows more items in a long list"],
 ["aboutEmpty","This page is being written.","Shown on the About page until you write it"],
@@ -331,6 +356,7 @@ var LABEL_DEFS=[
 ["charana","ಚರಣ","Heading of each charana (a number follows)"],
 ["loadError","Could not load the content. Please try again later.","Shown if the content cannot load"]
 ];
+
 var DEFAULT_LABELS={};LABEL_DEFS.forEach(function(d){DEFAULT_LABELS[d[0]]=d[1];});
 var LANGS=[["en","English"],["kn","ಕನ್ನಡ"],["hi","हिन्दी"]];
 var LAYOUTS=[["kriti","Kriti-style (pallavi, anupallavi, charanas)"],["verses","Verses (no pallavi: ugabhoga)"],["article","Article (blog)"]];
@@ -477,6 +503,100 @@ function sizeCss(t,pre){
   });
   return(vars?(pre||":root")+"{"+vars+"}":"")+out;
 }
+
+/* ---------- element catalogue: every piece of text that can be styled on its own ---------- */
+var CASES={u:["uppercase","UPPERCASE"],c:["capitalize","Capitalize Each Word"],l:["lowercase","lowercase"],n:["none","As written"]};
+function elDefs(types){
+  var D=[];
+  function add(page,key,label,g,sels,o){D.push(Object.assign({page:page,key:key,label:label,g:g,sels:sels},o||{}));}
+  add("Home page","h_offer","Dedication line (top)","home",[[".landing .offer",".78rem"]]);
+  add("Home page","h_name","Name","home",[[".landing .mast h1","clamp(1.35rem,6.2vw,2rem)"]]);
+  add("Home page","h_kn","Kannada name","home",[[".landing .knname","1.1rem"]]);
+  add("Home page","h_tag","Tagline","home",[[".landing .tag",".98rem"]]);
+  add("Home page","h_intro","Short introduction","home",[[".landing .intro",".98rem"]]);
+  add("Home page","h_btn","Buttons: About, Kritis, Ugabhoga, Tattva Chintane","home",[[".landing .menu b","1.2rem"]]);
+  add("Home page","h_btnsub","Small line under each button","home",[[".landing .menu small",".8rem"]]);
+  add("Top of every page","n_name","Name (small, at the top)","nav",[[".mast.small h1","1.2rem"]]);
+  add("Top of every page","n_kn","Kannada name (small)","nav",[[".mast.small .knname",".9rem"]]);
+  add("Top of every page","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
+  add("Top of every page","n_links","Menu links","nav",[[".nav a",".7rem"]]);
+  add("Top of every page","n_back","Back link","nav",[[".back",".82rem"]]);
+  add("Top of every page","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
+  add("About page","a_title","Page title","head",[[".pt","1.7rem"]],{sc:"about"});
+  add("About page","a_text","Paragraphs","body",[[".md","1.02rem"]],{sc:"about",dl:0});
+  add("About page","a_h2","Large headings","head",[[".md h2","1.4rem"]],{sc:"about"});
+  add("About page","a_h3","Small headings","head",[[".md h3",".8rem"]],{sc:"about"});
+  (types||[]).forEach(function(t){
+    var s=slug(t.name),P=(t.plural||t.name)+" ("+t.name+")",lay=t.layout;
+    function a(k,l,g,sels,o){add(P,s+"."+k,l,g,sels,Object.assign({sc:s},o||{}));}
+    a("t_title","List page title","head",[[".pt","1.7rem"]]);
+    a("t_intro","List page introduction","body",[[".tintro",".95rem"]]);
+    a("t_item","Titles in the list","head",[[".item .title","1.05rem"]]);
+    a("t_first","First line shown under each title","small",[[".item .pallavi",".9rem"],[".item .exc",".92rem"]]);
+    a("t_meta","Date or tag line in the list","small",[[".item .meta",".8rem"]]);
+    a("p_title","Title of a piece","head",[[".dt","1.55rem"]]);
+    a("p_meta","Raga, tala, ankita line","small",[[".dt + .meta",".8rem"]]);
+    if(lay==="kriti"){
+      a("p_pal","Pallavi","verse",[[".s-pallavi .verse","1.02rem"]]);
+      a("p_anu","Anupallavi","verse",[[".s-anupallavi .verse","1.02rem"]]);
+      a("p_cha","Charanas","verse",[[".s-charana .verse","1.02rem"]]);
+      a("p_lbl","Labels (Pallavi, Charana 1…)","small",[[".sec .lbl",".72rem"]]);
+    }else if(lay==="verses"){
+      a("p_ver","Verses","verse",[[".s-verse .verse","1.02rem"]]);
+      a("p_lbl","Verse numbers","small",[[".sec .lbl",".72rem"]]);
+    }else{
+      a("p_body","Paragraphs","body",[[".md","1.02rem"]]);
+      a("p_h2","Large headings","head",[[".md h2","1.4rem"]]);
+      a("p_h3","Small headings","head",[[".md h3",".8rem"]]);
+    }
+    if(lay!=="article")a("p_tr","Translations and summaries","mean",[[".mean","MEAN"],[".sum","MEAN"]],{dl:1});
+    a("p_btn","Small buttons (Translation, Listen)","small",[[".tbtn",".72rem"]]);
+    a("p_note","Closing note","body",[[".note","1.02rem"]]);
+  });
+  add("Footer","f_nav","Footer menu","nav",[["footer .fnav a",".74rem"]]);
+  add("Footer","f_text","Footer lines","small",[["footer .ft",".82rem"]]);
+  add("Footer","f_copy","Copyright and licence","small",[["footer .copy",".76rem"]]);
+  return D;
+}
+function meanBase(t){return({s:".88rem",m:".95rem",l:"1.06rem"})[(t&&t.mSize)||"s"]||".88rem";}
+/* theme.el = { key: {f:latinFont, k:kannadaFont, s:sizePct, w:"n|b", i:"n|i", c:"u|c|l|n"} } */
+function elCss(t,types,pre){
+  t=t||{};var E=t.el||{},out="",specs=[],pv=pre?pre+" ":"";
+  elDefs(types).forEach(function(d){
+    var o=E[d.key];if(!o)return;
+    var f=HOME_FONTS[o.f],k=KN_FONTS[o.k],body="";
+    if(f||k){var kk=k||KN_FONTS.noto;specs.push(kk[1]);if(f)specs.push(f[1]);
+      body+="font-family:"+(f?'"'+f[0]+'",':"")+'"'+kk[0]+'","Noto Serif Devanagari",serif;';}
+    if(o.w==="b")body+="font-weight:700;";else if(o.w==="n")body+="font-weight:400;";
+    if(o.i==="i")body+="font-style:italic;";else if(o.i==="n")body+="font-style:normal;";
+    if(CASES[o.c])body+="text-transform:"+CASES[o.c][0]+";";
+    var s=Number(o.s),sz=(s>=50&&s<=250&&s!==100)?s/100:0;
+    if(!body&&!sz)return;
+    var sc=d.sc?pv+'body[data-ty="'+d.sc+'"] ':pv;
+    d.sels.forEach(function(p){
+      var css=body;
+      if(sz){var base=p[1]==="MEAN"?meanBase(t):p[1];css+="font-size:calc("+base+"*"+sz+"*var(--z-"+d.g+",1)*var(--z-all,1));";}
+      out+=sc+p[0]+"{"+css+"}";
+      if(d.dl&&body)out+=sc+p[0]+" [data-l]{"+body.replace(/font-size:[^;]+;/,"")+"}";
+    });
+  });
+  if(specs.length)loadFonts(specs);
+  return out;
+}
+/* which element is under a click? (deepest match wins) */
+function elAt(target,types,ty){
+  var best=null,bd=-1;
+  elDefs(types).forEach(function(d){
+    if(d.sc&&d.sc!==ty)return;
+    for(var i=0;i<d.sels.length;i++){
+      var c=target.closest(d.sels[i][0]);if(!c)continue;
+      var depth=0,n=c;while(n.parentNode){depth++;n=n.parentNode;}
+      if(depth>bd){bd=depth;best=d.key;}
+    }
+  });
+  return best;
+}
+
 
 /* ---------- basics ---------- */
 function toast(t,err){var m=$("toast");m.textContent=t;m.className=err?"err":"";m.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(function(){m.style.display="none";},err?12000:5000);}
@@ -928,6 +1048,53 @@ document.querySelectorAll("[data-zp]").forEach(function(b){b.onclick=function(){
 };});
 $("zReset").onclick=function(){ZDEFS.forEach(function(d){var r=$("z_"+d[0]);r.value=100;$("zv_"+d[0]).textContent="100%";});schedule();};
 
+/* ---------- style every piece of text (element tree) ---------- */
+var elBuilt=false,elSig="";
+function opts(sel,pairs){pairs.forEach(function(o){el("option","",o[1],sel).value=o[0];});}
+function buildElTree(){
+  var box=$("elTree");box.innerHTML="";
+  var E=((site&&site.theme)||{}).el||{},pages={},order=[];
+  elDefs(types()).forEach(function(d){if(!pages[d.page]){pages[d.page]=[];order.push(d.page);}pages[d.page].push(d);});
+  order.forEach(function(pg,pi){
+    var card=el("details","card pgcard");
+    el("summary","",pg,card);
+    pages[pg].forEach(function(d){
+      var o=E[d.key]||{},row=el("div","erow",null,card);row.id="ee_"+d.key;row.dataset.key=d.key;
+      var hd=el("b","",d.label,row);el("i","","customised",hd);
+      var g=el("div","grid2",null,row);
+      var a=el("div","",null,g);el("label","","English letters",a);var fl=el("select","ef",null,a);optList(fl,HOME_FONTS,"Default");fl.value=o.f||"";
+      var b=el("div","",null,g);el("label","","ಕನ್ನಡ letters",b);var fk=el("select","ek",null,b);optList(fk,KN_FONTS,"Default");fk.value=o.k||"";
+      var z=el("div","zline",null,row);z.style.marginTop=".5rem";
+      el("label","","Size",z).style.margin="0";
+      var r=el("input","es",null,z);r.type="range";r.min=50;r.max=250;r.step=5;r.value=o.s||100;
+      var v=el("b","",(o.s||100)+"%",z);
+      var g3=el("div","grid4",null,row);
+      var c1=el("div","",null,g3);el("label","","Weight",c1);var w=el("select","ew",null,c1);opts(w,[["","Default"],["n","Normal"],["b","Bold"]]);w.value=o.w||"";
+      var c2=el("div","",null,g3);el("label","","Slant",c2);var it=el("select","ei",null,c2);opts(it,[["","Default"],["n","Upright"],["i","Italic"]]);it.value=o.i||"";
+      var c3=el("div","",null,g3);el("label","","Capitals",c3);var cs=el("select","ec",null,c3);opts(cs,[["","Default"],["u","UPPERCASE"],["c","Capitalize Each Word"],["l","lowercase"],["n","As written"]]);cs.value=o.c||"";
+      function mark(){row.classList.toggle("set",!!(fl.value||fk.value||Number(r.value)!==100||w.value||it.value||cs.value));}
+      r.oninput=function(){v.textContent=r.value+"%";mark();schedule();};
+      [fl,fk,w,it,cs].forEach(function(x){x.onchange=function(){mark();schedule();};});
+      var rs=el("button","btn small","Reset this",row);rs.type="button";rs.style.marginTop=".4rem";
+      rs.onclick=function(){fl.value=fk.value=w.value=it.value=cs.value="";r.value=100;v.textContent="100%";mark();schedule();};
+      mark();
+    });
+    box.appendChild(card);
+  });
+  elBuilt=true;
+}
+function readEl(){
+  var out=Object.assign({},((site&&site.theme)||{}).el||{});
+  if(elBuilt)Array.from(document.querySelectorAll("#elTree .erow")).forEach(function(row){
+    var k=row.dataset.key,o={};
+    var f=row.querySelector(".ef").value,kn=row.querySelector(".ek").value,sz=Number(row.querySelector(".es").value);
+    var w=row.querySelector(".ew").value,i=row.querySelector(".ei").value,c=row.querySelector(".ec").value;
+    if(f)o.f=f;if(kn)o.k=kn;if(sz!==100)o.s=sz;if(w)o.w=w;if(i)o.i=i;if(c)o.c=c;
+    if(Object.keys(o).length)out[k]=o;else delete out[k];
+  });
+  return out;
+}
+
 /* read every Pages + Design control into `site` */
 function readAll(){
   var s=Object.assign({},site);
@@ -945,7 +1112,7 @@ function readAll(){
   LABEL_DEFS.forEach(function(d){var v=$("lab_"+d[0]).value.trim();if(v&&v!==d[1])labs[d[0]]=v;});
   if(Object.keys(labs).length)s.labels=labs;else delete s.labels;
   var old=s.theme||{},th={};
-  Object.keys(old).forEach(function(k){if(["z","fonts","homeFont","homeKn","size","accent","paper","font","mItalic","mTone","mFrame"].indexOf(k)<0)th[k]=old[k];});
+  Object.keys(old).forEach(function(k){if(["z","fonts","el","homeFont","homeKn","size","accent","paper","font","mItalic","mTone","mFrame"].indexOf(k)<0)th[k]=old[k];});
   th.accent=$("d_accent").value;if($("d_paper").value)th.paper=$("d_paper").value;th.font=$("d_font").value;
   var z={},fonts={};
   ZDEFS.forEach(function(d){
@@ -953,6 +1120,7 @@ function readAll(){
     if(k!=="all"){var l=$("fl_"+k).value,kn=$("fk_"+k).value;if(l||kn){fonts[k]={};if(l)fonts[k].l=l;if(kn)fonts[k].k=kn;}}
   });
   if(Object.keys(z).length)th.z=z;if(Object.keys(fonts).length)th.fonts=fonts;
+  var ee=readEl();if(Object.keys(ee).length)th.el=ee;
   th.mItalic=$("m_italic").value;th.mTone=$("m_tone").value;th.mFrame=$("m_frame").value;
   s.theme=th;site=s;
 }
@@ -972,6 +1140,8 @@ function pvPageChips(){
   });
 }
 function initDesign(){
+  var sig=JSON.stringify(types().map(function(t){return[t.name,t.layout,t.plural];}));
+  if(!elBuilt||sig!==elSig){if(elBuilt)readAll();buildElTree();elSig=sig;}
   pvPageChips();
   var fr=$("pvFrame");
   if(!fr.getAttribute("src")){fr.onload=function(){pvSend(fr,pvHash);};fr.src="index.html";}
@@ -980,7 +1150,8 @@ function initDesign(){
 window.addEventListener("message",function(e){
   var d=e.data;if(e.origin!==location.origin||!d||d.kriti!=="pick")return;
   showView("design");
-  var c=$("el_"+d.group);if(!c)return;
+  var c=d.el?$("ee_"+d.el):$("el_"+d.group);if(!c)return;
+  if(d.el&&c.parentNode)c.parentNode.open=true;
   c.open=true;c.classList.add("flash");c.scrollIntoView({behavior:"smooth",block:"center"});
   setTimeout(function(){c.classList.remove("flash");},1300);
 });
@@ -1103,12 +1274,56 @@ function dirFor(f){
   if(/^audio\//.test(f.type)||/\.(mp3|wav|m4a|aac|ogg|oga|opus|flac|weba)$/.test(n))return"audio/";
   return"kritis/";
 }
+var AUDIO_KEY="kriti-audio-mode";
+function audioMode(){try{return localStorage.getItem(AUDIO_KEY)||"smart";}catch(e){return"smart";}}
+$("a_mode").value=audioMode();
+$("a_mode").onchange=function(){try{localStorage.setItem(AUDIO_KEY,$("a_mode").value);}catch(e){}};
+function apiRepo(g,p){return"https://api.github.com/repos/"+g.owner+"/"+g.repo+p;}
+/* one release (tag "audio") holds all large audio files */
+function audioRelease(g){
+  return fetch(apiRepo(g,"/releases/tags/audio"),{headers:ghHeaders(g),cache:"no-store"}).then(function(r){
+    if(r.ok)return r.json();
+    if(r.status!==404)return ghCheck(r,"Could not open the Releases area");
+    return fetch(apiRepo(g,"/releases"),{method:"POST",headers:ghHeaders(g),body:JSON.stringify({tag_name:"audio",target_commitish:g.branch,name:"Audio library",body:"Audio files for the website. Please do not delete.",draft:false,prerelease:false})})
+      .then(function(r2){return ghCheck(r2,"Could not create the audio release");});
+  });
+}
+var MIME={mp3:"audio/mpeg",wav:"audio/wav",m4a:"audio/mp4",aac:"audio/aac",ogg:"audio/ogg",oga:"audio/ogg",opus:"audio/ogg",flac:"audio/flac",weba:"audio/webm"};
+function uploadRelease(g,f){
+  return audioRelease(g).then(function(rel){
+    var taken={};(rel.assets||[]).forEach(function(a){taken[a.name]=1;});
+    var name=safeName(f.name);
+    if(taken[name]){var d=name.lastIndexOf(".");name=name.slice(0,d)+"-"+Date.now().toString(36)+name.slice(d);}
+    var ext=name.split(".").pop(),type=f.type||MIME[ext]||"application/octet-stream";
+    return new Promise(function(resolve,reject){
+      var x=new XMLHttpRequest();
+      x.open("POST","https://uploads.github.com/repos/"+g.owner+"/"+g.repo+"/releases/"+rel.id+"/assets?name="+encodeURIComponent(name));
+      x.setRequestHeader("Authorization","Bearer "+g.token);x.setRequestHeader("Accept","application/vnd.github+json");x.setRequestHeader("Content-Type",type);
+      x.upload.onprogress=function(e){if(e.lengthComputable)toast("Uploading "+f.name+" … "+Math.round(e.loaded/e.total*100)+"%");};
+      x.onload=function(){
+        var j={};try{j=JSON.parse(x.responseText);}catch(e){}
+        if(x.status>=200&&x.status<300&&j.browser_download_url)resolve(j.browser_download_url);
+        else reject(new Error("Releases upload failed ("+x.status+"): "+(j.message||"no details")));
+      };
+      x.onerror=function(){reject(new Error("The browser could not reach GitHub's upload server. Try again, or add the file by hand: open your repository → Releases → audio → Edit → attach the file, then paste its link here."));};
+      x.send(f);
+    });
+  });
+}
 function uploadFile(f){
   var g=gh();
   return new Promise(function(resolve,reject){
     if(!g.token){showView("conn");reject(new Error("Connect to GitHub first (Connect tab)"));return;}
-    var dir=dirFor(f),limit=dir==="audio/"?40:20;
-    if(f.size>limit*1024*1024){reject(new Error("File is over "+limit+" MB. For audio, try an mp3 or m4a version."));return;}
+    var dir=dirFor(f),mb=f.size/1048576;
+    if(dir==="audio/"){
+      var mode=audioMode(),useRel=mode==="release"||(mode==="smart"&&mb>25);
+      if(useRel){
+        if(mb>1900){reject(new Error("This file is over 1.9 GB, which GitHub does not accept. Please compress it (mp3 or m4a)."));return;}
+        toast("Uploading "+f.name+" to Releases …");
+        uploadRelease(g,f).then(resolve,reject);return;
+      }
+      if(mb>60){reject(new Error("Over 60 MB cannot be stored with the site. Choose “Smart” or “Always use Releases” in the Connect tab."));return;}
+    }else if(mb>20){reject(new Error("File is over 20 MB."));return;}
     var path=dir+safeName(f.name),r=new FileReader();
     toast("Uploading "+f.name+"…");
     r.onload=function(){putFile(g,path,String(r.result).split(",")[1],"Add "+path).then(function(){resolve(path);}).catch(reject);};
@@ -1134,6 +1349,14 @@ $("btnLib").onclick=function(){
   var g=gh(),box=$("lib");
   if(!g.token){toast("Connect to GitHub first (Connect tab)",true);showView("conn");return;}
   box.innerHTML="";
+  audioRelease(g).then(function(rel){return rel.assets||[];},function(){return[];}).then(function(assets){
+    assets.forEach(function(a){
+      var row=el("div","libitem",null,box),l=el("div","",null,row);
+      el("b","",a.name,l);el("div","hint",a.browser_download_url.replace(/^https:\/\/github.com\//,"…/")+" · "+(a.size/1048576).toFixed(1)+" MB (Releases)",l).style.margin="0";
+      var c=el("button","btn small","Copy link",row);
+      c.onclick=function(){if(navigator.clipboard)navigator.clipboard.writeText(a.browser_download_url).then(function(){toast("Copied the link");},function(){toast(a.browser_download_url);});else toast(a.browser_download_url);};
+    });
+  });
   Promise.all(["audio","images","kritis"].map(function(d){return listDir(g,d);})).then(function(all){
     var any=false;
     all.forEach(function(files){files.forEach(function(f){
@@ -1170,7 +1393,7 @@ function loadRemote(){
 function start(s){
   site=s.site||{};index=s.index||[];dirty=s.dirty||{};deleted=s.deleted||{};fresh=s.fresh||{};legacy=!!s.legacy;siteDirty=!!s.siteDirty;
   shown=PAGE;fType="";
-  buildElCards();renderPages();renderDesign();renderChips();renderList();updateStatus();
+  buildElCards();buildElTree();renderPages();renderDesign();renderChips();renderList();updateStatus();
 }
 $("btnGh").onclick=function(){saveGh();};
 $("btnTest").onclick=testGh;

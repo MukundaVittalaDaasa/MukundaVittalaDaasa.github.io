@@ -60,3 +60,15 @@ Upload photos (go to `images/`) or PDFs (go to `kritis/`) and copy the path it s
 - Own address later: buy `mukundavittala.com` (or `.in`) with auto-renew on, then add it under **Settings → Pages → Custom domain**.
 
 </details>
+
+## Styling every piece of text (Design tab)
+
+Under **Style each piece of text**, open a page (Home page, Top of every page, About, each of your sections, Footer). Every part has its own font (English and ಕನ್ನಡ), size (50–250%), weight, slant and capitals (UPPERCASE / Capitalize / lowercase / As written). Tap any text in the live preview to jump to its controls. "Default" keeps the original look. The older "Broad sizes" group controls still work and combine with these.
+
+## Audio storage
+
+- Up to 25 MB: stored with the website (audio/ folder). Up to 60 MB if you choose "Always with the site".
+- Larger files: stored in your repository's **Releases** (tag `audio`, up to 2 GB per file) and played from there. They do not count towards the website's size.
+- Choose the behaviour in **Connect → Where audio is stored**. The Files tab lists both kinds and copies their links.
+- Tip: a mp3 at 96 kbps is about 0.7 MB per minute, so most kritis stay under 10 MB.
+- If the upload to Releases is blocked by your browser, open the repository → Releases → audio → Edit, attach the file, and paste its link into the audio box.

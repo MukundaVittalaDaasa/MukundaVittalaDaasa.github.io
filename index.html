@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!--META-START-->
-<title>Mukunda Vittala · ಮುಕುಂದ ವಿಠಲ</title>
-<meta name="description" content="Small offerings at the feet of Hari. Written with little learning, and much hope.">
+<title>Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ</title>
+<meta name="description" content="Kannada kritis, ugabhogas and reflections on tattva in praise of Hari, with the ankita Mukunda Vittala.">
 <link rel="canonical" href="https://mukundavittaladaasa.github.io/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Mukunda Vittala · ಮುಕುಂದ ವಿಠಲ">
-<meta property="og:description" content="Small offerings at the feet of Hari. Written with little learning, and much hope.">
+<meta property="og:title" content="Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ">
+<meta property="og:description" content="Kannada kritis, ugabhogas and reflections on tattva in praise of Hari.">
 <meta property="og:url" content="https://mukundavittaladaasa.github.io/">
 <!--META-END-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,6 +42,7 @@ a{color:var(--accent)}
 .nav{display:flex;justify-content:center;flex-wrap:wrap;border-top:3px double var(--line);border-bottom:1px solid var(--line);margin:1.5rem 0 2rem}
 .nav a{padding:.8rem .6rem;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px}
 .nav a:hover{color:var(--fg)}
+.nav a.homebtn{letter-spacing:.09em}
 .nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .pt{font-family:var(--head);font-size:1.7rem;font-weight:700;line-height:1.25;margin:0 0 .3rem}
 .pt+.sub{color:var(--muted);font-size:.9rem;margin:0 0 1.2rem;font-family:var(--kn)}
@@ -129,6 +130,7 @@ footer a{color:var(--accent)}
 var SITE={},INDEX=[],V="",state={q:"",tag:"",lang:"en",tab:"",shown:30,rid:0},PAGE=30;
 var app=document.getElementById("app");
 var LABEL_DEFS=[
+["homeBtn","⌂ Home","Home button on every inner page"],
 ["navAbout","About","Tab name for the About page (if no About title is set)"],
 ["showMore","Show more","Button that shows more items in a long list"],
 ["aboutEmpty","This page is being written.","Shown on the About page until you write it"],
@@ -156,6 +158,7 @@ var LABEL_DEFS=[
 ["charana","ಚರಣ","Heading of each charana (a number follows)"],
 ["loadError","Could not load the content. Please try again later.","Shown if the content cannot load"]
 ];
+
 var DEFAULT_LABELS={};LABEL_DEFS.forEach(function(d){DEFAULT_LABELS[d[0]]=d[1];});
 var LANGS=[["en","English"],["kn","ಕನ್ನಡ"],["hi","हिन्दी"]];
 var PAPERS={cream:"#faf7f0",white:"#ffffff",grey:"#f3f2ef",sage:"#f1f4ec"};
@@ -308,6 +311,100 @@ function sizeCss(t,pre){
   return(vars?(pre||":root")+"{"+vars+"}":"")+out;
 }
 
+/* ---------- element catalogue: every piece of text that can be styled on its own ---------- */
+var CASES={u:["uppercase","UPPERCASE"],c:["capitalize","Capitalize Each Word"],l:["lowercase","lowercase"],n:["none","As written"]};
+function elDefs(types){
+  var D=[];
+  function add(page,key,label,g,sels,o){D.push(Object.assign({page:page,key:key,label:label,g:g,sels:sels},o||{}));}
+  add("Home page","h_offer","Dedication line (top)","home",[[".landing .offer",".78rem"]]);
+  add("Home page","h_name","Name","home",[[".landing .mast h1","clamp(1.35rem,6.2vw,2rem)"]]);
+  add("Home page","h_kn","Kannada name","home",[[".landing .knname","1.1rem"]]);
+  add("Home page","h_tag","Tagline","home",[[".landing .tag",".98rem"]]);
+  add("Home page","h_intro","Short introduction","home",[[".landing .intro",".98rem"]]);
+  add("Home page","h_btn","Buttons: About, Kritis, Ugabhoga, Tattva Chintane","home",[[".landing .menu b","1.2rem"]]);
+  add("Home page","h_btnsub","Small line under each button","home",[[".landing .menu small",".8rem"]]);
+  add("Top of every page","n_name","Name (small, at the top)","nav",[[".mast.small h1","1.2rem"]]);
+  add("Top of every page","n_kn","Kannada name (small)","nav",[[".mast.small .knname",".9rem"]]);
+  add("Top of every page","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
+  add("Top of every page","n_links","Menu links","nav",[[".nav a",".7rem"]]);
+  add("Top of every page","n_back","Back link","nav",[[".back",".82rem"]]);
+  add("Top of every page","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
+  add("About page","a_title","Page title","head",[[".pt","1.7rem"]],{sc:"about"});
+  add("About page","a_text","Paragraphs","body",[[".md","1.02rem"]],{sc:"about",dl:0});
+  add("About page","a_h2","Large headings","head",[[".md h2","1.4rem"]],{sc:"about"});
+  add("About page","a_h3","Small headings","head",[[".md h3",".8rem"]],{sc:"about"});
+  (types||[]).forEach(function(t){
+    var s=slug(t.name),P=(t.plural||t.name)+" ("+t.name+")",lay=t.layout;
+    function a(k,l,g,sels,o){add(P,s+"."+k,l,g,sels,Object.assign({sc:s},o||{}));}
+    a("t_title","List page title","head",[[".pt","1.7rem"]]);
+    a("t_intro","List page introduction","body",[[".tintro",".95rem"]]);
+    a("t_item","Titles in the list","head",[[".item .title","1.05rem"]]);
+    a("t_first","First line shown under each title","small",[[".item .pallavi",".9rem"],[".item .exc",".92rem"]]);
+    a("t_meta","Date or tag line in the list","small",[[".item .meta",".8rem"]]);
+    a("p_title","Title of a piece","head",[[".dt","1.55rem"]]);
+    a("p_meta","Raga, tala, ankita line","small",[[".dt + .meta",".8rem"]]);
+    if(lay==="kriti"){
+      a("p_pal","Pallavi","verse",[[".s-pallavi .verse","1.02rem"]]);
+      a("p_anu","Anupallavi","verse",[[".s-anupallavi .verse","1.02rem"]]);
+      a("p_cha","Charanas","verse",[[".s-charana .verse","1.02rem"]]);
+      a("p_lbl","Labels (Pallavi, Charana 1…)","small",[[".sec .lbl",".72rem"]]);
+    }else if(lay==="verses"){
+      a("p_ver","Verses","verse",[[".s-verse .verse","1.02rem"]]);
+      a("p_lbl","Verse numbers","small",[[".sec .lbl",".72rem"]]);
+    }else{
+      a("p_body","Paragraphs","body",[[".md","1.02rem"]]);
+      a("p_h2","Large headings","head",[[".md h2","1.4rem"]]);
+      a("p_h3","Small headings","head",[[".md h3",".8rem"]]);
+    }
+    if(lay!=="article")a("p_tr","Translations and summaries","mean",[[".mean","MEAN"],[".sum","MEAN"]],{dl:1});
+    a("p_btn","Small buttons (Translation, Listen)","small",[[".tbtn",".72rem"]]);
+    a("p_note","Closing note","body",[[".note","1.02rem"]]);
+  });
+  add("Footer","f_nav","Footer menu","nav",[["footer .fnav a",".74rem"]]);
+  add("Footer","f_text","Footer lines","small",[["footer .ft",".82rem"]]);
+  add("Footer","f_copy","Copyright and licence","small",[["footer .copy",".76rem"]]);
+  return D;
+}
+function meanBase(t){return({s:".88rem",m:".95rem",l:"1.06rem"})[(t&&t.mSize)||"s"]||".88rem";}
+/* theme.el = { key: {f:latinFont, k:kannadaFont, s:sizePct, w:"n|b", i:"n|i", c:"u|c|l|n"} } */
+function elCss(t,types,pre){
+  t=t||{};var E=t.el||{},out="",specs=[],pv=pre?pre+" ":"";
+  elDefs(types).forEach(function(d){
+    var o=E[d.key];if(!o)return;
+    var f=HOME_FONTS[o.f],k=KN_FONTS[o.k],body="";
+    if(f||k){var kk=k||KN_FONTS.noto;specs.push(kk[1]);if(f)specs.push(f[1]);
+      body+="font-family:"+(f?'"'+f[0]+'",':"")+'"'+kk[0]+'","Noto Serif Devanagari",serif;';}
+    if(o.w==="b")body+="font-weight:700;";else if(o.w==="n")body+="font-weight:400;";
+    if(o.i==="i")body+="font-style:italic;";else if(o.i==="n")body+="font-style:normal;";
+    if(CASES[o.c])body+="text-transform:"+CASES[o.c][0]+";";
+    var s=Number(o.s),sz=(s>=50&&s<=250&&s!==100)?s/100:0;
+    if(!body&&!sz)return;
+    var sc=d.sc?pv+'body[data-ty="'+d.sc+'"] ':pv;
+    d.sels.forEach(function(p){
+      var css=body;
+      if(sz){var base=p[1]==="MEAN"?meanBase(t):p[1];css+="font-size:calc("+base+"*"+sz+"*var(--z-"+d.g+",1)*var(--z-all,1));";}
+      out+=sc+p[0]+"{"+css+"}";
+      if(d.dl&&body)out+=sc+p[0]+" [data-l]{"+body.replace(/font-size:[^;]+;/,"")+"}";
+    });
+  });
+  if(specs.length)loadFonts(specs);
+  return out;
+}
+/* which element is under a click? (deepest match wins) */
+function elAt(target,types,ty){
+  var best=null,bd=-1;
+  elDefs(types).forEach(function(d){
+    if(d.sc&&d.sc!==ty)return;
+    for(var i=0;i<d.sels.length;i++){
+      var c=target.closest(d.sels[i][0]);if(!c)continue;
+      var depth=0,n=c;while(n.parentNode){depth++;n=n.parentNode;}
+      if(depth>bd){bd=depth;best=d.key;}
+    }
+  });
+  return best;
+}
+
+
 function baseTypes(){return(SITE.types&&SITE.types.length)?SITE.types:DEFAULT_TYPES;}
 function types(){
   var out=baseTypes().slice(),seen={};out.forEach(function(t){seen[t.name]=1;});
@@ -346,13 +443,13 @@ function header(parent,small){
   }
 }
 function navLinks(ts,active){
-  var out=[["about",aboutLabel(),"#/about"]];
+  var out=[["home",L("homeBtn"),"#/"],["about",aboutLabel(),"#/about"]];
   ts.forEach(function(t){out.push([t.slug,t.label,"#/t/"+t.slug]);});
   return out.map(function(x){return{key:x[0],label:x[1],href:x[2],on:x[0]===active};});
 }
 function tabsBar(parent,ts,active){
   var nav=el("nav","nav",null,parent);nav.setAttribute("aria-label","Sections");
-  navLinks(ts,active).forEach(function(n){var a=el("a",n.on?"on":"",n.label,nav);a.href=n.href;if(n.on)a.setAttribute("aria-current","page");});
+  navLinks(ts,active).forEach(function(n){var a=el("a",(n.on?"on":"")+(n.key==="home"?" homebtn":""),n.label,nav);a.href=n.href;if(n.on)a.setAttribute("aria-current","page");});
 }
 function footer(parent,noNav){
   var f=el("footer","",null,parent);
@@ -389,7 +486,7 @@ function renderHome(tabSlug){
   var ts=availableTabs();
   if(tabSlug!==""&&tabSlug!=="about"&&!ts.some(function(t){return t.slug===tabSlug;}))tabSlug="";
   if(state.tab!==tabSlug){state.tab=tabSlug;state.q="";state.tag="";state.shown=PAGE;}
-  app.innerHTML="";
+  app.innerHTML="";document.body.setAttribute("data-ty",tabSlug);
   if(tabSlug===""){
     var land=el("div","landing",null,app);header(land,false);
     var menu=el("nav","menu",null,land);menu.setAttribute("aria-label","Sections");
@@ -442,7 +539,7 @@ function renderWork(id){
 function showWork(w,entry){
   var lay=layoutOf(w),list=ofType(w.type),i=list.indexOf(entry);
   var M=w.meanings||{},A=w.audios||{},refresh=[],panels=[];
-  app.innerHTML="";header(app,true);tabsBar(app,availableTabs(),slug(w.type));
+  app.innerHTML="";document.body.setAttribute("data-ty",slug(w.type));header(app,true);tabsBar(app,availableTabs(),slug(w.type));
   var ti=typeInfo(w.type),back=el("a","back","← "+(ti&&ti.plural?ti.plural:L("back")),app);back.href="#/t/"+slug(w.type);
   el("div","dt",w.title,app);
   var meta=[w.type];
@@ -471,8 +568,8 @@ function showWork(w,entry){
     refresh.push(langBox(w.summary,sb));
   }
   var players=[];
-  function sec(label,text,m,au){
-    var wrap=el("div","sec",null,app);
+  function sec(label,text,m,au,kind){
+    var wrap=el("div","sec s-"+(kind||"verse"),null,app);
     if(label)el("div","lbl",label,wrap);
     var has=hasAny(m),body=el("div","verse"+(has?" tap":""),text,wrap);
     if(!has&&!au)return;
@@ -495,12 +592,12 @@ function showWork(w,entry){
     }
   }
   if(lay==="kriti"){
-    if(w.pallavi)sec(L("pallavi"),w.pallavi,M.pallavi,A.pallavi);
-    if(w.anupallavi)sec(L("anupallavi"),w.anupallavi,M.anupallavi,A.anupallavi);
-    (w.charanas||[]).forEach(function(c,k){sec(L("charana")+" "+(k+1),c,(M.charanas||[])[k],(A.charanas||[])[k]);});
+    if(w.pallavi)sec(L("pallavi"),w.pallavi,M.pallavi,A.pallavi,"pallavi");
+    if(w.anupallavi)sec(L("anupallavi"),w.anupallavi,M.anupallavi,A.anupallavi,"anupallavi");
+    (w.charanas||[]).forEach(function(c,k){sec(L("charana")+" "+(k+1),c,(M.charanas||[])[k],(A.charanas||[])[k],"charana");});
   }else if(lay==="verses"){
     var vs=w.verses||[];
-    vs.forEach(function(v,k){sec(vs.length>1?String(k+1):"",v,(M.verses||[])[k],(A.verses||[])[k]);});
+    vs.forEach(function(v,k){sec(vs.length>1?String(k+1):"",v,(M.verses||[])[k],(A.verses||[])[k],"verse");});
   }else{
     md(w.body,el("div","md",null,app));
   }
@@ -538,7 +635,7 @@ function applyTheme(){
   if(t.font==="sans")root+="--body:system-ui,-apple-system,\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;--kn:\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;";
   var fs="";
   if(t.font==="sans")root+="--head:system-ui,-apple-system,\"Noto Sans Kannada\",sans-serif;";
-  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"")+fontsCss(t,"")+sizeCss(t,"");
+  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"")+fontsCss(t,"")+sizeCss(t,"")+elCss(t,baseTypes(),"");
   document.getElementById("themeStyle").textContent=out;
 }
 function getJson(u){
@@ -583,6 +680,8 @@ window.addEventListener("message",function(e){
 document.addEventListener("click",function(e){
   if(!PREVIEWING)return;
   var t=e.target;if(!t||!t.closest)return;
+  var ek=elAt(t,baseTypes().map(function(x){return{name:x.name,plural:x.plural,layout:x.layout};}),document.body.getAttribute("data-ty")||"");
+  if(ek){e.preventDefault();e.stopPropagation();parent.postMessage({kriti:"pick",group:"",el:ek},location.origin);return;}
   var order=["mean","verse","home","nav","head","body","small"];
   for(var i=0;i<order.length;i++){
     var g=order[i],sels=g==="mean"?[".mean",".sum"]:ZSEL[g].map(function(p){return p[0];});

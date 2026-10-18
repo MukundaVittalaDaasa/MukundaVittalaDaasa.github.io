@@ -4,292 +4,303 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Editor</title>
+<title>Studio</title>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  --soft:rgba(60,40,20,.05);--body:system-ui,sans-serif;--bg:#faf7f0;--fg:#2b2622;--muted:#8a8177;--line:#e4ddcf;--accent:#a4562b;--card:#fffdf8}
-@media (prefers-color-scheme:dark){:root{--soft:rgba(255,255,255,.05);--bg:#1a1714;--fg:#ece5d8;--muted:#9a9083;--line:#2f2a24;--accent:#d08a5b;--card:#211d19}}
+:root{--bg:#f6f3ec;--fg:#241f1a;--muted:#7b7266;--line:#e2dacb;--accent:#7a2f1f;--card:#fffdf9;--soft:rgba(60,40,20,.06);--ok:#2f7a4a;--bad:#b33;--r:12px}
+@media (prefers-color-scheme:dark){:root{--bg:#171411;--fg:#ece5d8;--muted:#9a9083;--line:#2f2a24;--accent:#d99a78;--card:#201c18;--soft:rgba(255,255,255,.06);--ok:#6fcf97;--bad:#ff8a80}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Noto Sans Kannada","Noto Sans Devanagari",sans-serif;font-size:16px;line-height:1.5}
-main{max-width:42rem;margin:0 auto;padding:1.5rem 1.2rem 5rem}
-h1{font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
-h2{font-size:1rem;margin:1.6rem 0 .6rem}
-h3{font-size:.9rem;margin:1.3rem 0 .1rem;color:var(--accent)}
-.sub,.hint{color:var(--muted);font-size:.88rem;margin:0 0 .8rem}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem;margin-bottom:1rem}
-label{display:block;font-size:.8rem;color:var(--muted);margin:.8rem 0 .2rem}
-input,textarea,select{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.55rem .65rem}
-input[type=color]{padding:.1rem;height:2.6rem}
-input[type=file]{padding:.4rem}
-textarea{min-height:4.5rem;resize:vertical}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI","Noto Sans Kannada","Noto Sans Devanagari",sans-serif;font-size:16px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:15rem 1fr;min-height:100vh}
+.side{position:sticky;top:0;height:100vh;padding:1.4rem 1rem;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:.3rem;background:var(--card)}
+.brand{font-weight:700;font-size:1.05rem;margin-bottom:1rem;line-height:1.2}.brand small{display:block;color:var(--muted);font-weight:400;font-size:.8rem}
+.side nav{display:flex;flex-direction:column;gap:.2rem}
+.nb{display:flex;align-items:center;gap:.7rem;border:0;background:none;padding:.7rem .8rem;border-radius:10px;text-align:left;cursor:pointer;color:var(--muted);font-weight:500}
+.nb i{font-style:normal;width:1.3rem;text-align:center;font-size:1.1rem}
+.nb:hover{background:var(--soft)}
+.nb.on{background:var(--soft);color:var(--accent);font-weight:700}
+.side .sl{margin-top:auto;color:var(--muted);font-size:.85rem}
+.side .sl a{color:var(--accent)}
+.main{min-width:0}
+.top{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.7rem 1.2rem;background:var(--bg);border-bottom:1px solid var(--line)}
+.top b{font-size:1.1rem}.top small{display:block;color:var(--muted);font-size:.8rem}
+.top small.pend{color:var(--accent);font-weight:600}
+.wrap{max-width:46rem;margin:0 auto;padding:1.2rem 1.2rem 6rem}
+.wide{max-width:70rem}
+h2{font-size:1.15rem;margin:0 0 .3rem}
+h3{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 .4rem}
+.hint{color:var(--muted);font-size:.88rem;margin:.2rem 0 .8rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.9rem}
+details.card>summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:"＋";color:var(--muted);font-weight:400}
+details.card[open]>summary::after{content:"－"}
+details.card>summary small{color:var(--muted);font-weight:400;margin-left:.5rem}
+details.card[open]>summary{margin-bottom:.6rem}
+label{display:block;font-size:.82rem;color:var(--muted);margin:.8rem 0 .25rem;font-weight:500}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.65rem .75rem;min-height:2.7rem}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+textarea{min-height:5rem;resize:vertical;line-height:1.6}
+input[type=color]{padding:.2rem;height:2.7rem}
+input[type=range]{padding:0;min-height:1.8rem;accent-color:var(--accent);background:none;border:0}
+input[type=file]{padding:.45rem}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
-.row3{display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));gap:.6rem}
-button,a.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:.5rem .85rem;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block}
-button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-button.danger{color:#b33}
-button.small{padding:.2rem .55rem;font-size:.85rem}
-.btns{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
-.tabbar{display:flex;gap:.4rem;margin:1rem 0;flex-wrap:wrap}
-.tabbar button.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.w{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.7rem 0;border-bottom:1px solid var(--line)}
-.w:last-child{border-bottom:0}
-.w b{display:block;font-weight:600}
-.w small{color:var(--muted)}
-#msg{position:sticky;top:0;z-index:5;background:var(--accent);color:#fff;padding:.5rem .8rem;border-radius:8px;margin-bottom:.8rem;display:none;font-size:.9rem}
-#msg.err{background:#b33}
-details>summary{cursor:pointer;font-weight:600}
-.sec{border:1px solid var(--line);border-radius:10px;padding:.7rem;margin:.6rem 0;background:var(--card)}
-.sechead{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.3rem}
+.row3{display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));gap:.7rem}
+button{cursor:pointer}
+.btn,button.btn{border:1px solid var(--line);background:var(--card);padding:.6rem 1rem;border-radius:10px;font-weight:600;text-decoration:none;color:var(--fg);display:inline-block}
+.primary{background:var(--accent);border:1px solid var(--accent);color:#fff;padding:.6rem 1.1rem;border-radius:10px;font-weight:700}
+.primary:hover{filter:brightness(1.08)}
+.ghost{background:none;border:0;color:var(--accent);font-weight:600;padding:.5rem}
+button.small{padding:.3rem .7rem;font-size:.85rem;border-radius:8px;min-height:0}
+button.danger,.danger{color:var(--bad)}
+.seg{display:flex;flex-wrap:wrap;gap:.35rem}
+.seg button{border:1px solid var(--line);background:var(--bg);padding:.5rem .9rem;border-radius:99px;font-weight:500;color:var(--muted)}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.seg.small button{padding:.25rem .7rem;font-size:.85rem}
+.seg button.has::after{content:" ●";font-size:.6rem;vertical-align:middle;color:var(--ok)}
+.seg button.on.has::after{color:#fff}
+.tools{display:flex;gap:.6rem;margin-bottom:.8rem}.tools input{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.chips button{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:.25rem .8rem;font-size:.85rem;color:var(--muted)}
+.chips button.on{border-color:var(--accent);color:var(--accent);font-weight:600}
+.item{display:flex;justify-content:space-between;align-items:center;gap:.8rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.8rem 1rem;margin-bottom:.5rem;cursor:pointer}
+.item:hover{border-color:var(--accent)}
+.item b{display:block;font-weight:600}.item small{color:var(--muted)}
+.item .pill{font-size:.72rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:.1rem .5rem;margin-left:.3rem}
+.empty{text-align:center;color:var(--muted);padding:2rem 1rem;border:1px dashed var(--line);border-radius:var(--r)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:1.2rem;z-index:60;max-width:90vw;background:var(--fg);color:var(--bg);padding:.7rem 1rem;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.25);display:none;font-size:.92rem}
+#toast.err{background:var(--bad);color:#fff}
+.editor{position:fixed;inset:0;z-index:40;background:var(--bg);overflow:auto}
+.edtop{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.6rem 1rem;background:var(--bg);border-bottom:1px solid var(--line)}
+.edbody{max-width:46rem;margin:0 auto;padding:1rem 1rem 7rem}
+.edfoot{position:fixed;left:0;right:0;bottom:0;z-index:3;display:flex;gap:.6rem;justify-content:center;padding:.7rem;background:var(--bg);border-top:1px solid var(--line)}
+.sec{border:1px solid var(--line);border-radius:var(--r);padding:.8rem;margin-bottom:.7rem;background:var(--card)}
+.sechead{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.sechead b{font-size:.9rem}
 .ctl{display:flex;gap:.3rem}
-.meanbox{margin-top:.6rem}
-.meanbox summary{font-weight:500;font-size:.88rem;color:var(--accent)}
+.stabs{display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap}
+.stab{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:.3rem .8rem;font-size:.85rem;color:var(--muted)}
+.stab.open{border-color:var(--accent);color:var(--accent);font-weight:600}
+.stab.has::after{content:" ●";font-size:.6rem;color:var(--ok);vertical-align:middle}
+.spanel{margin-top:.6rem;padding:.7rem;border-radius:10px;background:var(--soft)}
+.spanel textarea{margin-top:.5rem}
+.audio audio{width:100%;margin-top:.5rem}
+.row2{display:grid;grid-template-columns:1fr auto;gap:.5rem;margin-top:.5rem}
 .toolbar{display:flex;flex-wrap:wrap;gap:.3rem;margin:.4rem 0}
-.preview{border:1px dashed var(--line);border-radius:8px;padding:.8rem;margin-top:.6rem;line-height:1.7}
+.preview{border:1px dashed var(--line);border-radius:10px;padding:.8rem;margin-top:.6rem;line-height:1.7}
 .preview blockquote{margin:.8rem 0;padding-left:.8rem;border-left:2px solid var(--accent);color:var(--muted)}
 .preview img{max-width:100%}
-.path{font-family:ui-monospace,monospace;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.3rem .5rem;word-break:break-all;margin-top:.5rem}
-ol.sub li{margin-bottom:.3rem}
-#mprev .mean{margin-top:.5rem;line-height:1.7;white-space:pre-line}
-#fprev .mast{text-align:center}#fprev h1{font-size:1.5rem;letter-spacing:.12em;text-transform:uppercase;margin:.5rem 0 0;line-height:1.2}
-#fprev .knname{display:block;color:var(--accent);font-size:1rem;text-transform:none;letter-spacing:0}#fprev .offer{color:var(--muted);font-size:.8rem}
-#fprev .tag{font-style:italic;color:var(--muted);margin:.4rem 0 0}#fprev .menu a{display:block;text-align:center;border:1px solid var(--line);padding:.5rem;margin-top:.8rem}
-#fprev .menu b{display:block;letter-spacing:.14em;text-transform:uppercase}#fprev .menu small{color:var(--muted);font-size:.8rem}
-.zrow{margin:.5rem 0}.zrow label{margin:0 0 .1rem}.zrow small{color:var(--muted)}
-.zctl{display:flex;align-items:center;gap:.7rem}.zctl input{padding:0}.zctl b{min-width:3rem;text-align:right;font-size:.85rem}
-#zprev .mast{text-align:center}#zprev h1{margin:.3rem 0 0;letter-spacing:.1em;text-transform:uppercase;line-height:1.2}
-#zprev .knname{display:block;color:var(--accent);text-transform:none;letter-spacing:0}#zprev .offer,#zprev .meta,#zprev .lbl,#zprev footer{color:var(--muted)}
-#zprev .tag{font-style:italic;color:var(--muted);margin:.3rem 0 0}#zprev .menu a{display:block;text-align:center;border:1px solid var(--line);padding:.4rem;margin:.6rem 0}
-#zprev .menu b{display:block;letter-spacing:.12em;text-transform:uppercase}#zprev .menu small{color:var(--muted)}
-#zprev .nav{display:flex;gap:.8rem;border-top:3px double var(--line);border-bottom:1px solid var(--line);padding:.4rem 0;margin:.6rem 0;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}#zprev .nav .on{color:var(--accent)}
-#zprev .pt{font-weight:700;margin-top:.6rem}#zprev .verse{line-height:1.9}#zprev .lbl{text-transform:uppercase;letter-spacing:.12em;margin-top:.5rem}#zprev footer{text-align:center;margin-top:.8rem;border:0;padding:0}
+.path{font-family:ui-monospace,monospace;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.35rem .55rem;word-break:break-all;font-size:.85rem}
+.dgrid{display:grid;grid-template-columns:minmax(0,26rem) minmax(0,1fr);gap:1.4rem;align-items:start}
+.pvcol{position:sticky;top:4.2rem}
+.phone{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--card);height:calc(100vh - 12rem);min-height:26rem;box-shadow:0 10px 40px rgba(0,0,0,.12)}
+.phone iframe{width:100%;height:100%;border:0;display:block}
+.el.flash{outline:2px solid var(--accent);animation:fl 1.2s}
+@keyframes fl{from{background:var(--soft)}to{background:var(--card)}}
+.zline{display:flex;align-items:center;gap:.7rem}.zline input{flex:1}.zline b{min-width:3.2rem;text-align:right;font-size:.9rem}
+.lib{display:grid;gap:.5rem}
+.libitem{display:grid;grid-template-columns:1fr auto;gap:.5rem;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.5rem .7rem}
+.libitem audio{grid-column:1/-1;width:100%}.libitem img{max-height:5rem;border-radius:6px}
+.pvmodal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;padding:.8rem}
+.pvmodal .phone{width:min(26rem,100%);height:100%}
+.pvmodal .ghost{color:#fff}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;flex-direction:row;padding:.3rem .4rem calc(.3rem + env(safe-area-inset-bottom,0px));border-right:0;border-top:1px solid var(--line);z-index:30}
+  .side .brand,.side .sl{display:none}
+  .side nav{flex-direction:row;width:100%;justify-content:space-around}
+  .nb{flex-direction:column;gap:.1rem;padding:.35rem .5rem;font-size:.72rem;text-align:center;flex:1}
+  .wrap{padding-bottom:7rem}
+  .dgrid{grid-template-columns:1fr}
+  .pvcol{top:3.7rem;z-index:5;background:var(--bg);padding-bottom:.4rem}
+  .phone{height:44vh;min-height:15rem}
+  #toast{bottom:5rem}
+}
 </style>
 </head>
 <body>
-<main>
-<div id="msg"></div>
-<h1>Editor</h1>
-<p class="sub">Changes stay on this device until you press <b>Publish</b>.</p>
-<p class="sub" id="connNote"></p>
+<div class="app">
+<aside class="side">
+  <div class="brand">Mukunda Vittala<small>Studio</small></div>
+  <nav id="nav">
+    <button class="nb on" data-v="pieces"><i>✎</i>Pieces</button>
+    <button class="nb" data-v="pages"><i>☰</i>Pages</button>
+    <button class="nb" data-v="design"><i>◐</i>Design</button>
+    <button class="nb" data-v="files"><i>♫</i>Files</button>
+    <button class="nb" data-v="conn"><i>⚙</i>Connect</button>
+  </nav>
+  <div class="sl"><a href="./" target="_blank" rel="noopener">View website ↗</a></div>
+</aside>
+<div class="main">
+  <header class="top">
+    <div><b id="viewTitle">Pieces</b><small id="status"></small></div>
+    <div><button class="primary" id="btnPublish">Publish</button></div>
+  </header>
 
-<div class="card">
-  <div class="btns" style="margin-top:0">
-    <button class="primary" id="btnPublish">Publish</button>
-    <button id="btnDiscard">Discard changes</button>
-    <a class="btn" href="./" target="_blank" rel="noopener">View site</a>
-  </div>
-</div>
+  <!-- ============ PIECES ============ -->
+  <section id="v_pieces" class="view"><div class="wrap">
+    <div class="tools"><input id="wsearch" type="search" placeholder="Search your pieces"><button class="primary" id="btnNew">+ New</button></div>
+    <div id="typeChips" class="chips"></div>
+    <div id="list"></div>
+    <button class="btn" id="btnMore" hidden>Show more</button>
+  </div></section>
 
-<div class="tabbar" id="tabbar">
-  <button data-t="works" class="on">Works</button>
-  <button data-t="site">Site</button>
-  <button data-t="files">Files</button>
-  <button data-t="conn">Connection</button>
-</div>
+  <!-- ============ PAGES ============ -->
+  <section id="v_pages" class="view" hidden><div class="wrap">
+    <p class="hint">Every page of your website, one card each. Changes apply as you type; press <b>Publish</b> (top right) when you are happy.</p>
 
-<!-- ============ WORKS ============ -->
-<section id="tab_works">
-  <div class="row" style="margin-bottom:.6rem"><input id="wsearch" type="search" placeholder="Search your pieces"><select id="wtype"></select></div>
-  <div class="card" id="list"></div>
-  <button id="btnMore" class="small" hidden style="margin-bottom:.8rem">Show more</button>
-  <p class="sub" id="pending"></p>
-  <button id="btnNew">+ New piece</button>
+    <details class="card" open><summary>First page <small>name, dedication, tagline</small></summary>
+      <label>Lines above the name (dedication; several lines allowed)</label><textarea id="p_offering" rows="2"></textarea>
+      <div class="row"><div><label>Name</label><input id="p_name"></div><div><label>Name in Kannada</label><input id="p_kn"></div></div>
+      <label>Tagline (several lines allowed)</label><textarea id="p_tagline" rows="3"></textarea>
+      <label>Short introduction (optional)</label><textarea id="p_intro" rows="3"></textarea>
+    </details>
 
-  <div class="card" id="formCard" hidden style="margin-top:1rem">
-    <b id="formTitle">New piece</b>
-    <div class="row">
-      <div><label>Type</label><select id="f_type"></select></div>
-      <div><label>Status</label><select id="f_status"><option value="complete">complete</option><option value="draft">draft (in progress)</option></select></div>
+    <details class="card"><summary>About page <small>your story and understanding</small></summary>
+      <div class="row"><div><label>Button name</label><input id="p_aboutTitle" placeholder="About"></div><div><label>Small line under the button</label><input id="lab_aboutSub" placeholder="ಪರಿಚಯ"></div></div>
+      <label>Text</label><div id="aboutTools"></div>
+      <textarea id="p_about" style="min-height:14rem"></textarea>
+      <div id="aboutPrev" class="preview" hidden></div>
+      <p class="hint">A starter text is filled in for you. Please make it your own.</p>
+    </details>
+
+    <h3>Sections of your website</h3>
+    <p class="hint">Each section becomes a button on the first page. Kriti-style has pallavi, anupallavi and charanas; Verses has no pallavi (ugabhoga); Article is a blog.</p>
+    <div id="typeCards"></div>
+    <button class="btn" id="btnAddType">+ Add a section</button>
+
+    <h3>Bottom of every page</h3>
+    <details class="card"><summary>Footer and license</summary>
+      <label>Footer lines (several lines allowed)</label><textarea id="p_footer" rows="3"></textarea>
+      <div class="row"><div><label>Copyright since</label><input id="p_year" placeholder="2026"></div><div><label>License name</label><input id="p_lname" placeholder="CC BY-NC-ND 4.0"></div></div>
+      <label>License link</label><input id="p_lurl" placeholder="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+      <label>License note</label><textarea id="p_lnote" rows="2"></textarea>
+    </details>
+    <details class="card"><summary>Browser tab and sharing <small>title, description, address</small></summary>
+      <label>Browser tab title</label><input id="p_title" placeholder="Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ">
+      <label>Description (one or two sentences)</label><textarea id="p_desc" rows="3"></textarea>
+      <label>Website address</label><input id="p_url" placeholder="https://mukundavittaladaasa.github.io/">
+    </details>
+    <details class="card"><summary>Words and buttons <small>rename any word on the site</small></summary>
+      <p class="hint">Leave a box empty to keep the original (shown faintly).</p>
+      <div id="labels"></div>
+    </details>
+  </div></section>
+
+  <!-- ============ DESIGN ============ -->
+  <section id="v_design" class="view" hidden><div class="wrap wide"><div class="dgrid">
+    <div class="pvcol">
+      <div id="pvPages" class="seg small" style="margin-bottom:.5rem"></div>
+      <div class="phone"><iframe id="pvFrame" title="Live preview"></iframe></div>
+      <p class="hint" style="margin-top:.4rem">Live preview. Tap any text in it to jump to its style controls.</p>
     </div>
-    <label>Title *</label><input id="f_title">
-    <div class="row">
-      <div><label>Date</label><input id="f_date" type="date"></div>
-      <div><label>Tags (comma separated)</label><input id="f_tags" placeholder="guru, avatara-traya"></div>
-    </div>
-
-    <div id="grp_music">
-      <div class="row3">
-        <div><label>Ankita</label><input id="f_ankita"></div>
-        <div><label>Raga (optional)</label><input id="f_raga"></div>
-        <div><label>Tala (optional)</label><input id="f_tala"></div>
+    <div>
+      <div class="card">
+        <b>Quick size</b>
+        <div class="seg small" style="margin-top:.5rem"><button data-zp="90">Smaller</button><button data-zp="100">Normal</button><button data-zp="115">Larger</button><button data-zp="130">Largest</button><button id="zReset">Reset all</button></div>
       </div>
+      <details class="card" open><summary>Colours and style</summary>
+        <div class="row"><div><label>Accent colour</label><input type="color" id="d_accent" value="#7a2f1f"></div><div><label>Page colour</label><select id="d_paper"><option value="">Default</option><option value="cream">Cream</option><option value="white">White</option><option value="grey">Soft grey</option><option value="sage">Soft green</option></select></div></div>
+        <div class="row"><div><label>Letter style</label><select id="d_font"><option value="serif">Serif (classic)</option><option value="sans">Sans (modern)</option></select></div><div><label>Default language for meanings</label><select id="d_lang"><option value="en">English</option><option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option></select></div></div>
+      </details>
+      <h3>Each kind of text</h3>
+      <div id="elCards"></div>
+    </div>
+  </div></div></section>
+
+  <!-- ============ FILES ============ -->
+  <section id="v_files" class="view" hidden><div class="wrap">
+    <div class="card">
+      <b>Upload</b>
+      <p class="hint">Audio (mp3, wav, m4a, ogg, flac…), photos and PDFs. Audio goes to <code>audio/</code>, photos to <code>images/</code>, the rest to <code>kritis/</code>. Tip: mp3 or m4a keep the site fast; wav files are large.</p>
+      <input type="file" id="u_file" multiple accept="audio/*,image/*,.pdf,.txt,.doc,.docx,.mp3,.wav,.m4a,.aac,.ogg,.flac">
+      <div style="margin-top:.7rem"><button class="primary" id="btnUpload">Upload</button></div>
+      <div id="u_result" style="margin-top:.8rem"></div>
+    </div>
+    <div class="card"><b>Your files</b> <button class="small btn" id="btnLib" style="float:right">Refresh</button>
+      <div id="lib" class="lib" style="margin-top:.7rem"><span class="hint">Press Refresh to list the files in your repository.</span></div>
+    </div>
+  </div></section>
+
+  <!-- ============ CONNECT ============ -->
+  <section id="v_conn" class="view" hidden><div class="wrap">
+    <div class="card">
+      <b>Connect to GitHub (once)</b>
+      <ol class="hint" style="padding-left:1.2rem">
+        <li>Open <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">github.com/settings/tokens/new</a> and choose <b>Tokens (classic)</b>.</li>
+        <li>Name it <b>kriti-editor</b>, pick the longest expiry, tick only <b>public_repo</b>, then Generate and copy the token.</li>
+        <li>Paste it below and press <b>Save connection</b>, then <b>Test connection</b>.</li>
+      </ol>
+      <label>GitHub username</label><input id="g_owner">
+      <label>Repository name</label><input id="g_repo">
+      <label>Branch</label><input id="g_branch" placeholder="main">
+      <label>Access token (kept only in this browser)</label><input id="g_token" type="password" autocomplete="off">
+      <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="primary" id="btnGh">Save connection</button><button class="btn" id="btnTest">Test connection</button></div>
+    </div>
+    <div class="card">
+      <b>Unpublished changes</b>
+      <p class="hint">Everything you edit stays on this device until you press Publish.</p>
+      <button class="btn danger" id="btnDiscard">Discard unpublished changes</button>
+    </div>
+  </div></section>
+</div>
+</div>
+
+<!-- ============ PIECE EDITOR ============ -->
+<div id="editor" class="editor" hidden>
+  <div class="edtop"><button class="ghost" id="edBack">‹ Back</button><b id="edTitle">New piece</b><button class="primary" id="btnSave">Save</button></div>
+  <div class="edbody">
+    <div class="card">
+      <label style="margin-top:0">Type</label><div id="f_typeSeg" class="seg"></div>
+      <label>Title *</label><input id="f_title" placeholder="Title of the piece">
+      <div class="row"><div><label>Date</label><input id="f_date" type="date"></div><div><label>Status</label><div id="f_statusSeg" class="seg"><button type="button" data-v="complete" class="on">Complete</button><button type="button" data-v="draft">In progress</button></div></div></div>
+      <label>Tags (comma separated)</label><input id="f_tags" placeholder="guru, avatara-traya">
+      <div id="grp_music" class="row3"><div><label>Ankita</label><input id="f_ankita"></div><div><label>Raga</label><input id="f_raga"></div><div><label>Tala</label><input id="f_tala"></div></div>
     </div>
 
     <div id="grp_kriti">
       <h3>Pallavi</h3><div id="pallaviBox"></div>
-      <h3>Anupallavi (optional: leave empty to skip)</h3><div id="anupallaviBox"></div>
+      <h3>Anupallavi</h3>
+      <button class="btn" id="anuBtn">+ Add anupallavi (optional)</button>
+      <div id="anupallaviBox"></div>
       <h3>Charanas</h3><div id="charanas"></div>
-      <button id="btnAddCharana" class="small">+ Add charana</button>
+      <button class="btn" id="btnAddCharana">+ Add charana</button>
     </div>
-
     <div id="grp_verses">
       <h3>Verses</h3>
-      <p class="hint">An ugabhoga has no pallavi or anupallavi: just write the lines. Add more verses only if it has several parts.</p>
+      <p class="hint">An ugabhoga has no pallavi or anupallavi. Add more verses only if it has several parts.</p>
       <div id="verses"></div>
-      <button id="btnAddVerse" class="small">+ Add verse</button>
+      <button class="btn" id="btnAddVerse">+ Add verse</button>
     </div>
-
     <div id="grp_article">
       <h3>Writing</h3>
       <div id="bodyTools"></div>
-      <textarea id="f_body" style="min-height:16rem"></textarea>
+      <textarea id="f_body" style="min-height:18rem"></textarea>
       <div id="bodyPrev" class="preview" hidden></div>
-      <p class="hint">Leave a blank line between paragraphs. Use the buttons above for headings, bold, quotes, lists and links.</p>
+      <p class="hint">Blank line between paragraphs. The buttons add headings, bold, quotes, lists, links and pictures.</p>
     </div>
 
-    <details class="meanbox" id="sumBox">
-      <summary>Summary of the whole piece (optional, in 3 languages)</summary>
-      <label>English</label><textarea id="sum_en" rows="3"></textarea>
-      <label>ಕನ್ನಡ</label><textarea id="sum_kn" rows="3"></textarea>
-      <label>हिन्दी</label><textarea id="sum_hi" rows="3"></textarea>
-    </details>
+    <h3>Summary of the whole piece (optional)</h3>
+    <div class="card" id="sumBox"></div>
 
-    <label>Short note (optional)</label><textarea id="f_notes" rows="2"></textarea>
-    <label>Link to full text (optional: PDF or Google Doc)</label><input id="f_link" placeholder="https://… or kritis/name.pdf">
-    <div class="row" style="margin-top:.4rem"><input type="file" id="f_file" accept=".pdf,.txt,.doc,.docx,image/*"><button type="button" id="btnUpload">Upload file</button></div>
-    <label>Audio link (optional)</label><input id="f_audio" placeholder="https://… or audio/name.mp3">
-    <div class="btns">
-      <button class="primary" id="btnSave">Save piece</button>
-      <button id="btnCancel">Cancel</button>
+    <h3>More (optional)</h3>
+    <div class="card">
+      <label style="margin-top:0">Short note</label><textarea id="f_notes" rows="2"></textarea>
+      <label>Link to the full text (PDF or Google Doc)</label><input id="f_link" placeholder="https://… or kritis/name.pdf">
+      <div class="row2"><input type="file" id="f_file" accept=".pdf,.txt,.doc,.docx,image/*"><button class="btn" id="btnUploadLink">Upload</button></div>
+      <label>Audio for the whole piece</label><div id="pieceAudio"></div>
     </div>
   </div>
-</section>
+  <div class="edfoot"><button class="btn" id="btnPv">Preview</button><button class="primary" id="btnSave2">Save piece</button></div>
+</div>
 
-<!-- ============ SITE ============ -->
-<section id="tab_site" hidden>
-  <p class="sub">Everything visible on the website can be changed here. Press <b>Save site settings</b> at the bottom, then <b>Publish</b>.</p>
-
-  <details class="card" open><summary>Header</summary>
-    <label>Dedication / lines above the name (several lines allowed)</label><textarea id="s_offering" rows="2"></textarea>
-    <div class="row"><div><label>Name</label><input id="s_name"></div><div><label>Name in Kannada</label><input id="s_kn"></div></div>
-    <label>Tagline (several lines allowed)</label><textarea id="s_tagline" rows="3"></textarea>
-    <label>Short introduction (optional, several lines allowed)</label><textarea id="s_intro" rows="3"></textarea>
-  </details>
-
-  <details class="card"><summary>Search engines &amp; sharing</summary>
-    <p class="hint">Used for the browser tab and the preview when the link is shared. Publishing updates these automatically.</p>
-    <label>Browser tab title</label><input id="s_title" placeholder="Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ">
-    <label>Description (one or two sentences)</label><textarea id="s_desc" rows="3"></textarea>
-    <label>Website address</label><input id="s_url" placeholder="https://mukundavittaladaasa.github.io/">
-  </details>
-
-  <details class="card"><summary>Look</summary>
-    <div class="row">
-      <div><label>Accent colour</label><input type="color" id="s_accent" value="#a4562b"></div>
-      <div><label>Page colour</label><select id="s_paper"><option value="cream">Cream</option><option value="white">White</option><option value="grey">Soft grey</option><option value="sage">Soft green</option></select></div>
-    </div>
-    <div class="row">
-      <div><label>Letter style</label><select id="s_font"><option value="serif">Serif (classic)</option><option value="sans">Sans (modern)</option></select></div>
-    </div>
-    <h3>Text sizes</h3>
-    <p class="hint">Drag a slider and watch the preview. 100% is the original size. Start with “All text together”, then fine-tune the rest.</p>
-    <div class="btns" style="margin:.2rem 0 .6rem"><button type="button" class="small" data-zp="92">Smaller</button><button type="button" class="small" data-zp="100">Normal</button><button type="button" class="small" data-zp="115">Larger</button><button type="button" class="small" data-zp="130">Largest</button><button type="button" class="small" id="zReset">Reset all</button></div>
-<div class="zrow"><label for="z_all">All text together <small>scales the whole site</small></label><div class="zctl"><input type="range" id="z_all" min="70" max="160" step="5" value="100"><b id="zv_all">100%</b></div></div>
-<div class="zrow"><label for="z_home">First page <small>name, tagline, buttons</small></label><div class="zctl"><input type="range" id="z_home" min="70" max="160" step="5" value="100"><b id="zv_home">100%</b></div></div>
-<div class="zrow"><label for="z_nav">Menu and links <small>top menu, footer menu</small></label><div class="zctl"><input type="range" id="z_nav" min="70" max="160" step="5" value="100"><b id="zv_nav">100%</b></div></div>
-<div class="zrow"><label for="z_head">Titles and headings <small>page and list titles</small></label><div class="zctl"><input type="range" id="z_head" min="70" max="160" step="5" value="100"><b id="zv_head">100%</b></div></div>
-<div class="zrow"><label for="z_verse">Verses <small>pallavi, charanas, ugabhoga</small></label><div class="zctl"><input type="range" id="z_verse" min="70" max="160" step="5" value="100"><b id="zv_verse">100%</b></div></div>
-<div class="zrow"><label for="z_mean">Meanings and summaries <small>translation text</small></label><div class="zctl"><input type="range" id="z_mean" min="70" max="160" step="5" value="100"><b id="zv_mean">100%</b></div></div>
-<div class="zrow"><label for="z_body">About and blog text <small>paragraphs</small></label><div class="zctl"><input type="range" id="z_body" min="70" max="160" step="5" value="100"><b id="zv_body">100%</b></div></div>
-<div class="zrow"><label for="z_small">Small text <small>labels, dates, footer</small></label><div class="zctl"><input type="range" id="z_small" min="70" max="160" step="5" value="100"><b id="zv_small">100%</b></div></div>
-    <div id="zprev" class="preview">
-      <div class="landing" style="min-height:0"><div class="mast"><div class="offer">ಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು</div><h1>Mukunda Vittala<span class="knname">ಮುಕುಂದ ವಿಠ್ಠಲ</span></h1><p class="tag">Small offerings at the feet of Hari.</p></div><div class="menu"><a><b>Kritis</b><small>ಕೃತಿಗಳು</small></a></div></div>
-      <nav class="nav"><a class="on">Kritis</a> <a>Ugabhoga</a> <a>Tattva Chintane</a></nav>
-      <div class="pt">Avatara-traya prarthane</div><div class="meta">Kriti · Ankita: Mukunda Vittala</div>
-      <div class="lbl">ಪಲ್ಲವಿ</div><div class="verse">ವಿಠಲ ವಿಠಲ ವಿಠಲನ ತೋರಿರೈ</div>
-      <div class="mean"><div data-l="en">Show me Vithala, Vithala, Vithala.</div></div>
-      <div class="md"><p>A short paragraph of the About page or a Tattva Chintane writing appears like this.</p></div>
-      <footer>Please forgive any errors.</footer>
-    </div>
-    <h3>First page fonts</h3>
-    <div class="row">
-      <div><label>English letters</label><select id="s_hFont"><option value="">Default</option><option value="cormorant">Cormorant Garamond (classic)</option><option value="playfair">Playfair Display (high contrast)</option><option value="cinzel">Cinzel (carved capitals)</option><option value="garamond">EB Garamond (bookish)</option><option value="lora">Lora (warm)</option><option value="inter">Inter (clean modern)</option></select></div>
-      <div><label>ಕನ್ನಡ</label><select id="s_hKn"><option value="">Default</option><option value="noto">Noto Serif Kannada (default)</option><option value="sans">Noto Sans Kannada (plain)</option><option value="tiro">Tiro Kannada (book style)</option><option value="hubballi">Hubballi (soft)</option></select></div>
-    </div>
-    <div id="fprev" class="preview"><div class="landing" style="min-height:0"><div class="mast"><div class="offer">ಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು</div><h1>Mukunda Vittala<span class="knname">ಮುಕುಂದ ವಿಠ್ಠಲ</span></h1><p class="tag">Small offerings at the feet of Hari.</p></div><div class="menu"><a><b>Kritis</b><small>ಕೃತಿಗಳು</small></a></div></div></div>
-    <h3>Meanings and summaries</h3>
-    <div class="row">
-      <div><label>Italics</label><select id="s_mItalic"><option value="all">All languages</option><option value="en">English only</option><option value="off">None</option></select></div>
-      <div><label>Text size</label><select id="s_mSize"><option value="s">Small</option><option value="m">Medium</option><option value="l">Large</option></select></div>
-    </div>
-    <div class="row">
-      <div><label>Text colour</label><select id="s_mTone"><option value="muted">Soft grey</option><option value="normal">Same as the verses</option></select></div>
-      <div><label>Frame</label><select id="s_mFrame"><option value="rule">Thin line on the left</option><option value="box">Soft box</option><option value="none">None</option></select></div>
-    </div>
-    <p class="hint">Preview (Kannada and Hindi have no true italic, so the browser slants them: choose “English only” if that looks odd):</p>
-    <div id="mprev"><div class="mean"><div data-l="en">This is how a meaning in English will look.</div></div>
-    <div class="mean"><div data-l="kn">ಕನ್ನಡದಲ್ಲಿ ಅರ್ಥ ಹೀಗೆ ಕಾಣುತ್ತದೆ.</div></div>
-    <div class="mean"><div data-l="hi">हिन्दी में अर्थ ऐसे दिखेगा।</div></div></div>
-    <label>Default language for meanings</label>
-    <select id="s_lang"><option value="en">English</option><option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option></select>
-  </details>
-
-  <details class="card"><summary>About page</summary>
-    <p class="hint">Your experience and your understanding of tattva, about the author, etc. This page opens first on the website. A starter text is filled in for you: please read it and make it yours.</p>
-    <label>Tab / page title</label><input id="s_aboutTitle" placeholder="About">
-    <label>Text</label><div id="aboutTools"></div>
-    <textarea id="s_about" style="min-height:14rem"></textarea>
-    <div id="aboutPrev" class="preview" hidden></div>
-  </details>
-
-  <details class="card"><summary>Types of pieces (the buttons on the website)</summary>
-    <p class="hint">One per line as <b>Name | layout | Button name | Kannada subtitle</b>. Layouts: <b>kriti</b> (pallavi, anupallavi, charanas), <b>verses</b> (no pallavi, for ugabhoga), <b>article</b> (blog writing). Each type becomes its own button on the website. Example: <i>Suladi | verses | Suladis | ಸುಳಾದಿ</i>.</p>
-    <textarea id="s_types" rows="5"></textarea>
-  </details>
-
-  <details class="card"><summary>Footer &amp; license</summary>
-    <label>Footer lines (several lines allowed)</label><textarea id="s_footer" rows="3"></textarea>
-    <div class="row"><div><label>Copyright since (year)</label><input id="s_year" placeholder="2026"></div><div><label>License name</label><input id="s_lname" placeholder="CC BY-NC-ND 4.0"></div></div>
-    <label>License link</label><input id="s_lurl" placeholder="https://creativecommons.org/licenses/by-nc-nd/4.0/">
-    <label>License note (one line)</label><textarea id="s_lnote" rows="2"></textarea>
-  </details>
-
-  <details class="card"><summary>Words used on the site</summary>
-    <p class="hint">Change any word or button text. Leave a box empty to keep the original (shown faintly).</p>
-    <div id="labels"></div>
-  </details>
-
-  <div class="btns"><button class="primary" id="btnSite">Save site settings</button></div>
-</section>
-
-<!-- ============ FILES ============ -->
-<section id="tab_files" hidden>
-  <div class="card">
-    <b>Upload a file</b>
-    <p class="hint">Photos go to <code>images/</code>, everything else to <code>kritis/</code>. Then paste the path it shows into a link box, or into your writing as a picture.</p>
-    <input type="file" id="u_file" accept=".pdf,.txt,.doc,.docx,.mp3,.m4a,image/*">
-    <div class="btns"><button class="primary" id="btnUpload2">Upload</button></div>
-    <div id="u_result" hidden>
-      <label>Link / path</label><div class="path" id="u_path"></div>
-      <label>To show it as a picture in a writing, paste this</label><div class="path" id="u_md"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ CONNECTION ============ -->
-<section id="tab_conn" hidden>
-  <div class="card">
-    <details id="ghBox">
-      <summary>Set up once (so Publish and Upload work)</summary>
-      <ol class="sub" style="padding-left:1.2rem">
-        <li>Open <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">github.com/settings/tokens/new</a> (choose <b>Tokens (classic)</b>).</li>
-        <li>Name it <b>kriti-editor</b> and pick the longest expiry.</li>
-        <li>Tick only <b>public_repo</b>, then tap <b>Generate token</b> and copy it.</li>
-        <li>Paste it below, tap <b>Save connection</b>, then <b>Test connection</b>.</li>
-      </ol>
-      <label>GitHub username</label><input id="g_owner">
-      <label>Repository name</label><input id="g_repo">
-      <div class="row">
-        <div><label>Branch</label><input id="g_branch" placeholder="main"></div>
-        <div><label>Data file</label><input id="g_path" placeholder="data.json"></div>
-      </div>
-      <label>Access token (kept only in this browser)</label><input id="g_token" type="password" autocomplete="off">
-      <div class="btns"><button id="btnGh" class="primary">Save connection</button><button id="btnTest">Test connection</button></div>
-    </details>
-  </div>
-</section>
-</main>
-
+<div id="pvModal" class="pvmodal" hidden>
+  <button class="ghost" id="pvClose">✕ Close preview</button>
+  <div class="phone"><iframe id="pvFrame2" title="Piece preview"></iframe></div>
+</div>
+<div id="toast"></div>
 <script>
 var DRAFT_KEY="kriti-draft-v3",GH_KEY="kriti-gh-v1",PAGE=40;
 var LABEL_DEFS=[
@@ -308,6 +319,7 @@ var LABEL_DEFS=[
 ["inProgress","in progress","Marks an unfinished piece"],
 ["summary","Summary","Heading of the summary box"],
 ["transBtn","Translation","Small button below each verse that opens its meaning"],
+["listenBtn","Listen","Small button below a verse that plays its audio"],
 ["showAll","Show all translations","Button text"],
 ["hideAll","Hide all translations","Button text"],
 ["shownIn","shown in {lang}","Note shown when the chosen language is missing"],
@@ -321,10 +333,9 @@ var LABEL_DEFS=[
 ];
 var DEFAULT_LABELS={};LABEL_DEFS.forEach(function(d){DEFAULT_LABELS[d[0]]=d[1];});
 var LANGS=[["en","English"],["kn","ಕನ್ನಡ"],["hi","हिन्दी"]];
-var LAYOUTS=["kriti","verses","article"];
-var KNOWN=["id","title","type","status","date","tags","ankita","raga","tala","pallavi","anupallavi","charanas","verses","body","meanings","summary","notes","link","audio"];
-/* state: site settings, light index of every piece, only the pieces changed on this device (dirty) */
-var site={},index=[],dirty={},deleted={},fresh={},legacy=false,editing=null,shown=PAGE;
+var LAYOUTS=[["kriti","Kriti-style (pallavi, anupallavi, charanas)"],["verses","Verses (no pallavi: ugabhoga)"],["article","Article (blog)"]];
+var KNOWN=["id","title","type","status","date","tags","ankita","raga","tala","pallavi","anupallavi","charanas","verses","body","meanings","audios","summary","notes","link","audio"];
+var site={},index=[],dirty={},deleted={},fresh={},legacy=false,siteDirty=false,editing=null,shown=PAGE,fType="",pvHash="#/",edType="",edStatus="complete";
 var $=function(id){return document.getElementById(id);};
 function el(tag,cls,text,parent){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
 function safeUrl(u){u=(u||"").trim();if(/^(https?:\/\/|mailto:)/i.test(u))return u;if(/^[a-z][a-z0-9+.\-]*:/i.test(u))return "";return u;}
@@ -386,6 +397,7 @@ function meanCss(t,pre){
 }
 
 var HOME_FONTS={
+  source:["Source Serif 4","Source+Serif+4:ital,wght@0,400;0,600;1,400","Source Serif 4 (body default)"],
   cormorant:["Cormorant Garamond","Cormorant+Garamond:ital,wght@0,500;0,700;1,500","Cormorant Garamond (classic)"],
   playfair:["Playfair Display","Playfair+Display:ital,wght@0,500;0,700;1,500","Playfair Display (high contrast)"],
   cinzel:["Cinzel","Cinzel:wght@500;700","Cinzel (carved capitals)"],
@@ -406,18 +418,24 @@ function loadFonts(specs){
     var l=document.createElement("link");l.rel="stylesheet";l.href=href;document.head.appendChild(l);
   });
 }
-/* font for the first (home) page only; nothing is applied until a font is chosen */
-function homeFontCss(t,pre){
+var FSEL=null;
+/* per-group fonts: t.fonts = {group:{l:"latinKey",k:"kannadaKey"}} (older sites: homeFont/homeKn) */
+function fontsCss(t,pre){
   t=t||{};
-  if(!t.homeFont&&!t.homeKn)return"";
-  var f=HOME_FONTS[t.homeFont],k=KN_FONTS[t.homeKn]||KN_FONTS.noto;
-  var specs=[k[1]];if(f)specs.push(f[1]);loadFonts(specs);
-  var kfam='"'+k[0]+'","Noto Serif Devanagari",serif';
-  var lfam=(f?'"'+f[0]+'",':"")+kfam;
-  var p=(pre?pre+" ":"")+".landing";
-  return p+"{font-family:"+lfam+"}"+
-    p+" h1,"+p+" .menu b{font-family:"+lfam+"}"+
-    p+" .knname,"+p+" .offer,"+p+" .menu small{font-family:"+kfam+"}";
+  var F={};Object.keys(t.fonts||{}).forEach(function(g){F[g]=t.fonts[g];});
+  if(!F.home&&(t.homeFont||t.homeKn))F.home={l:t.homeFont,k:t.homeKn};
+  var out="",specs=[],pv=pre?pre+" ":"";
+  Object.keys(F).forEach(function(g){
+    var f=HOME_FONTS[F[g].l],k=KN_FONTS[F[g].k];
+    if(!f&&!k)return;
+    var kk=k||KN_FONTS.noto;specs.push(kk[1]);if(f)specs.push(f[1]);
+    var fam=(f?'"'+f[0]+'",':"")+'"'+kk[0]+'","Noto Serif Devanagari",serif';
+    var sels=g==="mean"?[".mean",".mean [data-l]",".sum",".sum [data-l]"]:(ZSEL[g]||[]).map(function(p){return p[0];});
+    if(g==="home")sels.push(".landing");
+    sels.forEach(function(s){out+=pv+s+"{font-family:"+fam+"}";});
+  });
+  if(specs.length)loadFonts(specs);
+  return out;
 }
 
 var ZDEFS=[
@@ -435,7 +453,7 @@ var ZSEL={
   nav:[[".mast.small h1","1.2rem"],[".mast.small .knname",".9rem"],[".nav a",".7rem"],["footer .fnav a",".74rem"],[".back",".82rem"],[".pn",".88rem"]],
   head:[[".pt","1.7rem"],[".dt","1.55rem"],[".md h2","1.4rem"],[".md h3",".8rem"],[".title","1.05rem"]],
   verse:[[".verse","1.02rem"]],
-  body:[[".md","1.02rem"],[".exc",".92rem"],[".note","1.02rem"]],
+  body:[[".md","1.02rem"],[".exc",".92rem"],[".note","1.02rem"],[".tintro",".95rem"]],
   small:[[".lbl",".72rem"],[".meta",".8rem"],[".count",".78rem"],[".tbtn",".72rem"],[".lc",".72rem"],[".chip",".78rem"],[".num",".78rem"],[".pallavi",".9rem"],["footer",".82rem"],["footer .copy",".76rem"],[".readbtn",".82rem"],["#q",".92rem"]]
 };
 function zval(t,k){
@@ -460,12 +478,14 @@ function sizeCss(t,pre){
   return(vars?(pre||":root")+"{"+vars+"}":"")+out;
 }
 
-function msg(t,err){var m=$("msg");m.textContent=t;m.className=err?"err":"";m.style.display="block";clearTimeout(msg.t);msg.t=setTimeout(function(){m.style.display="none";},12000);}
-function persist(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify({site:site,index:index,dirty:dirty,deleted:deleted,fresh:fresh,legacy:legacy}));}catch(e){}}
+/* ---------- basics ---------- */
+function toast(t,err){var m=$("toast");m.textContent=t;m.className=err?"err":"";m.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(function(){m.style.display="none";},err?12000:5000);}
+function persist(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify({site:site,index:index,dirty:dirty,deleted:deleted,fresh:fresh,legacy:legacy,siteDirty:siteDirty}));}catch(e){}}
 function today(){return new Date().toISOString().slice(0,10);}
 function types(){var t=site&&site.types;return(t&&t.length)?t:DEFAULT_TYPES;}
-function layoutOfType(n){var t=types().filter(function(x){return x.name===n;})[0];return t?t.layout:"kriti";}
-function layoutOfWork(w){var t=types().filter(function(x){return x.name===w.type;})[0];if(t)return t.layout;if(w.body)return"article";if(w.verses)return"verses";return"kriti";}
+function typeOf(n){return types().filter(function(x){return x.name===n;})[0];}
+function layoutOfType(n){var t=typeOf(n);return t?t.layout:"kriti";}
+function layoutOfWork(w){var t=typeOf(w.type);if(t)return t.layout;if(w.body)return"article";if(w.verses)return"verses";return"kriti";}
 function entryOf(id){return index.filter(function(e){return e.id===id;})[0];}
 function mkEntry(w,oldf){
   var lay=layoutOfWork(w);
@@ -475,67 +495,83 @@ function mkEntry(w,oldf){
   if(w.link)e.link=1;
   return e;
 }
-
-/* ---------- tabs ---------- */
-function showTab(n){
-  ["works","site","files","conn"].forEach(function(t){$("tab_"+t).hidden=(t!==n);});
-  Array.from($("tabbar").children).forEach(function(b){b.className=b.dataset.t===n?"on":"";});
+function pendingCount(){return Object.keys(dirty).length+Object.keys(deleted).length+(siteDirty?1:0);}
+function updateStatus(){
+  var n=pendingCount(),s=$("status");
+  s.textContent=n?n+" unpublished change"+(n>1?"s":""):"All changes are published";
+  s.className=n?"pend":"";
+  $("btnPublish").textContent=n?"Publish ("+n+")":"Publish";
 }
-Array.from($("tabbar").children).forEach(function(b){b.onclick=function(){showTab(b.dataset.t);};});
 
-/* ---------- list (works with 1000s of pieces: search + paging) ---------- */
-function fillTypeFilter(){
-  var s=$("wtype"),cur=s.value;s.innerHTML="";
-  el("option","","All types",s).value="";
-  var seen={};types().forEach(function(t){seen[t.name]=1;el("option","",t.name,s).value=t.name;});
-  index.forEach(function(e){if(!seen[e.type]){seen[e.type]=1;el("option","",e.type,s).value=e.type;}});
-  s.value=cur;
+/* ---------- views ---------- */
+var TITLES={pieces:"Pieces",pages:"Pages",design:"Design",files:"Files",conn:"Connect"};
+function showView(v){
+  Object.keys(TITLES).forEach(function(k){$("v_"+k).hidden=(k!==v);});
+  Array.from($("nav").children).forEach(function(b){b.className="nb"+(b.dataset.v===v?" on":"");});
+  $("viewTitle").textContent=TITLES[v];
+  window.scrollTo(0,0);
+  if(v==="design")initDesign();
+}
+Array.from($("nav").children).forEach(function(b){b.onclick=function(){showView(b.dataset.v);};});
+
+/* ---------- pieces list ---------- */
+function renderChips(){
+  var box=$("typeChips");box.innerHTML="";
+  var names=types().map(function(t){return t.name;});
+  index.forEach(function(e){if(names.indexOf(e.type)<0)names.push(e.type);});
+  [""].concat(names).forEach(function(n){
+    var b=el("button",fType===n?"on":"",n||"All",box);
+    b.onclick=function(){fType=n;shown=PAGE;renderChips();renderList();};
+  });
 }
 function renderList(){
   var box=$("list");box.innerHTML="";
-  var term=$("wsearch").value.trim().toLowerCase(),ty=$("wtype").value;
+  var term=$("wsearch").value.trim().toLowerCase();
   var rows=index.filter(function(e){
-    return(!ty||e.type===ty)&&(!term||(e.title+" "+(e.first||"")+" "+(e.tags||[]).join(" ")).toLowerCase().indexOf(term)>-1);
+    return(!fType||e.type===fType)&&(!term||(e.title+" "+(e.first||"")+" "+(e.tags||[]).join(" ")).toLowerCase().indexOf(term)>-1);
   }).sort(function(a,b){return(b.date||"").localeCompare(a.date||"");});
-  if(!rows.length)box.textContent=index.length?"No match.":"No pieces yet.";
+  if(!rows.length){
+    var m=el("div","empty",null,box);
+    m.textContent=index.length?"No match.":"Nothing here yet. Press “+ New” to add your first piece.";
+  }
   rows.slice(0,shown).forEach(function(w){
-    var d=el("div","w",null,box),l=el("div","",null,d);
-    el("b","",w.title,l);
-    el("small","",[w.type,w.date,w.status==="draft"?"draft":"",dirty[w.id]?"unpublished":""].filter(Boolean).join(" · "),l);
-    var r=el("div","",null,d);
-    var e=el("button","small","Edit",r);e.onclick=function(){openForm(w.id);};
-    var x=el("button","small danger","Delete",r);x.style.marginLeft=".4rem";
-    x.onclick=function(){
+    var d=el("div","item",null,box),l=el("div","",null,d);
+    var b=el("b","",w.title,l);
+    if(dirty[w.id])el("span","pill","unpublished",b);
+    el("small","",[w.type,w.date,w.status==="draft"?"in progress":""].filter(Boolean).join(" · "),l);
+    d.onclick=function(){openForm(w.id);};
+    var x=el("button","ghost danger","Delete",d);
+    x.onclick=function(ev){
+      ev.stopPropagation();
       if(!confirm("Delete “"+w.title+"”?"))return;
       var en=entryOf(w.id);index=index.filter(function(k){return k.id!==w.id;});
       delete dirty[w.id];
       if(!fresh[w.id]&&en&&en.f)deleted[w.id]=en.f;
       delete fresh[w.id];
-      persist();renderList();msg("Deleted (not yet published)");
+      persist();renderList();updateStatus();toast("Deleted (press Publish to make it final)");
     };
   });
   $("btnMore").hidden=rows.length<=shown;
-  var n=Object.keys(dirty).length+Object.keys(deleted).length;
-  $("pending").textContent=index.length+" pieces"+(n?" · "+n+" change"+(n>1?"s":"")+" not yet published":"")+(legacy?" · your existing works will move into the new data/ folders when you Publish":"");
 }
 $("wsearch").oninput=function(){shown=PAGE;renderList();};
-$("wtype").onchange=function(){shown=PAGE;renderList();};
 $("btnMore").onclick=function(){shown+=PAGE;renderList();};
 
-/* ---------- toolbar for markdown fields ---------- */
+/* ---------- markdown toolbar ---------- */
 function wrapSel(ta,pre,post,ph){
   var s=ta.selectionStart,e=ta.selectionEnd,v=ta.value,sel=v.slice(s,e)||ph;
   ta.value=v.slice(0,s)+pre+sel+post+v.slice(e);ta.focus();
   ta.selectionStart=s+pre.length;ta.selectionEnd=s+pre.length+sel.length;
+  ta.dispatchEvent(new Event("input",{bubbles:true}));
 }
 function linePrefix(ta,prefix){
   var s=ta.selectionStart,v=ta.value,ls=v.lastIndexOf("\n",s-1)+1;
   ta.value=v.slice(0,ls)+prefix+v.slice(ls);ta.focus();ta.selectionStart=ta.selectionEnd=s+prefix.length;
+  ta.dispatchEvent(new Event("input",{bubbles:true}));
 }
 function toolbar(host,ta,prev){
   host.innerHTML="";
   var bar=el("div","toolbar",null,host);
-  function btn(t,f){var b=el("button","small",t,bar);b.type="button";b.onclick=f;return b;}
+  function btn(t,f){var b=el("button","btn small",t,bar);b.type="button";b.onclick=f;return b;}
   btn("Heading",function(){linePrefix(ta,"## ");});
   btn("Subheading",function(){linePrefix(ta,"### ");});
   btn("Bold",function(){wrapSel(ta,"**","**","bold");});
@@ -547,73 +583,113 @@ function toolbar(host,ta,prev){
   btn("Preview",function(){prev.hidden=!prev.hidden;if(!prev.hidden){prev.innerHTML="";md(ta.value,prev);}});
 }
 
-/* ---------- section boxes (text + meanings) ---------- */
+/* ---------- reusable fields: languages and audio ---------- */
+function langField(host,init,rows,onChange){
+  var vals={},lang="en";
+  LANGS.forEach(function(l){if(init&&init[l[0]])vals[l[0]]=init[l[0]];});
+  var seg=el("div","seg small",null,host),ta=el("textarea","",null,host),btns={};
+  ta.rows=rows||3;
+  function mark(){LANGS.forEach(function(l){btns[l[0]].className=(l[0]===lang?"on ":"")+(vals[l[0]]?"has":"");});}
+  function show(){ta.value=vals[lang]||"";ta.placeholder="Write it in "+LANGS.filter(function(l){return l[0]===lang;})[0][1];mark();}
+  LANGS.forEach(function(l){var b=el("button","",l[1],seg);b.type="button";btns[l[0]]=b;b.onclick=function(){lang=l[0];show();};});
+  ta.oninput=function(){vals[lang]=ta.value;mark();if(onChange)onChange();};
+  show();
+  return{get:function(){var o={},any=false;LANGS.forEach(function(l){var v=(vals[l[0]]||"").trim();if(v){o[l[0]]=v;any=true;}});return any?o:null;}};
+}
+function audioField(host,init,onChange){
+  var wrap=el("div","audio",null,host),path=el("input","",null,wrap);
+  path.placeholder="Link or path, e.g. audio/pallavi.mp3";path.value=init||"";
+  var row=el("div","row2",null,wrap),file=el("input","",null,row),up=el("button","btn small","Upload",row);
+  file.type="file";file.accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.oga,.opus,.flac,.weba";
+  var pl=el("audio","",null,wrap);pl.controls=true;pl.preload="none";
+  function sync(){var v=path.value.trim();pl.hidden=!v;if(v&&pl.getAttribute("src")!==v)pl.src=v;if(onChange)onChange();}
+  path.oninput=sync;
+  up.type="button";
+  up.onclick=function(){
+    if(!file.files[0]){toast("Choose an audio file first",true);return;}
+    uploadFile(file.files[0]).then(function(p){path.value=p;file.value="";sync();toast("Uploaded as "+p+". Save the piece and Publish to use it.");}).catch(function(e){toast(e.message,true);});
+  };
+  sync();
+  return{get:function(){return path.value.trim();}};
+}
+
+/* ---------- a text section (pallavi, charana, verse…) ---------- */
 function secBox(o){
   var box=el("div","sec"),head=el("div","sechead",null,box);
   el("b","",o.label,head);
   var ctl=el("div","ctl",null,head);
   if(o.move){
-    var up=el("button","small","↑",ctl),dn=el("button","small","↓",ctl);
+    var up=el("button","btn small","↑",ctl),dn=el("button","btn small","↓",ctl);
     up.type=dn.type="button";
     up.onclick=function(){var p=box.parentNode,pr=box.previousElementSibling;if(pr){p.insertBefore(box,pr);renumber(p);}};
     dn.onclick=function(){var p=box.parentNode,nx=box.nextElementSibling;if(nx){p.insertBefore(nx,box);renumber(p);}};
   }
   if(o.remove){
-    var rm=el("button","small danger","Remove",ctl);rm.type="button";
+    var rm=el("button","btn small danger","Remove",ctl);rm.type="button";
     rm.onclick=function(){var p=box.parentNode;p.removeChild(box);renumber(p);};
   }
-  var ta=el("textarea","",null,box);ta.value=o.text||"";ta.rows=o.rows||4;
-  var det=el("details","meanbox",null,box);el("summary","","Meaning / summary (optional)",det);
-  var inputs={},any=false;
-  LANGS.forEach(function(l){
-    el("label","",l[1],det);
-    var t=el("textarea","",null,det);t.rows=2;t.value=(o.mean&&o.mean[l[0]])||"";if(t.value)any=true;inputs[l[0]]=t;
-  });
-  if(any)det.open=true;
+  var ta=el("textarea","",null,box);ta.value=o.text||"";ta.rows=o.rows||4;ta.placeholder="Write the lines here";
+  var tabs=el("div","stabs",null,box);
+  var tT=el("button","stab","Translation",tabs),tA=el("button","stab","Audio",tabs);
+  tT.type=tA.type="button";
+  var pT=el("div","spanel",null,box),pA=el("div","spanel",null,box);pT.hidden=pA.hidden=true;
+  var lf,af;
+  function badges(){tT.classList.toggle("has",!!(lf&&lf.get()));tA.classList.toggle("has",!!(af&&af.get()));}
+  lf=langField(pT,o.mean,3,badges);af=audioField(pA,o.audio,badges);
+  tT.onclick=function(){pT.hidden=!pT.hidden;pA.hidden=true;tT.classList.toggle("open",!pT.hidden);tA.classList.remove("open");};
+  tA.onclick=function(){pA.hidden=!pA.hidden;pT.hidden=true;tA.classList.toggle("open",!pA.hidden);tT.classList.remove("open");};
+  badges();
   box.getText=function(){return ta.value.trim();};
-  box.getMean=function(){var m={},got=false;LANGS.forEach(function(l){var v=inputs[l[0]].value.trim();if(v){m[l[0]]=v;got=true;}});return got?m:null;};
+  box.getMean=function(){return lf.get();};
+  box.getAudio=function(){return af.get();};
   return box;
 }
 function renumber(container){
   var word=container.id==="verses"?"Verse ":"Charana ";
   Array.from(container.children).forEach(function(b,i){b.querySelector(".sechead b").textContent=word+(i+1);});
 }
-function addRepeat(container,text,mean){
+function addRepeat(container,text,mean,audio){
   var word=container.id==="verses"?"Verse ":"Charana ";
-  var box=secBox({label:word+(container.children.length+1),text:text,mean:mean,move:true,remove:true,rows:4});
+  var box=secBox({label:word+(container.children.length+1),text:text,mean:mean,audio:audio,move:true,remove:true,rows:4});
   container.appendChild(box);return box;
 }
 function collect(container){
-  var texts=[],means=[],any=false;
+  var texts=[],means=[],auds=[],anyM=false,anyA=false;
   Array.from(container.children).forEach(function(b){
-    var t=b.getText(),m=b.getMean();
-    if(!t&&!m)return;
-    texts.push(t);means.push(m||{});if(m)any=true;
+    var t=b.getText(),m=b.getMean(),a=b.getAudio();
+    if(!t&&!m&&!a)return;
+    texts.push(t);means.push(m||{});auds.push(a||"");if(m)anyM=true;if(a)anyA=true;
   });
-  return{texts:texts,means:any?means:null};
+  return{texts:texts,means:anyM?means:null,audios:anyA?auds:null};
 }
 
-/* ---------- work form ---------- */
-function fillTypes(sel){
-  var s=$("f_type");s.innerHTML="";
-  types().forEach(function(t){el("option","",t.name,s).value=t.name;});
-  if(sel&&!types().some(function(t){return t.name===sel;}))el("option","",sel,s).value=sel;
-  s.value=sel||types()[0].name;
+/* ---------- piece editor ---------- */
+var sumField=null,pieceAudio=null;
+function segSet(box,val,cb){
+  Array.from(box.children).forEach(function(b){b.className=(b.dataset.v===val?"on":"");b.onclick=function(){segSet(box,b.dataset.v,cb);if(cb)cb(b.dataset.v);};});
+}
+function buildTypeSeg(sel){
+  var box=$("f_typeSeg");box.innerHTML="";
+  var list=types().map(function(t){return t.name;});
+  if(sel&&list.indexOf(sel)<0)list.push(sel);
+  list.forEach(function(n){var b=el("button","",n,box);b.type="button";b.dataset.v=n;});
+  edType=sel||list[0];
+  segSet(box,edType,function(v){edType=v;applyLayout();});
 }
 function applyLayout(){
-  var lay=layoutOfType($("f_type").value);
+  var lay=layoutOfType(edType);
   $("grp_music").hidden=(lay==="article");
   $("grp_kriti").hidden=(lay!=="kriti");
   $("grp_verses").hidden=(lay!=="verses");
   $("grp_article").hidden=(lay!=="article");
-  if(lay==="kriti"&&!$("charanas").children.length)addRepeat($("charanas"),"",null);
-  if(lay==="verses"&&!$("verses").children.length)addRepeat($("verses"),"",null);
+  if(lay==="kriti"&&!$("charanas").children.length)addRepeat($("charanas"),"",null,"");
+  if(lay==="verses"&&!$("verses").children.length)addRepeat($("verses"),"",null,"");
 }
-$("f_type").onchange=applyLayout;
-$("btnAddCharana").onclick=function(){addRepeat($("charanas"),"",null);};
-$("btnAddVerse").onclick=function(){addRepeat($("verses"),"",null);};
+$("btnAddCharana").onclick=function(){addRepeat($("charanas"),"",null,"");};
+$("btnAddVerse").onclick=function(){addRepeat($("verses"),"",null,"");};
+$("anuBtn").onclick=function(){$("anupallaviBox").hidden=false;$("anuBtn").hidden=true;};
+segSet($("f_statusSeg"),"complete",function(v){edStatus=v;});
 
-/* read one piece: unsaved local copy first, otherwise its own small file */
 function getWork(id){
   if(dirty[id])return Promise.resolve(dirty[id]);
   var en=entryOf(id);
@@ -622,28 +698,32 @@ function getWork(id){
 }
 function openForm(id){
   if(!id)return fillForm(null,{});
-  getWork(id).then(function(w){fillForm(id,w);}).catch(function(e){msg("Could not load this piece ("+e.message+"). Check your connection.",true);});
+  getWork(id).then(function(w){fillForm(id,w);}).catch(function(e){toast("Could not load this piece ("+e.message+"). Check your connection.",true);});
 }
 function fillForm(id,w){
   editing=id;
-  var M=w.meanings||{};
-  fillTypes(w.type);
-  $("formTitle").textContent=id?"Edit piece":"New piece";
-  $("f_title").value=w.title||"";$("f_status").value=w.status||"complete";
+  var M=w.meanings||{},A=w.audios||{};
+  buildTypeSeg(w.type);
+  $("edTitle").textContent=id?"Edit piece":"New piece";
+  $("f_title").value=w.title||"";
+  edStatus=w.status||"complete";segSet($("f_statusSeg"),edStatus,function(v){edStatus=v;});
   $("f_date").value=w.date||today();$("f_tags").value=(w.tags||[]).join(", ");
   $("f_ankita").value=id?(w.ankita||""):((site&&site.name)||"");
   $("f_raga").value=w.raga||"";$("f_tala").value=w.tala||"";
-  $("pallaviBox").innerHTML="";$("pallaviBox").appendChild(secBox({label:"Pallavi",text:w.pallavi,mean:M.pallavi,rows:3}));
-  $("anupallaviBox").innerHTML="";$("anupallaviBox").appendChild(secBox({label:"Anupallavi",text:w.anupallavi,mean:M.anupallavi,rows:3}));
-  $("charanas").innerHTML="";(w.charanas||[]).forEach(function(c,i){addRepeat($("charanas"),c,(M.charanas||[])[i]);});
-  $("verses").innerHTML="";(w.verses||[]).forEach(function(v,i){addRepeat($("verses"),v,(M.verses||[])[i]);});
+  $("pallaviBox").innerHTML="";$("pallaviBox").appendChild(secBox({label:"Pallavi",text:w.pallavi,mean:M.pallavi,audio:A.pallavi,rows:3}));
+  $("anupallaviBox").innerHTML="";$("anupallaviBox").appendChild(secBox({label:"Anupallavi",text:w.anupallavi,mean:M.anupallavi,audio:A.anupallavi,rows:3}));
+  var hasAnu=!!(w.anupallavi||M.anupallavi||A.anupallavi);
+  $("anupallaviBox").hidden=!hasAnu;$("anuBtn").hidden=hasAnu;
+  $("charanas").innerHTML="";(w.charanas||[]).forEach(function(c,i){addRepeat($("charanas"),c,(M.charanas||[])[i],(A.charanas||[])[i]);});
+  $("verses").innerHTML="";(w.verses||[]).forEach(function(v,i){addRepeat($("verses"),v,(M.verses||[])[i],(A.verses||[])[i]);});
   $("f_body").value=w.body||"";$("bodyPrev").hidden=true;
-  var s=w.summary||{};LANGS.forEach(function(l){$("sum_"+l[0]).value=s[l[0]]||"";});
-  $("sumBox").open=!!(s.en||s.kn||s.hi);
-  $("f_notes").value=w.notes||"";$("f_link").value=w.link||"";$("f_audio").value=w.audio||"";
+  $("sumBox").innerHTML="";sumField=langField($("sumBox"),w.summary,3);
+  $("f_notes").value=w.notes||"";$("f_link").value=w.link||"";
+  $("pieceAudio").innerHTML="";pieceAudio=audioField($("pieceAudio"),w.audio||"");
   applyLayout();
-  $("formCard").hidden=false;$("formCard").scrollIntoView({behavior:"smooth"});
+  $("editor").hidden=false;$("editor").scrollTop=0;document.body.style.overflow="hidden";
 }
+function closeEditor(){$("editor").hidden=true;document.body.style.overflow="";editing=null;}
 function makeId(title){
   var s=title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
   if(s.length<3)s="w"+Date.now().toString(36);
@@ -652,135 +732,258 @@ function makeId(title){
   while(entryOf(s))s=base+"-"+(n++);
   return s;
 }
-function saveWork(){
+function buildWork(){
   var title=$("f_title").value.trim();
-  if(!title){msg("Title is required",true);return;}
-  var type=$("f_type").value,lay=layoutOfType(type);
-  var oldEntry=editing?entryOf(editing):null;
+  if(!title){toast("Please write a title first",true);$("f_title").focus();return null;}
+  var type=edType,lay=layoutOfType(type);
   var old=editing?(dirty[editing]||{}):{};
   var w={id:editing||makeId(title)};
   Object.keys(old).forEach(function(k){if(KNOWN.indexOf(k)<0)w[k]=old[k];});
-  w.title=title;w.type=type;w.status=$("f_status").value;w.date=$("f_date").value;
+  w.title=title;w.type=type;w.status=edStatus;w.date=$("f_date").value;
   w.tags=$("f_tags").value.split(",").map(function(t){return t.trim();}).filter(Boolean);
-  var M={};
+  var M={},A={};
   if(lay!=="article"){w.ankita=$("f_ankita").value.trim();w.raga=$("f_raga").value.trim();w.tala=$("f_tala").value.trim();}
   if(lay==="kriti"){
-    var pb=$("pallaviBox").firstElementChild,ab=$("anupallaviBox").firstElementChild;
-    w.pallavi=pb.getText();w.anupallavi=ab.getText();
+    var pb=$("pallaviBox").firstElementChild,ab=$("anupallaviBox").firstElementChild,useAnu=!$("anupallaviBox").hidden;
+    w.pallavi=pb.getText();w.anupallavi=useAnu?ab.getText():"";
     if(pb.getMean())M.pallavi=pb.getMean();
-    if(ab.getMean())M.anupallavi=ab.getMean();
-    var c=collect($("charanas"));w.charanas=c.texts;if(c.means)M.charanas=c.means;
+    if(pb.getAudio())A.pallavi=pb.getAudio();
+    if(useAnu){if(ab.getMean())M.anupallavi=ab.getMean();if(ab.getAudio())A.anupallavi=ab.getAudio();}
+    var c=collect($("charanas"));w.charanas=c.texts;if(c.means)M.charanas=c.means;if(c.audios)A.charanas=c.audios;
   }else if(lay==="verses"){
-    var v=collect($("verses"));w.verses=v.texts;if(v.means)M.verses=v.means;
+    var v=collect($("verses"));w.verses=v.texts;if(v.means)M.verses=v.means;if(v.audios)A.verses=v.audios;
   }else{
     w.body=$("f_body").value.trim();
   }
   if(Object.keys(M).length)w.meanings=M;
-  var sm={};LANGS.forEach(function(l){var t=$("sum_"+l[0]).value.trim();if(t)sm[l[0]]=t;});
-  if(Object.keys(sm).length)w.summary=sm;
-  w.notes=$("f_notes").value.trim();w.link=$("f_link").value.trim();w.audio=$("f_audio").value.trim();
+  if(Object.keys(A).length)w.audios=A;
+  var sm=sumField.get();if(sm)w.summary=sm;
+  w.notes=$("f_notes").value.trim();w.link=$("f_link").value.trim();w.audio=pieceAudio.get();
   Object.keys(w).forEach(function(k){var x=w[k];if(x===""||x==null||(Array.isArray(x)&&!x.length))delete w[k];});
+  return w;
+}
+function saveWork(){
+  var w=buildWork();if(!w)return;
+  var oldEntry=editing?entryOf(editing):null;
   var e=mkEntry(w,oldEntry&&oldEntry.f);
   if(!oldEntry)fresh[w.id]=1;
   delete deleted[w.id];
   var i=index.findIndex(function(k){return k.id===w.id;});
   if(i>-1)index[i]=e;else index.push(e);
   dirty[w.id]=w;
-  persist();fillTypeFilter();renderList();$("formCard").hidden=true;editing=null;
-  msg("Saved on this device. Press Publish to put it online.");
-  window.scrollTo({top:0,behavior:"smooth"});
+  persist();renderChips();renderList();updateStatus();closeEditor();
+  toast("Saved on this device. Press Publish to put it online.");
 }
 $("btnNew").onclick=function(){openForm(null);};
-$("btnSave").onclick=saveWork;
-$("btnCancel").onclick=function(){$("formCard").hidden=true;};
+$("btnSave").onclick=saveWork;$("btnSave2").onclick=saveWork;
+$("edBack").onclick=function(){if(confirm("Close without saving this piece?"))closeEditor();};
 toolbar($("bodyTools"),$("f_body"),$("bodyPrev"));
-toolbar($("aboutTools"),$("s_about"),$("aboutPrev"));
+$("btnUploadLink").onclick=function(){
+  var f=$("f_file").files[0];if(!f){toast("Choose a file first",true);return;}
+  uploadFile(f).then(function(p){$("f_link").value=p;$("f_file").value="";toast("Uploaded as "+p);}).catch(function(e){toast(e.message,true);});
+};
 
-/* ---------- site settings ---------- */
-function typesText(){return types().map(function(t){return t.name+" | "+t.layout+" | "+(t.plural||t.name+"s")+" | "+(t.sub||"");}).join("\n");}
-function parseTypes(txt){
+/* ---------- live preview (the real website in a frame) ---------- */
+function pvSend(frame,hash,idx,works){
+  if(!frame||!frame.contentWindow)return;
+  var w=Object.assign({},dirty,works||{});
+  try{frame.contentWindow.postMessage({kriti:"preview",site:site,index:idx||index,works:w,hash:hash},location.origin);}catch(e){}
+}
+$("btnPv").onclick=function(){
+  var w=buildWork();if(!w)return;
+  var oldEntry=editing?entryOf(editing):null,e=mkEntry(w,oldEntry&&oldEntry.f);
+  var idx=index.filter(function(k){return k.id!==w.id;}).concat([e]),works={};works[w.id]=w;
+  var fr=$("pvFrame2"),go=function(){pvSend(fr,"#/"+encodeURIComponent(w.id),idx,works);};
+  $("pvModal").hidden=false;
+  if(!fr.getAttribute("src")){fr.onload=go;fr.src="index.html";}else go();
+};
+$("pvClose").onclick=function(){$("pvModal").hidden=true;};
+
+/* ---------- pages (content of every section) ---------- */
+var pageTimer=null;
+function schedule(){clearTimeout(pageTimer);pageTimer=setTimeout(applyAll,250);}
+function applyAll(){
+  readAll();siteDirty=true;persist();updateStatus();
+  var fr=$("pvFrame");if(fr&&fr.getAttribute("src"))pvSend(fr,pvHash);
+}
+function typeCard(t,open){
+  var inUse=index.some(function(e){return e.type===t.name;});
+  var d=el("details","card tcard");if(open)d.open=true;
+  var sm=el("summary","",null,d);
+  var title=el("span","",t.plural||t.name,sm);el("small","",layoutLabel(t.layout),title);
+  var body=el("div","",null,d);
+  var r1=el("div","row",null,body);
+  var a=el("div","",null,r1);el("label","","Button name on the website",a);var inPl=el("input","t_plural",null,a);inPl.value=t.plural||"";inPl.placeholder="e.g. Kritis";
+  var b=el("div","",null,r1);el("label","","Small line under it (Kannada)",b);var inSub=el("input","t_sub",null,b);inSub.value=t.sub||"";inSub.placeholder="ಕೃತಿಗಳು";
+  var r2=el("div","row",null,body);
+  var c=el("div","",null,r2);el("label","","Kind of page",c);var sel=el("select","t_layout",null,c);
+  LAYOUTS.forEach(function(l){var o=el("option","",l[1],sel);o.value=l[0];});sel.value=t.layout||"kriti";
+  var e=el("div","",null,r2);el("label","","Internal name"+(inUse?" (locked: pieces use it)":""),e);var inName=el("input","t_name",null,e);inName.value=t.name||"";inName.disabled=inUse;inName.placeholder="e.g. Suladi";
+  el("label","","Introduction shown at the top of this page (optional, several lines allowed)",body);
+  var inIntro=el("textarea","t_intro",null,body);inIntro.rows=2;inIntro.value=t.intro||"";
+  var act=el("div","btns",null,body);act.style.cssText="display:flex;gap:.4rem;margin-top:.8rem";
+  var up=el("button","btn small","↑ Move up",act),dn=el("button","btn small","↓ Move down",act),rm=el("button","btn small danger","Remove section",act);
+  up.type=dn.type=rm.type="button";
+  up.onclick=function(){var p=d.parentNode,pr=d.previousElementSibling;if(pr){p.insertBefore(d,pr);schedule();}};
+  dn.onclick=function(){var p=d.parentNode,nx=d.nextElementSibling;if(nx){p.insertBefore(nx,d);schedule();}};
+  rm.onclick=function(){
+    if(inUse){toast("This section still has pieces. Delete or move them first.",true);return;}
+    if(confirm("Remove this section?")){d.parentNode.removeChild(d);schedule();}
+  };
+  inPl.addEventListener("input",function(){title.firstChild.textContent=inPl.value||inName.value||"New section";});
+  sel.addEventListener("change",function(){title.querySelector("small").textContent=layoutLabel(sel.value);});
+  return d;
+}
+function layoutLabel(l){var r=LAYOUTS.filter(function(x){return x[0]===l;})[0];return r?r[1].split(" (")[0]:l;}
+function buildTypeCards(){
+  var box=$("typeCards");box.innerHTML="";
+  types().forEach(function(t){box.appendChild(typeCard(t,false));});
+}
+$("btnAddType").onclick=function(){
+  var d=typeCard({name:"",layout:"kriti",plural:"",sub:"",intro:""},true);
+  $("typeCards").appendChild(d);d.scrollIntoView({behavior:"smooth",block:"center"});
+};
+function readTypes(){
   var out=[];
-  txt.split("\n").forEach(function(line){
-    var p=line.split("|"),name=p[0].trim();if(!name)return;
-    var lay=(p[1]||"kriti").trim().toLowerCase();if(LAYOUTS.indexOf(lay)<0)lay="kriti";
-    var o={name:name,layout:lay,plural:(p[2]||"").trim()||name+"s"};if((p[3]||"").trim())o.sub=p[3].trim();out.push(o);
+  Array.from($("typeCards").children).forEach(function(d){
+    var name=d.querySelector(".t_name").value.trim(),pl=d.querySelector(".t_plural").value.trim();
+    if(!name)name=pl;if(!name)return;
+    var o={name:name,layout:d.querySelector(".t_layout").value,plural:pl||name+"s"};
+    var sub=d.querySelector(".t_sub").value.trim(),intro=d.querySelector(".t_intro").value.trim();
+    if(sub)o.sub=sub;if(intro)o.intro=intro;
+    out.push(o);
   });
   return out.length?out:DEFAULT_TYPES;
 }
 function buildLabels(){
   var box=$("labels");box.innerHTML="";
   LABEL_DEFS.forEach(function(d){
+    if(d[0]==="aboutSub")return;
     el("label","",d[2],box);
     var i=el("input","",null,box);i.id="lab_"+d[0];i.placeholder=d[1];
     i.value=(site.labels&&site.labels[d[0]])||"";
   });
+  $("lab_aboutSub").value=(site.labels&&site.labels.aboutSub)||"";
 }
-function renderSite(){
-  var s=site||{},t=s.theme||{};
-  $("s_offering").value=s.offering||"";$("s_name").value=s.name||"";$("s_kn").value=s.kn||"";
-  $("s_tagline").value=s.tagline||"";$("s_intro").value=s.intro||"";
-  $("s_title").value=s.title||"";$("s_desc").value=s.description||"";$("s_url").value=s.url||"";
-  $("s_accent").value=/^#[0-9a-f]{6}$/i.test(t.accent||"")?t.accent:"#a4562b";
-  $("s_paper").value=t.paper||"cream";zWrite(t);$("s_font").value=t.font||"serif";
-  $("s_lang").value=s.defaultLang||"en";
-  $("s_hFont").value=t.homeFont||"";$("s_hKn").value=t.homeKn||"";$("s_mItalic").value=t.mItalic||"all";$("s_mSize").value=t.mSize||"s";$("s_mTone").value=t.mTone||"muted";$("s_mFrame").value=t.mFrame||"rule";
-  mPreview();fPreview();
-  $("s_aboutTitle").value=s.aboutTitle||"";$("s_about").value=s.about||DEFAULT_ABOUT;
-  $("s_types").value=typesText();
-  $("s_footer").value=s.footer||"";$("s_year").value=s.copyrightYear||"";
-  $("s_lname").value=s.licenseName||"";$("s_lurl").value=s.licenseUrl||"";$("s_lnote").value=s.licenseNote||"";
-  buildLabels();
+function renderPages(){
+  var s=site||{};
+  $("p_offering").value=s.offering||"";$("p_name").value=s.name||"";$("p_kn").value=s.kn||"";
+  $("p_tagline").value=s.tagline||"";$("p_intro").value=s.intro||"";
+  $("p_aboutTitle").value=s.aboutTitle||"";$("p_about").value=s.about||DEFAULT_ABOUT;
+  $("p_footer").value=s.footer||"";$("p_year").value=s.copyrightYear||"";
+  $("p_lname").value=s.licenseName||"";$("p_lurl").value=s.licenseUrl||"";$("p_lnote").value=s.licenseNote||"";
+  $("p_title").value=s.title||"";$("p_desc").value=s.description||"";$("p_url").value=s.url||"";
+  buildTypeCards();buildLabels();
 }
-function saveSite(){
+toolbar($("aboutTools"),$("p_about"),$("aboutPrev"));
+
+/* ---------- design: size, font and colour for each kind of text ---------- */
+var FONT_NOTE={home:"First page",nav:"Menu",head:"Titles",verse:"Verses",mean:"Meanings",body:"Writings",small:"Small text"};
+function optList(sel,map,defLabel){
+  el("option","",defLabel,sel).value="";
+  Object.keys(map).forEach(function(k){el("option","",map[k][2],sel).value=k;});
+}
+function buildElCards(){
+  var box=$("elCards");box.innerHTML="";
+  ZDEFS.forEach(function(d){
+    var k=d[0],card=el("details","card el");card.id="el_"+k;
+    var sm=el("summary","",null,card),t=el("span","",d[1],sm);el("small","",d[2],t);
+    var z=el("div","zline",null,card);z.style.marginTop=".4rem";
+    var r=el("input","",null,z);r.type="range";r.id="z_"+k;r.min=70;r.max=160;r.step=5;r.value=100;
+    var v=el("b","","100%",z);v.id="zv_"+k;
+    r.oninput=function(){v.textContent=r.value+"%";schedule();};
+    if(k!=="all"){
+      var row=el("div","row",null,card);
+      var a=el("div","",null,row);el("label","","English letters",a);var fl=el("select","",null,a);fl.id="fl_"+k;optList(fl,HOME_FONTS,"Default");
+      var b=el("div","",null,row);el("label","","ಕನ್ನಡ letters",b);var fk=el("select","",null,b);fk.id="fk_"+k;optList(fk,KN_FONTS,"Default");
+      fl.onchange=fk.onchange=schedule;
+    }
+    if(k==="mean"){
+      var r2=el("div","row",null,card);
+      var c=el("div","",null,r2);el("label","","Italics",c);var it=el("select","",null,c);it.id="m_italic";
+      [["all","All languages"],["en","English only"],["off","None"]].forEach(function(o){el("option","",o[1],it).value=o[0];});
+      var e=el("div","",null,r2);el("label","","Text colour",e);var tn=el("select","",null,e);tn.id="m_tone";
+      [["muted","Soft grey"],["normal","Same as verses"]].forEach(function(o){el("option","",o[1],tn).value=o[0];});
+      var r3=el("div","",null,card);el("label","","Frame",r3);var fr=el("select","",null,r3);fr.id="m_frame";
+      [["rule","Thin line on the left"],["box","Soft box"],["none","None"]].forEach(function(o){el("option","",o[1],fr).value=o[0];});
+      it.onchange=tn.onchange=fr.onchange=schedule;
+    }
+    box.appendChild(card);
+  });
+}
+function renderDesign(){
+  var t=(site&&site.theme)||{};
+  $("d_accent").value=/^#[0-9a-f]{6}$/i.test(t.accent||"")?t.accent:"#7a2f1f";
+  $("d_paper").value=t.paper||"";$("d_font").value=t.font||"serif";$("d_lang").value=(site&&site.defaultLang)||"en";
+  var F=t.fonts||{};if(!F.home&&(t.homeFont||t.homeKn))F=Object.assign({},F,{home:{l:t.homeFont,k:t.homeKn}});
+  ZDEFS.forEach(function(d){
+    var k=d[0],v=zval(t,k);$("z_"+k).value=v;$("zv_"+k).textContent=v+"%";
+    if(k!=="all"){$("fl_"+k).value=(F[k]&&F[k].l)||"";$("fk_"+k).value=(F[k]&&F[k].k)||"";}
+  });
+  $("m_italic").value=t.mItalic||"all";$("m_tone").value=t.mTone||"muted";$("m_frame").value=t.mFrame||"rule";
+}
+["d_accent","d_paper","d_font","d_lang"].forEach(function(id){$(id).addEventListener("input",schedule);});
+document.querySelectorAll("[data-zp]").forEach(function(b){b.onclick=function(){
+  ZDEFS.forEach(function(d){var r=$("z_"+d[0]);r.value=d[0]==="all"?b.dataset.zp:100;$("zv_"+d[0]).textContent=r.value+"%";});schedule();
+};});
+$("zReset").onclick=function(){ZDEFS.forEach(function(d){var r=$("z_"+d[0]);r.value=100;$("zv_"+d[0]).textContent="100%";});schedule();};
+
+/* read every Pages + Design control into `site` */
+function readAll(){
   var s=Object.assign({},site);
   function set(k,v){if(v===""||v==null)delete s[k];else s[k]=v;}
-  set("offering",$("s_offering").value.trim());set("name",$("s_name").value.trim());set("kn",$("s_kn").value.trim());
-  set("tagline",$("s_tagline").value.trim());set("intro",$("s_intro").value.trim());
-  set("title",$("s_title").value.trim());set("description",$("s_desc").value.trim());set("url",$("s_url").value.trim());
-  s.theme={accent:$("s_accent").value,paper:$("s_paper").value,z:zRead(),font:$("s_font").value,mItalic:$("s_mItalic").value,homeFont:$("s_hFont").value,homeKn:$("s_hKn").value,mSize:$("s_mSize").value,mTone:$("s_mTone").value,mFrame:$("s_mFrame").value};
-  set("defaultLang",$("s_lang").value);
-  set("aboutTitle",$("s_aboutTitle").value.trim());set("about",$("s_about").value.trim());
-  s.types=parseTypes($("s_types").value);
-  set("footer",$("s_footer").value.trim());set("copyrightYear",$("s_year").value.trim());
-  set("licenseName",$("s_lname").value.trim());set("licenseUrl",$("s_lurl").value.trim());set("licenseNote",$("s_lnote").value.trim());
+  set("offering",$("p_offering").value.trim());set("name",$("p_name").value.trim());set("kn",$("p_kn").value.trim());
+  set("tagline",$("p_tagline").value.trim());set("intro",$("p_intro").value.trim());
+  set("aboutTitle",$("p_aboutTitle").value.trim());
+  var ab=$("p_about").value.trim();set("about",ab===DEFAULT_ABOUT.trim()?"":ab);
+  set("footer",$("p_footer").value.trim());set("copyrightYear",$("p_year").value.trim());
+  set("licenseName",$("p_lname").value.trim());set("licenseUrl",$("p_lurl").value.trim());set("licenseNote",$("p_lnote").value.trim());
+  set("title",$("p_title").value.trim());set("description",$("p_desc").value.trim());set("url",$("p_url").value.trim());
+  set("defaultLang",$("d_lang").value);
+  s.types=readTypes();
   var labs={};
   LABEL_DEFS.forEach(function(d){var v=$("lab_"+d[0]).value.trim();if(v&&v!==d[1])labs[d[0]]=v;});
   if(Object.keys(labs).length)s.labels=labs;else delete s.labels;
-  Object.keys(s.theme).forEach(function(k){if(s.theme[k]==="")delete s.theme[k];});
-  if(!Object.keys(s.theme.z).length)delete s.theme.z;
-  site=s;persist();fillTypes($("f_type").value);fillTypeFilter();
-  msg("Site settings saved on this device. Press Publish to put them online.");
+  var old=s.theme||{},th={};
+  Object.keys(old).forEach(function(k){if(["z","fonts","homeFont","homeKn","size","accent","paper","font","mItalic","mTone","mFrame"].indexOf(k)<0)th[k]=old[k];});
+  th.accent=$("d_accent").value;if($("d_paper").value)th.paper=$("d_paper").value;th.font=$("d_font").value;
+  var z={},fonts={};
+  ZDEFS.forEach(function(d){
+    var k=d[0],v=Number($("z_"+k).value);if(v!==100)z[k]=v;
+    if(k!=="all"){var l=$("fl_"+k).value,kn=$("fk_"+k).value;if(l||kn){fonts[k]={};if(l)fonts[k].l=l;if(kn)fonts[k].k=kn;}}
+  });
+  if(Object.keys(z).length)th.z=z;if(Object.keys(fonts).length)th.fonts=fonts;
+  th.mItalic=$("m_italic").value;th.mTone=$("m_tone").value;th.mFrame=$("m_frame").value;
+  s.theme=th;site=s;
 }
-function zRead(){
-  var z={};ZDEFS.forEach(function(d){var v=Number($("z_"+d[0]).value);if(v!==100)z[d[0]]=v;});return z;
+document.getElementById("v_pages").addEventListener("input",schedule);
+document.getElementById("v_pages").addEventListener("change",schedule);
+
+var designReady=false;
+function pvPageChips(){
+  var box=$("pvPages");box.innerHTML="";
+  var first=index.slice().sort(function(a,b){return(b.date||"").localeCompare(a.date||"");})[0];
+  var pages=[["Home","#/"],["About","#/about"]];
+  types().forEach(function(t){pages.push([t.plural||t.name,"#/t/"+slug(t.name)]);});
+  if(first)pages.push(["A piece","#/"+encodeURIComponent(first.id)]);
+  pages.forEach(function(p){
+    var b=el("button",pvHash===p[1]?"on":"",p[0],box);b.type="button";
+    b.onclick=function(){pvHash=p[1];pvPageChips();pvSend($("pvFrame"),pvHash);};
+  });
 }
-function zWrite(t){
-  ZDEFS.forEach(function(d){$("z_"+d[0]).value=zval(t,d[0]);});zPreview();
+function initDesign(){
+  pvPageChips();
+  var fr=$("pvFrame");
+  if(!fr.getAttribute("src")){fr.onload=function(){pvSend(fr,pvHash);};fr.src="index.html";}
+  else pvSend(fr,pvHash);
 }
-function zPreview(){
-  ZDEFS.forEach(function(d){$("zv_"+d[0]).textContent=$("z_"+d[0]).value+"%";});
-  var st=$("zprevStyle");if(!st){st=document.createElement("style");st.id="zprevStyle";document.head.appendChild(st);}
-  var z={};ZDEFS.forEach(function(d){z[d[0]]=Number($("z_"+d[0]).value);});
-  st.textContent=sizeCss({z:z},"#zprev");
-}
-ZDEFS.forEach(function(d){$("z_"+d[0]).oninput=zPreview;});
-document.querySelectorAll("[data-zp]").forEach(function(b){b.onclick=function(){
-  ZDEFS.forEach(function(d){$("z_"+d[0]).value=d[0]==="all"?b.dataset.zp:100;});zPreview();
-};});
-$("zReset").onclick=function(){ZDEFS.forEach(function(d){$("z_"+d[0]).value=100;});zPreview();};
-function fPreview(){
-  var t={homeFont:$("s_hFont").value,homeKn:$("s_hKn").value};
-  var st=$("fprevStyle");if(!st){st=document.createElement("style");st.id="fprevStyle";document.head.appendChild(st);}
-  st.textContent=homeFontCss(t,"#fprev");
-}
-["s_hFont","s_hKn"].forEach(function(id){$(id).onchange=fPreview;});
-function mPreview(){
-  var t={mItalic:$("s_mItalic").value,homeFont:$("s_hFont").value,homeKn:$("s_hKn").value,mSize:$("s_mSize").value,mTone:$("s_mTone").value,mFrame:$("s_mFrame").value};
-  var st=$("mprevStyle");if(!st){st=document.createElement("style");st.id="mprevStyle";document.head.appendChild(st);}
-  st.textContent=meanCss(t,"#mprev");
-}
-["s_mItalic","s_mSize","s_mTone","s_mFrame"].forEach(function(id){$(id).onchange=mPreview;});
-$("btnSite").onclick=saveSite;
+window.addEventListener("message",function(e){
+  var d=e.data;if(e.origin!==location.origin||!d||d.kriti!=="pick")return;
+  showView("design");
+  var c=$("el_"+d.group);if(!c)return;
+  c.open=true;c.classList.add("flash");c.scrollIntoView({behavior:"smooth",block:"center"});
+  setTimeout(function(){c.classList.remove("flash");},1300);
+});
 
 /* ---------- GitHub ---------- */
 function gh(){
@@ -800,22 +1003,22 @@ function gj(g,path,method,body){
   return fetch(repoUrl(g,path),{method:method||"GET",headers:ghHeaders(g),body:body?JSON.stringify(body):undefined,cache:"no-store"})
     .then(function(r){return ghCheck(r,(method||"GET")+" "+path.split("?")[0]);});
 }
+function setConnNote(){var g=gh();$("btnPublish").title=g.token?"":"Connect to GitHub first (Connect tab)";}
 function saveGh(silent){
   var g={owner:$("g_owner").value.trim(),repo:$("g_repo").value.trim(),branch:$("g_branch").value.trim()||"main",token:$("g_token").value.trim()};
-  localStorage.setItem(GH_KEY,JSON.stringify(g));
-  $("connNote").textContent=g.token?"Connected to GitHub on this device.":"";
-  if(silent!==true)msg("Connection saved on this device");
+  localStorage.setItem(GH_KEY,JSON.stringify(g));setConnNote();
+  if(silent!==true)toast("Connection saved on this device");
 }
 function testGh(){
   saveGh(true);var g=gh();
-  if(!g.token){msg("Paste your token first",true);return;}
+  if(!g.token){toast("Paste your token first",true);return;}
   fetch(repoUrl(g,""),{headers:ghHeaders(g)})
     .then(function(r){
       if(r.status===401)throw new Error("Token not accepted. Make a new one and paste it again.");
       if(r.status===404)throw new Error("Repository not found. Check the username and repo name.");
       if(!r.ok)throw new Error("GitHub replied with "+r.status);
-      msg("Connected ✓ Write access is confirmed the first time you Publish.");
-    }).catch(function(e){msg(e.message,true);});
+      toast("Connected ✓ Write access is confirmed the first time you Publish.");
+    }).catch(function(e){toast(e.message,true);});
 }
 function b64(str){return btoa(unescape(encodeURIComponent(str)));}
 function fileUrl(g,path){return repoUrl(g,"/contents/"+path);}
@@ -829,7 +1032,6 @@ function putFile(g,path,contentB64,message){
     return fetch(fileUrl(g,path),{method:"PUT",headers:ghHeaders(g),body:JSON.stringify(body)});
   }).then(function(r){return ghCheck(r,"Could not save "+path);});
 }
-/* read a text file from the repo (token: always-fresh via API; otherwise the public site) */
 function staticGet(path){return fetch(path+"?v="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error(String(r.status));return r.text();});}
 function readAny(path){
   var g=gh();
@@ -854,11 +1056,11 @@ function metaBlock(s){
 function indexText(){
   return'{"v":'+Date.now()+',"works":[\n'+index.map(function(e){return JSON.stringify(e);}).join(",\n")+"\n]}\n";
 }
-/* one atomic commit: changed pieces + site.json + index.json (+ page title/description) */
 function publish(){
   var g=gh();
-  if(!g.owner||!g.repo||!g.token){msg("Connect to GitHub first (Connection tab)",true);showTab("conn");return;}
-  msg("Publishing…");
+  if(!g.owner||!g.repo||!g.token){toast("Connect to GitHub first (Connect tab)",true);showView("conn");return;}
+  clearTimeout(pageTimer);if($("v_pages").hidden===false||$("v_design").hidden===false)readAll();
+  toast("Publishing…");
   var head,base,tree=[],note="";
   function add(path,text){tree.push({path:path,mode:"100644",type:"blob",content:text});}
   gj(g,"/git/ref/heads/"+encodeURIComponent(g.branch)).then(function(ref){
@@ -883,73 +1085,110 @@ function publish(){
   }).then(function(nc){
     return gj(g,"/git/refs/heads/"+encodeURIComponent(g.branch),"PATCH",{sha:nc.sha});
   }).then(function(){
-    dirty={};deleted={};fresh={};legacy=false;persist();renderList();
-    msg("Published. "+note+"The site updates in about a minute.");
-  }).catch(function(e){msg(e.message,true);});
+    dirty={};deleted={};fresh={};legacy=false;siteDirty=false;persist();renderList();updateStatus();
+    toast("Published. "+note+"The website updates in about a minute.");
+  }).catch(function(e){toast(e.message,true);});
 }
+$("btnPublish").onclick=publish;
+
+/* ---------- files ---------- */
 function safeName(n){
   var dot=n.lastIndexOf("."),ext=dot>-1?n.slice(dot).toLowerCase().replace(/[^.a-z0-9]/g,""):"";
   var base=(dot>-1?n.slice(0,dot):n).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
   return(base||"file-"+Date.now().toString(36))+ext;
 }
-function uploadFrom(input,done){
-  var g=gh(),f=input.files[0];
-  if(!f){msg("Choose a file first",true);return;}
-  if(!g.token){msg("Connect to GitHub first (Connection tab)",true);showTab("conn");return;}
-  if(f.size>20*1024*1024){msg("File is over 20 MB. Please use a smaller file.",true);return;}
-  var path=(/^image\//.test(f.type)?"images/":"kritis/")+safeName(f.name);
-  msg("Uploading…");
-  var reader=new FileReader();
-  reader.onload=function(){
-    putFile(g,path,String(reader.result).split(",")[1],"Add "+path)
-      .then(function(){input.value="";done(path);})
-      .catch(function(e){msg(e.message,true);});
-  };
-  reader.readAsDataURL(f);
+function dirFor(f){
+  var n=f.name.toLowerCase();
+  if(/^image\//.test(f.type)||/\.(png|jpe?g|gif|webp|svg)$/.test(n))return"images/";
+  if(/^audio\//.test(f.type)||/\.(mp3|wav|m4a|aac|ogg|oga|opus|flac|weba)$/.test(n))return"audio/";
+  return"kritis/";
 }
-$("btnUpload").onclick=function(){uploadFrom($("f_file"),function(p){$("f_link").value=p;msg("Uploaded as "+p+". Now press Save piece, then Publish.");});};
-$("btnUpload2").onclick=function(){uploadFrom($("u_file"),function(p){
-  $("u_path").textContent=p;$("u_md").textContent="![description]("+p+")";$("u_result").hidden=false;msg("Uploaded as "+p);
-});};
+function uploadFile(f){
+  var g=gh();
+  return new Promise(function(resolve,reject){
+    if(!g.token){showView("conn");reject(new Error("Connect to GitHub first (Connect tab)"));return;}
+    var dir=dirFor(f),limit=dir==="audio/"?40:20;
+    if(f.size>limit*1024*1024){reject(new Error("File is over "+limit+" MB. For audio, try an mp3 or m4a version."));return;}
+    var path=dir+safeName(f.name),r=new FileReader();
+    toast("Uploading "+f.name+"…");
+    r.onload=function(){putFile(g,path,String(r.result).split(",")[1],"Add "+path).then(function(){resolve(path);}).catch(reject);};
+    r.onerror=function(){reject(new Error("Could not read the file"));};
+    r.readAsDataURL(f);
+  });
+}
+$("btnUpload").onclick=function(){
+  var files=Array.from($("u_file").files);
+  if(!files.length){toast("Choose one or more files first",true);return;}
+  var out=$("u_result");out.innerHTML="";
+  files.reduce(function(p,f){return p.then(function(){return uploadFile(f).then(function(path){
+    var row=el("div","card",null,out);
+    el("div","path",path,row);
+    if(/^images\//.test(path))el("div","path","![description]("+path+")",row).style.marginTop=".4rem";
+  });});},Promise.resolve()).then(function(){$("u_file").value="";toast("Uploaded");}).catch(function(e){toast(e.message,true);});
+};
+function listDir(g,dir){
+  return fetch(fileUrl(g,dir)+"?ref="+encodeURIComponent(g.branch)+"&t="+Date.now(),{headers:ghHeaders(g),cache:"no-store"})
+    .then(function(r){if(r.status===404)return[];if(!r.ok)throw new Error("Could not list "+dir+" ("+r.status+")");return r.json();});
+}
+$("btnLib").onclick=function(){
+  var g=gh(),box=$("lib");
+  if(!g.token){toast("Connect to GitHub first (Connect tab)",true);showView("conn");return;}
+  box.innerHTML="";
+  Promise.all(["audio","images","kritis"].map(function(d){return listDir(g,d);})).then(function(all){
+    var any=false;
+    all.forEach(function(files){files.forEach(function(f){
+      if(f.type!=="file")return;any=true;
+      var row=el("div","libitem",null,box),l=el("div","",null,row);
+      el("b","",f.name,l);el("div","hint",f.path+" · "+Math.round(f.size/1024)+" KB",l).style.margin="0";
+      var c=el("button","btn small","Copy path",row);
+      c.onclick=function(){
+        var done=function(){toast("Copied: "+f.path);};
+        if(navigator.clipboard)navigator.clipboard.writeText(f.path).then(done,function(){toast(f.path);});else toast(f.path);
+      };
+      if(/^audio\//.test(f.path)){var a=el("audio","",null,row);a.controls=true;a.preload="none";a.src=f.path;}
+      else if(/^images\//.test(f.path)){var im=el("img","",null,row);im.src=f.path;im.loading="lazy";}
+    });});
+    if(!any)box.textContent="No files yet.";
+  }).catch(function(e){toast(e.message,true);});
+};
 
 /* ---------- loading ---------- */
 function loadRemote(){
   return readAny("data/site.json").then(function(st){
     return readAny("data/index.json").then(function(it){
-      return{site:JSON.parse(st),index:JSON.parse(it).works||[],dirty:{},deleted:{},fresh:{},legacy:false};
+      return{site:JSON.parse(st),index:JSON.parse(it).works||[],dirty:{},deleted:{},fresh:{},legacy:false,siteDirty:false};
     });
   }).catch(function(e){
     if(String(e.message)!=="404")throw e;
-    /* older single-file layout: bring every work in; Publish will move them into data/ */
     return readAny("data.json").then(function(t){
       var d=JSON.parse(t),ix=[],dr={},fr={};
-      site=d.site||{};
       (d.works||[]).forEach(function(w){var en=mkEntry(w);ix.push(en);dr[w.id]=w;fr[w.id]=1;});
-      return{site:d.site||{},index:ix,dirty:dr,deleted:{},fresh:fr,legacy:true};
+      return{site:d.site||{},index:ix,dirty:dr,deleted:{},fresh:fr,legacy:true,siteDirty:true};
     });
   });
 }
 function start(s){
-  site=s.site||{};index=s.index||[];dirty=s.dirty||{};deleted=s.deleted||{};fresh=s.fresh||{};legacy=!!s.legacy;
-  shown=PAGE;fillTypes();fillTypeFilter();renderList();renderSite();
+  site=s.site||{};index=s.index||[];dirty=s.dirty||{};deleted=s.deleted||{};fresh=s.fresh||{};legacy=!!s.legacy;siteDirty=!!s.siteDirty;
+  shown=PAGE;fType="";
+  buildElCards();renderPages();renderDesign();renderChips();renderList();updateStatus();
 }
 $("btnGh").onclick=function(){saveGh();};
 $("btnTest").onclick=testGh;
-$("btnPublish").onclick=publish;
 $("btnDiscard").onclick=function(){
   if(!confirm("Discard unpublished changes and reload the live content?"))return;
   try{localStorage.removeItem(DRAFT_KEY);}catch(e){}
-  loadRemote().then(function(s){start(s);if(s.legacy)persist();$("formCard").hidden=true;msg("Reloaded the live content");}).catch(function(){msg("Could not load the content",true);});
+  loadRemote().then(function(s){start(s);if(s.legacy)persist();closeEditor();toast("Reloaded the live content");}).catch(function(){toast("Could not load the content",true);});
 };
 (function init(){
   var g=gh();
   $("g_owner").value=g.owner;$("g_repo").value=g.repo;$("g_branch").value=g.branch;$("g_token").value=g.token||"";
-  if(!g.token){$("ghBox").open=true;$("connNote").textContent="Not connected yet: open the Connection tab and set it up once.";}
-  else $("connNote").textContent="Connected to GitHub on this device.";
+  setConnNote();
+  buildElCards();
   var draft=null;try{draft=localStorage.getItem(DRAFT_KEY);}catch(e){}
-  if(draft){try{start(JSON.parse(draft));msg("Restored your unpublished changes");return;}catch(e){}}
-  loadRemote().then(function(s){start(s);if(s.legacy){persist();msg("Your existing works were loaded. Press Publish once to move them into the new data/ structure.");}})
-    .catch(function(e){start({site:{},index:[]});msg("Couldn't load the content ("+e.message+"). Check your connection and reload.",true);});
+  function noToken(){if(!g.token){showView("conn");toast("Welcome! First connect to GitHub (once), then everything works.");}}
+  if(draft){try{start(JSON.parse(draft));toast("Restored your unpublished changes");noToken();return;}catch(e){}}
+  loadRemote().then(function(s){start(s);if(s.legacy){persist();toast("Your existing works were loaded. Press Publish once to move them into the new data/ structure.");}noToken();})
+    .catch(function(e){start({site:{},index:[]});toast("Couldn't load the content ("+e.message+"). Check your connection and reload.",true);});
 })();
 </script>
 </body>

@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!--META-START-->
-<title>Mukunda Vittala · ಮುಕುಂದ ವಿಠಲ</title>
-<meta name="description" content="Small offerings at the feet of Hari. Written with little learning, and much hope.">
+<title>Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ</title>
+<meta name="description" content="Kannada kritis, ugabhogas and reflections on tattva in praise of Hari, with the ankita Mukunda Vittala.">
 <link rel="canonical" href="https://mukundavittaladaasa.github.io/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Mukunda Vittala · ಮುಕುಂದ ವಿಠಲ">
-<meta property="og:description" content="Small offerings at the feet of Hari. Written with little learning, and much hope.">
+<meta property="og:title" content="Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ">
+<meta property="og:description" content="Kannada kritis, ugabhogas and reflections on tattva in praise of Hari.">
 <meta property="og:url" content="https://mukundavittaladaasa.github.io/">
 <!--META-END-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,6 +76,9 @@ a{color:var(--accent)}
 .lchips{display:flex;flex-wrap:wrap;margin-bottom:.3rem}
 .lc{background:none;border:0;border-bottom:1px solid transparent;color:var(--muted);font:inherit;font-size:.72rem;letter-spacing:.06em;padding:0;margin-right:.9rem;cursor:pointer}
 .lc.on{color:var(--accent);border-bottom-color:var(--accent)}
+.acts{display:flex;flex-wrap:wrap;gap:.2rem 1.2rem;margin-top:.1rem}
+.sa{display:block;width:100%;height:2.2rem;margin-top:.5rem}
+.tintro{white-space:pre-line;color:var(--muted);font-size:.95rem;margin:0 0 1.2rem}
 .fb{font-size:.75rem;color:var(--muted);margin-top:.3rem;font-style:italic}
 .sum{margin-top:1.3rem;line-height:1.7;white-space:pre-line;font-family:var(--kn);background:none;border-left:2px solid var(--accent);padding:.3rem .9rem;font-size:.88rem;color:var(--muted);font-style:italic}
 .sum .lbl{margin-bottom:.3rem}
@@ -141,6 +144,7 @@ var LABEL_DEFS=[
 ["inProgress","in progress","Marks an unfinished piece"],
 ["summary","Summary","Heading of the summary box"],
 ["transBtn","Translation","Small button below each verse that opens its meaning"],
+["listenBtn","Listen","Small button below a verse that plays its audio"],
 ["showAll","Show all translations","Button text"],
 ["hideAll","Hide all translations","Button text"],
 ["shownIn","shown in {lang}","Note shown when the chosen language is missing"],
@@ -223,6 +227,7 @@ function meanCss(t,pre){
 }
 
 var HOME_FONTS={
+  source:["Source Serif 4","Source+Serif+4:ital,wght@0,400;0,600;1,400","Source Serif 4 (body default)"],
   cormorant:["Cormorant Garamond","Cormorant+Garamond:ital,wght@0,500;0,700;1,500","Cormorant Garamond (classic)"],
   playfair:["Playfair Display","Playfair+Display:ital,wght@0,500;0,700;1,500","Playfair Display (high contrast)"],
   cinzel:["Cinzel","Cinzel:wght@500;700","Cinzel (carved capitals)"],
@@ -243,18 +248,24 @@ function loadFonts(specs){
     var l=document.createElement("link");l.rel="stylesheet";l.href=href;document.head.appendChild(l);
   });
 }
-/* font for the first (home) page only; nothing is applied until a font is chosen */
-function homeFontCss(t,pre){
+var FSEL=null;
+/* per-group fonts: t.fonts = {group:{l:"latinKey",k:"kannadaKey"}} (older sites: homeFont/homeKn) */
+function fontsCss(t,pre){
   t=t||{};
-  if(!t.homeFont&&!t.homeKn)return"";
-  var f=HOME_FONTS[t.homeFont],k=KN_FONTS[t.homeKn]||KN_FONTS.noto;
-  var specs=[k[1]];if(f)specs.push(f[1]);loadFonts(specs);
-  var kfam='"'+k[0]+'","Noto Serif Devanagari",serif';
-  var lfam=(f?'"'+f[0]+'",':"")+kfam;
-  var p=(pre?pre+" ":"")+".landing";
-  return p+"{font-family:"+lfam+"}"+
-    p+" h1,"+p+" .menu b{font-family:"+lfam+"}"+
-    p+" .knname,"+p+" .offer,"+p+" .menu small{font-family:"+kfam+"}";
+  var F={};Object.keys(t.fonts||{}).forEach(function(g){F[g]=t.fonts[g];});
+  if(!F.home&&(t.homeFont||t.homeKn))F.home={l:t.homeFont,k:t.homeKn};
+  var out="",specs=[],pv=pre?pre+" ":"";
+  Object.keys(F).forEach(function(g){
+    var f=HOME_FONTS[F[g].l],k=KN_FONTS[F[g].k];
+    if(!f&&!k)return;
+    var kk=k||KN_FONTS.noto;specs.push(kk[1]);if(f)specs.push(f[1]);
+    var fam=(f?'"'+f[0]+'",':"")+'"'+kk[0]+'","Noto Serif Devanagari",serif';
+    var sels=g==="mean"?[".mean",".mean [data-l]",".sum",".sum [data-l]"]:(ZSEL[g]||[]).map(function(p){return p[0];});
+    if(g==="home")sels.push(".landing");
+    sels.forEach(function(s){out+=pv+s+"{font-family:"+fam+"}";});
+  });
+  if(specs.length)loadFonts(specs);
+  return out;
 }
 
 var ZDEFS=[
@@ -272,7 +283,7 @@ var ZSEL={
   nav:[[".mast.small h1","1.2rem"],[".mast.small .knname",".9rem"],[".nav a",".7rem"],["footer .fnav a",".74rem"],[".back",".82rem"],[".pn",".88rem"]],
   head:[[".pt","1.7rem"],[".dt","1.55rem"],[".md h2","1.4rem"],[".md h3",".8rem"],[".title","1.05rem"]],
   verse:[[".verse","1.02rem"]],
-  body:[[".md","1.02rem"],[".exc",".92rem"],[".note","1.02rem"]],
+  body:[[".md","1.02rem"],[".exc",".92rem"],[".note","1.02rem"],[".tintro",".95rem"]],
   small:[[".lbl",".72rem"],[".meta",".8rem"],[".count",".78rem"],[".tbtn",".72rem"],[".lc",".72rem"],[".chip",".78rem"],[".num",".78rem"],[".pallavi",".9rem"],["footer",".82rem"],["footer .copy",".76rem"],[".readbtn",".82rem"],["#q",".92rem"]]
 };
 function zval(t,k){
@@ -309,7 +320,7 @@ var _sorted=null;
 function sorted(){if(!_sorted)_sorted=INDEX.slice().sort(function(a,b){return(b.date||"").localeCompare(a.date||"");});return _sorted;}
 function ofType(name){return sorted().filter(function(w){return w.type===name;});}
 function availableTabs(){
-  return types().map(function(t){return{slug:slug(t.name),name:t.name,label:t.plural||(t.name+"s"),sub:t.sub||"",count:ofType(t.name).length};});
+  return types().map(function(t){return{slug:slug(t.name),name:t.name,label:t.plural||(t.name+"s"),sub:t.sub||"",intro:t.intro||"",count:ofType(t.name).length};});
 }
 function hasAbout(){return true;}
 function vals(o){return o?Object.keys(o).map(function(k){return o[k];}):[];}
@@ -389,7 +400,7 @@ function renderHome(tabSlug){
   header(app,true);tabsBar(app,ts,tabSlug);
   if(tabSlug==="about"){renderAbout();footer(app);window.scrollTo(0,0);return;}
   var tab=ts.filter(function(t){return t.slug===tabSlug;})[0],list=ofType(tab.name);
-  el("h2","pt",tab.label,app);if(tab.sub)el("div","sub",tab.sub,app);
+  el("h2","pt",tab.label,app);if(tab.sub)el("div","sub",tab.sub,app);if(tab.intro)el("p","tintro",tab.intro,app);
   var tagset={};list.forEach(function(w){(w.tags||[]).forEach(function(t){tagset[t]=1;});});
   var names=Object.keys(tagset).sort();
   if(state.tag&&names.indexOf(state.tag)<0)state.tag="";
@@ -412,7 +423,9 @@ function renderHome(tabSlug){
   if(q)q.oninput=function(){state.q=q.value;state.shown=PAGE;draw();};
   draw();footer(app);
 }
+var PREVIEWING=false,PREVIEW={};
 function loadWork(entry){
+  if(PREVIEW[entry.id])return Promise.resolve(Object.assign({},entry,PREVIEW[entry.id]));
   if(entry._full)return Promise.resolve(entry);
   return fetch(entry.f+"?v="+encodeURIComponent(V||Date.now())).then(function(r){
     if(!r.ok)throw new Error(r.status);return r.json();
@@ -428,7 +441,7 @@ function renderWork(id){
 }
 function showWork(w,entry){
   var lay=layoutOf(w),list=ofType(w.type),i=list.indexOf(entry);
-  var M=w.meanings||{},refresh=[],panels=[];
+  var M=w.meanings||{},A=w.audios||{},refresh=[],panels=[];
   app.innerHTML="";header(app,true);tabsBar(app,availableTabs(),slug(w.type));
   var ti=typeInfo(w.type),back=el("a","back","← "+(ti&&ti.plural?ti.plural:L("back")),app);back.href="#/t/"+slug(w.type);
   el("div","dt",w.title,app);
@@ -457,24 +470,37 @@ function showWork(w,entry){
     var sb=el("div","sum",null,app);el("div","lbl",L("summary"),sb);
     refresh.push(langBox(w.summary,sb));
   }
-  function sec(label,text,m){
+  var players=[];
+  function sec(label,text,m,au){
     var wrap=el("div","sec",null,app);
     if(label)el("div","lbl",label,wrap);
     var has=hasAny(m),body=el("div","verse"+(has?" tap":""),text,wrap);
-    if(!has)return;
-    var btn=el("button","tbtn","ⓘ "+L("transBtn"),wrap);btn.type="button";btn.setAttribute("aria-expanded","false");
-    var panel=el("div","mean",null,wrap);panel.hidden=true;panels.push(panel);
-    var toggle=function(){panel.hidden=!panel.hidden;btn.setAttribute("aria-expanded",String(!panel.hidden));};
-    btn.onclick=toggle;body.onclick=toggle;
-    refresh.push(langBox(m,panel));
+    if(!has&&!au)return;
+    var acts=el("div","acts",null,wrap);
+    if(has){
+      var btn=el("button","tbtn","ⓘ "+L("transBtn"),acts);btn.type="button";btn.setAttribute("aria-expanded","false");
+      var panel=el("div","mean",null,wrap);panel.hidden=true;panels.push(panel);
+      var toggle=function(){panel.hidden=!panel.hidden;btn.setAttribute("aria-expanded",String(!panel.hidden));};
+      btn.onclick=toggle;body.onclick=toggle;
+      refresh.push(langBox(m,panel));
+    }
+    if(au){
+      var lb=el("button","tbtn","♪ "+L("listenBtn"),acts),pl=null;lb.type="button";
+      lb.onclick=function(){
+        if(!pl){pl=el("audio","sa",null,wrap);pl.controls=true;pl.preload="none";pl.src=au;players.push(pl);
+          pl.addEventListener("play",function(){players.forEach(function(x){if(x!==pl)x.pause();});});
+          pl.play().catch(function(){});return;}
+        pl.hidden=!pl.hidden;if(pl.hidden)pl.pause();else pl.play().catch(function(){});
+      };
+    }
   }
   if(lay==="kriti"){
-    if(w.pallavi)sec(L("pallavi"),w.pallavi,M.pallavi);
-    if(w.anupallavi)sec(L("anupallavi"),w.anupallavi,M.anupallavi);
-    (w.charanas||[]).forEach(function(c,k){sec(L("charana")+" "+(k+1),c,(M.charanas||[])[k]);});
+    if(w.pallavi)sec(L("pallavi"),w.pallavi,M.pallavi,A.pallavi);
+    if(w.anupallavi)sec(L("anupallavi"),w.anupallavi,M.anupallavi,A.anupallavi);
+    (w.charanas||[]).forEach(function(c,k){sec(L("charana")+" "+(k+1),c,(M.charanas||[])[k],(A.charanas||[])[k]);});
   }else if(lay==="verses"){
     var vs=w.verses||[];
-    vs.forEach(function(v,k){sec(vs.length>1?String(k+1):"",v,(M.verses||[])[k]);});
+    vs.forEach(function(v,k){sec(vs.length>1?String(k+1):"",v,(M.verses||[])[k],(A.verses||[])[k]);});
   }else{
     md(w.body,el("div","md",null,app));
   }
@@ -512,7 +538,7 @@ function applyTheme(){
   if(t.font==="sans")root+="--body:system-ui,-apple-system,\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;--kn:\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;";
   var fs="";
   if(t.font==="sans")root+="--head:system-ui,-apple-system,\"Noto Sans Kannada\",sans-serif;";
-  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"")+homeFontCss(t,"")+sizeCss(t,"");
+  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"")+fontsCss(t,"")+sizeCss(t,"");
   document.getElementById("themeStyle").textContent=out;
 }
 function getJson(u){
@@ -520,10 +546,11 @@ function getJson(u){
 }
 function loadAll(){
   return getJson("data/site.json").then(function(s){
-    return getJson("data/index.json").then(function(ix){SITE=s||{};INDEX=ix.works||[];V=String(ix.v||"");});
+    return getJson("data/index.json").then(function(ix){if(PREVIEWING)return;SITE=s||{};INDEX=ix.works||[];V=String(ix.v||"");});
   }).catch(function(e){
     if(String(e.message)!=="404")throw e;
     return getJson("data.json").then(function(d){
+      if(PREVIEWING)return;
       SITE=d.site||{};
       var ts=baseTypes();
       INDEX=(d.works||[]).map(function(w){
@@ -541,6 +568,28 @@ loadAll().then(function(){
   window.addEventListener("hashchange",route);
   route();
 }).catch(function(){app.innerHTML="";el("p","empty",L("loadError"),app);});
+/* live preview inside the editor (same origin only) */
+window.addEventListener("message",function(e){
+  var d=e.data;if(e.origin!==location.origin||!d||d.kriti!=="preview")return;
+  PREVIEWING=true;
+  if(d.site)SITE=d.site;
+  if(d.index){INDEX=d.index;_sorted=null;}
+  PREVIEW=d.works||{};
+  state.lang=lsGet("kriti-lang")||SITE.defaultLang||"en";
+  applyTheme();
+  document.title=SITE.title||((SITE.name||"")+(SITE.kn?" · "+SITE.kn:""));
+  if(typeof d.hash==="string"&&location.hash!==d.hash&&!(d.hash==="#/"&&location.hash==="")){location.hash=d.hash;}else route();
+});
+document.addEventListener("click",function(e){
+  if(!PREVIEWING)return;
+  var t=e.target;if(!t||!t.closest)return;
+  var order=["mean","verse","home","nav","head","body","small"];
+  for(var i=0;i<order.length;i++){
+    var g=order[i],sels=g==="mean"?[".mean",".sum"]:ZSEL[g].map(function(p){return p[0];});
+    for(var j=0;j<sels.length;j++){if(t.closest(sels[j])){e.preventDefault();e.stopPropagation();parent.postMessage({kriti:"pick",group:g},location.origin);return;}}
+  }
+  var a=t.closest("a");if(a){e.preventDefault();}
+},true);
 document.getElementById("theme").onclick=function(){
   var r=document.documentElement;
   var dark=r.getAttribute("data-theme")==="dark"||(!r.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme: dark)").matches);

@@ -36,25 +36,13 @@ The website loads only the light list first and opens a piece's own file when it
 <details>
 <summary>Owner's guide: how to update the site</summary>
 
-### Everyday routine
-1. Open `https://mukundavittaladaasa.github.io/admin.html` on any device.
-2. **Works → + New piece** (use the search box and type filter to find older pieces). Choose the type:
-   - **Kriti**: pallavi, anupallavi (optional, leave empty to skip), charanas.
-   - **Ugabhoga**: verses only, no pallavi or anupallavi.
-   - **Tattva writing**: a blog-style article (headings, bold, quotes, links, pictures).
-3. Under every pallavi, charana or verse, open **Meaning / summary** and type it in English, ಕನ್ನಡ and/or हिन्दी. Readers tap ⓘ (or the lines) and choose their language.
-4. **Save piece**, then **Publish**. The site updates in about a minute.
-
-### First time after this update
-Open the editor once and press **Publish**. It moves your existing works from `data.json` into the `data/` folders. Keep `data.json` as a backup.
-
-### What visitors see
-The website opens on a quiet first page with four buttons: **About**, **Kritis**, **Ugabhoga** and **Tattva Chintane**. A list appears only when a button is tapped. Tap the name at the top of any page to return.
-
-### Site tab
-Title, description, About page, colours, text size, letter style, footer, license, the list of types ("Name | layout | Button name | Kannada subtitle" per line; layouts are kriti, verses, article; each type becomes a button on the website) and every word on the site can be changed here. Press **Save site settings**, then **Publish**.
-
-The **Look** section has **Text sizes**: sliders for the whole site and for each kind of text, with a live preview. It also lets you choose the fonts of the first page (English and Kannada, with a preview). It also controls how meanings and summaries appear: italics, size, colour and frame, with a live preview.
+### The editor (admin.html), five areas
+- **Pieces**: search, add, edit and delete. Each pallavi, charana or verse has a **Translation** tab (English, ಕನ್ನಡ, हिन्दी) and an **Audio** tab (upload mp3, wav, m4a, ogg, flac…).
+- **Pages**: the words of every page: first page, About, each section (its button name, Kannada line and introduction), footer and license, browser title, and every word on the site. Changes apply as you type.
+- **Design**: a live preview of the real website. Tap any text in it to open that text's size and font controls. Colours, letter style and the style of translations are here too.
+- **Files**: upload audio, photos and PDFs, and see everything already uploaded.
+- **Connect**: the one-time GitHub connection.
+Press **Publish** (top right) when you are happy. The first time after an update it also moves any older works into the `data/` folders.
 
 ### Files tab
 Upload photos (go to `images/`) or PDFs (go to `kritis/`) and copy the path it shows.

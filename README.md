@@ -45,3 +45,21 @@ No GitHub token? Tap **Download data.json** instead, then upload it to the repo 
 - `LICENSE.md` holds the plain-language terms. The default is **CC BY-NC-ND 4.0**: others may share your kritis with credit, unchanged and not for sale.
 - To change the license, edit the name, link and note in Site details, and update `LICENSE.md` to match.
 - Upload `LICENSE.md` to the repo along with the other files. I'm not a lawyer, so check the wording if the works are ever published or sold.
+
+## Linking to the full text
+
+Each work has an optional **Link to full text** field. When set, the song page shows a "Read the full kriti ↗" button.
+
+- **Best for permanence:** save the kriti as a PDF, upload it to a `kritis/` folder in the repo, and put `kritis/name.pdf` in the field. It then lives and is backed up with the site.
+- **Google Doc or Drive file:** set sharing to "Anyone with the link can view", then paste the link. Easy to edit, but the link breaks if the file is deleted or moved.
+- Keep the file names simple (no spaces), for example `dasanadeno.pdf`.
+
+## Easiest routine (everything from `admin.html`, no Claude needed)
+
+1. One time only: in the editor, open **GitHub connection**, follow the 5 steps, then **Save connection** and **Test connection**.
+2. Open `mukundavittaladaasa.github.io/admin.html` on any device.
+3. **+ New work** → type or paste the song (blank line between charanas). Optional: tap **Upload file** to attach a PDF; the link fills in by itself.
+4. **Save work** → **Publish to GitHub**. The site updates in about a minute.
+
+To edit an existing song, tap **Edit** next to it, change it, Save, Publish. When connected, the editor always loads the newest copy straight from GitHub.
+If your token expires, make a new one (same steps) and paste it into the connection box.

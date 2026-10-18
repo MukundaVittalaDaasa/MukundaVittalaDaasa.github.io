@@ -38,6 +38,7 @@ details summary { cursor:pointer; font-weight:600; }
 <div id="msg"></div>
 <h1>Editor</h1>
 <p class="sub">Changes stay on this device until you press <b>Publish</b> or <b>Download</b>.</p>
+<p class="sub" id="connNote"></p>
 
 <div class="card">
   <div class="btns" style="margin-top:0">
@@ -73,6 +74,9 @@ details summary { cursor:pointer; font-weight:600; }
   <label>Anupallavi</label><textarea id="f_anupallavi"></textarea>
   <label>Charanas (leave a blank line between charanas)</label><textarea id="f_charanas" style="min-height:12rem"></textarea>
   <label>Notes</label><textarea id="f_notes"></textarea>
+  <label>Link to full text (optional: Google Doc, PDF, etc.)</label><input id="f_link" placeholder="https://… or kritis/name.pdf">
+  <label>…or upload a PDF/file here (the link above fills in by itself)</label>
+  <div class="row"><input type="file" id="f_file" accept=".pdf,.txt,.doc,.docx,image/*"><button type="button" id="btnUpload">Upload file</button></div>
   <label>Audio link (optional)</label><input id="f_audio" type="url" placeholder="https://…">
   <div class="btns">
     <button class="primary" id="btnSave">Save work</button>
@@ -98,8 +102,15 @@ details summary { cursor:pointer; font-weight:600; }
 
 <h2>GitHub connection</h2>
 <div class="card">
-  <details>
-    <summary>Set up once (so Publish works)</summary>
+  <details id="ghBox">
+    <summary>Set up once (so Publish and Upload work)</summary>
+    <ol class="sub" style="padding-left:1.2rem">
+      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> (sign in if asked).</li>
+      <li>Name it <b>kriti-editor</b>. For expiration pick the longest allowed (you'll make a new one when it ends).</li>
+      <li>Repository access → <b>Only select repositories</b> → choose your site repo.</li>
+      <li>Permissions → Repository permissions → <b>Contents: Read and write</b>.</li>
+      <li>Tap <b>Generate token</b>, copy it, paste it below, then tap <b>Save connection</b> and <b>Test connection</b>.</li>
+    </ol>
     <label>GitHub username</label><input id="g_owner">
     <label>Repository name</label><input id="g_repo">
     <div class="row">
@@ -107,7 +118,7 @@ details summary { cursor:pointer; font-weight:600; }
       <div><label>File path</label><input id="g_path" placeholder="data.json"></div>
     </div>
     <label>Access token (stored only in this browser)</label><input id="g_token" type="password" autocomplete="off">
-    <div class="btns"><button id="btnGh">Save connection</button></div>
+    <div class="btns"><button id="btnGh" class="primary">Save connection</button><button id="btnTest">Test connection</button></div>
   </details>
 </div>
 </main>
@@ -164,7 +175,7 @@ function openForm(id) {
   $("f_tags").value = (w.tags || []).join(", ");
   $("f_pallavi").value = w.pallavi || ""; $("f_anupallavi").value = w.anupallavi || "";
   $("f_charanas").value = (w.charanas || []).join("\n\n");
-  $("f_notes").value = w.notes || ""; $("f_audio").value = w.audio || "";
+  $("f_notes").value = w.notes || ""; $("f_audio").value = w.audio || ""; $("f_link").value = w.link || "";
   $("formCard").style.display = "block";
   $("formCard").scrollIntoView({ behavior: "smooth" });
 }
@@ -177,7 +188,7 @@ function saveWork() {
     tags: $("f_tags").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean),
     pallavi: $("f_pallavi").value.trim(), anupallavi: $("f_anupallavi").value.trim(),
     charanas: $("f_charanas").value.split(/\n\s*\n/).map(function (c) { return c.trim(); }).filter(Boolean),
-    notes: $("f_notes").value.trim(), audio: $("f_audio").value.trim()
+    notes: $("f_notes").value.trim(), audio: $("f_audio").value.trim(), link: $("f_link").value.trim()
   };
   Object.keys(w).forEach(function (k) { var v = w[k]; if (v === "" || (Array.isArray(v) && !v.length)) delete w[k]; });
   var i = data.works.findIndex(function (k) { return k.id === w.id; });
@@ -200,11 +211,63 @@ function download() {
   a.download = "data.json"; document.body.appendChild(a); a.click(); a.remove();
   msg("Downloaded. Replace data.json in your repo with this file.");
 }
-function gh() { try { return JSON.parse(localStorage.getItem(GH_KEY)) || {}; } catch (e) { return {}; } }
-function saveGh() {
+function gh() {
+  var g = {};
+  try { g = JSON.parse(localStorage.getItem(GH_KEY)) || {}; } catch (e) { g = {}; }
+  g.owner = g.owner || "MukundaVittalaDaasa"; g.repo = g.repo || "MukundaVittalaDaasa.github.io";
+  g.branch = g.branch || "main"; g.path = g.path || "data.json";
+  return g;
+}
+function ghHeaders(g) { return { Authorization: "Bearer " + g.token, Accept: "application/vnd.github+json" }; }
+function saveGh(silent) {
   var g = { owner: $("g_owner").value.trim(), repo: $("g_repo").value.trim(), branch: $("g_branch").value.trim() || "main",
     path: $("g_path").value.trim() || "data.json", token: $("g_token").value.trim() };
-  localStorage.setItem(GH_KEY, JSON.stringify(g)); msg("Connection saved on this device");
+  localStorage.setItem(GH_KEY, JSON.stringify(g));
+  $("connNote").textContent = g.token ? "Connected to GitHub on this device." : "";
+  if (silent !== true) msg("Connection saved on this device");
+}
+function testGh() {
+  saveGh(true);
+  var g = gh();
+  if (!g.token) { msg("Paste your token first", true); return; }
+  fetch("https://api.github.com/repos/" + g.owner + "/" + g.repo, { headers: ghHeaders(g) })
+    .then(function (r) {
+      if (r.status === 401) throw new Error("Token not accepted. Make a new one and paste it again.");
+      if (r.status === 404) throw new Error("Repository not found. Check the username and repo name, and that the token covers this repo.");
+      if (!r.ok) throw new Error("GitHub replied with " + r.status);
+      msg("Connected ✓ Write access is confirmed the first time you Publish.");
+    })
+    .catch(function (e) { msg(e.message, true); });
+}
+function safeName(n) {
+  var dot = n.lastIndexOf("."), ext = dot > -1 ? n.slice(dot).toLowerCase().replace(/[^.a-z0-9]/g, "") : "";
+  var base = (dot > -1 ? n.slice(0, dot) : n).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return (base || "file-" + Date.now().toString(36)) + ext;
+}
+function uploadFile() {
+  var g = gh(), f = $("f_file").files[0];
+  if (!f) { msg("Choose a file first", true); return; }
+  if (!g.token) { msg("Set up the GitHub connection first (bottom of page)", true); return; }
+  if (f.size > 20 * 1024 * 1024) { msg("File is over 20 MB. Please use a smaller file.", true); return; }
+  var path = "kritis/" + safeName(f.name);
+  var base = "https://api.github.com/repos/" + g.owner + "/" + g.repo + "/contents/" + path;
+  var headers = ghHeaders(g);
+  msg("Uploading…");
+  var reader = new FileReader();
+  reader.onload = function () {
+    var content = String(reader.result).split(",")[1];
+    fetch(base + "?ref=" + encodeURIComponent(g.branch), { headers: headers })
+      .then(function (r) { if (r.status === 404) return {}; if (!r.ok) throw new Error("Could not check the repo (" + r.status + ")"); return r.json(); })
+      .then(function (cur) {
+        var body = { message: "Add " + path, content: content, branch: g.branch };
+        if (cur.sha) body.sha = cur.sha;
+        return fetch(base, { method: "PUT", headers: headers, body: JSON.stringify(body) });
+      })
+      .then(function (r) { if (!r.ok) throw new Error("Upload failed (" + r.status + "). Check the token permissions."); return r.json(); })
+      .then(function () { $("f_link").value = path; $("f_file").value = ""; msg("Uploaded as " + path + ". Now press Save work, then Publish."); })
+      .catch(function (e) { msg(e.message, true); });
+  };
+  reader.readAsDataURL(f);
 }
 function b64(str) { return btoa(unescape(encodeURIComponent(str))); }
 function publish() {
@@ -224,8 +287,17 @@ function publish() {
     .then(function () { localStorage.removeItem(DRAFT_KEY); msg("Published. The site updates in about a minute."); })
     .catch(function (e) { msg(e.message, true); });
 }
-function loadRemote() {
+function siteData() {
   return fetch("data.json?v=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); });
+}
+/* When connected, read the newest data.json straight from GitHub so a just-published edit is never overwritten by a stale copy. */
+function loadRemote() {
+  var g = gh();
+  if (!g.token) return siteData();
+  var url = "https://api.github.com/repos/" + g.owner + "/" + g.repo + "/contents/" + g.path + "?ref=" + encodeURIComponent(g.branch) + "&t=" + Date.now();
+  return fetch(url, { headers: { Authorization: "Bearer " + g.token, Accept: "application/vnd.github.raw+json" }, cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error("api"); return r.json(); })
+    .catch(function () { return siteData(); });
 }
 function start(d) { data = d; data.site = data.site || {}; data.works = data.works || []; renderList(); renderSite(); }
 
@@ -235,7 +307,9 @@ $("btnCancel").onclick = function () { $("formCard").style.display = "none"; };
 $("btnSite").onclick = saveSite;
 $("btnDownload").onclick = download;
 $("btnPublish").onclick = publish;
-$("btnGh").onclick = saveGh;
+$("btnGh").onclick = function () { saveGh(); };
+$("btnTest").onclick = testGh;
+$("btnUpload").onclick = uploadFile;
 $("btnOpen").onclick = function () { $("file").click(); };
 $("file").onchange = function () {
   var f = this.files[0]; if (!f) return;
@@ -252,6 +326,8 @@ $("btnDiscard").onclick = function () {
   var g = gh();
   $("g_owner").value = g.owner || ""; $("g_repo").value = g.repo || ""; $("g_branch").value = g.branch || "main";
   $("g_path").value = g.path || "data.json"; $("g_token").value = g.token || "";
+  if (!g.token) { $("ghBox").open = true; $("connNote").textContent = "Not connected yet: scroll down to “GitHub connection” and set it up once."; }
+  else { $("connNote").textContent = "Connected to GitHub on this device."; }
   var draft = localStorage.getItem(DRAFT_KEY);
   if (draft) { try { start(JSON.parse(draft)); msg("Restored your unpublished changes"); return; } catch (e) {} }
   loadRemote().then(start).catch(function () { start({ site: {}, works: [] }); msg("Couldn't load data.json. Use “Open a file…”", true); });

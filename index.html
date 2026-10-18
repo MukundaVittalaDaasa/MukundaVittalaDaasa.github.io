@@ -210,7 +210,7 @@ var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis",sub:"ಕೃತ�
 function meanCss(t,pre){
   t=t||{};pre=pre||"";
   function S(list){return list.split(",").map(function(x){return(pre?pre+" ":"")+x.trim();}).join(",");}
-  var it=t.mItalic||"all",sz={s:".88rem",m:".95rem",l:"1.06rem"}[t.mSize||"s"]||".88rem";
+  var it=t.mItalic||"all",sz0={s:".88rem",m:".95rem",l:"1.06rem"}[t.mSize||"s"]||".88rem",sz="calc("+sz0+"*var(--z-mean,1)*var(--z-all,1))";
   var tone=t.mTone==="normal"?"var(--fg)":"var(--muted)",fr=t.mFrame||"rule";
   var frame=fr==="box"?"background:var(--soft);border:0;border-left:2px solid var(--accent);padding:.6rem .9rem":
             fr==="none"?"background:none;border:0;padding:.3rem 0":
@@ -255,6 +255,46 @@ function homeFontCss(t,pre){
   return p+"{font-family:"+lfam+"}"+
     p+" h1,"+p+" .menu b{font-family:"+lfam+"}"+
     p+" .knname,"+p+" .offer,"+p+" .menu small{font-family:"+kfam+"}";
+}
+
+var ZDEFS=[
+  ["all","All text together","Scales the whole site at once"],
+  ["home","First page","Name, Kannada name, tagline and the four buttons"],
+  ["nav","Menu and links","Top menu, footer menu, back links"],
+  ["head","Titles and headings","Page titles, list titles, headings in writings"],
+  ["verse","Verses","Pallavi, anupallavi, charanas and ugabhoga lines"],
+  ["mean","Meanings and summaries","The translation text"],
+  ["body","About and blog text","Paragraphs in About and Tattva Chintane"],
+  ["small","Small text","Labels, dates, tags, footer, buttons"]
+];
+var ZSEL={
+  home:[[".landing .mast h1","clamp(1.35rem,6.2vw,2rem)"],[".landing .knname","1.1rem"],[".landing .offer",".78rem"],[".landing .tag",".98rem"],[".landing .intro",".98rem"],[".landing .menu b","1.2rem"],[".landing .menu small",".8rem"]],
+  nav:[[".mast.small h1","1.2rem"],[".mast.small .knname",".9rem"],[".nav a",".7rem"],["footer .fnav a",".74rem"],[".back",".82rem"],[".pn",".88rem"]],
+  head:[[".pt","1.7rem"],[".dt","1.55rem"],[".md h2","1.4rem"],[".md h3",".8rem"],[".title","1.05rem"]],
+  verse:[[".verse","1.02rem"]],
+  body:[[".md","1.02rem"],[".exc",".92rem"],[".note","1.02rem"]],
+  small:[[".lbl",".72rem"],[".meta",".8rem"],[".count",".78rem"],[".tbtn",".72rem"],[".lc",".72rem"],[".chip",".78rem"],[".num",".78rem"],[".pallavi",".9rem"],["footer",".82rem"],["footer .copy",".76rem"],[".readbtn",".82rem"],["#q",".92rem"]]
+};
+function zval(t,k){
+  var z=(t&&t.z)||{},v=z[k];
+  if((v==null||v==="")&&k==="all")v=({s:94,l:112})[t&&t.size];
+  v=Number(v);return(v>=50&&v<=200)?v:100;
+}
+/* site: pre="" (only changed groups are written); admin preview: pre="#zprev" (all groups, "all" kept as a variable) */
+function sizeCss(t,pre){
+  t=t||{};var out="",vars="",pv=pre?pre+" ":"";
+  var all=zval(t,"all");
+  if(pre)vars+="--z-all:"+(all/100)+";";
+  else if(all!==100)out+="html{font-size:"+(16*all/100)+"px}";
+  Object.keys(ZSEL).forEach(function(k){
+    var v=zval(t,k);
+    if(!pre&&v===100)return;
+    vars+="--z-"+k+":"+(v/100)+";";
+    ZSEL[k].forEach(function(p){
+      out+=pv+p[0]+"{font-size:calc("+p[1]+"*var(--z-"+k+",1)*var(--z-all,1))}";
+    });
+  });
+  return(vars?(pre||":root")+"{"+vars+"}":"")+out;
 }
 
 function baseTypes(){return(SITE.types&&SITE.types.length)?SITE.types:DEFAULT_TYPES;}
@@ -470,9 +510,9 @@ function applyTheme(){
   if(acc){root+="--accent:"+acc+";";var d=shade(acc,.35);css+="@media (prefers-color-scheme:dark){:root:not([data-theme=\"light\"]){--accent:"+d+"}}:root[data-theme=\"dark\"]{--accent:"+d+"}";}
   if(PAPERS[t.paper])root+="--bg:"+PAPERS[t.paper]+";";
   if(t.font==="sans")root+="--body:system-ui,-apple-system,\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;--kn:\"Noto Sans Kannada\",\"Noto Sans Devanagari\",sans-serif;";
-  var fs={s:"15px",l:"18px"}[t.size];
+  var fs="";
   if(t.font==="sans")root+="--head:system-ui,-apple-system,\"Noto Sans Kannada\",sans-serif;";
-  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"")+homeFontCss(t,"");
+  var out=(root?":root{"+root+"}":"")+css+(fs?"html{font-size:"+fs+"}":"")+meanCss(t,"")+homeFontCss(t,"")+sizeCss(t,"");
   document.getElementById("themeStyle").textContent=out;
 }
 function getJson(u){

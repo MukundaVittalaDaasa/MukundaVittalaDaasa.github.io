@@ -54,7 +54,7 @@ The website opens on a quiet first page with four buttons: **About**, **Kritis**
 ### Site tab
 Title, description, About page, colours, text size, letter style, footer, license, the list of types ("Name | layout | Button name | Kannada subtitle" per line; layouts are kriti, verses, article; each type becomes a button on the website) and every word on the site can be changed here. Press **Save site settings**, then **Publish**.
 
-The **Look** section lets you choose the fonts of the first page (English and Kannada, with a preview). It also controls how meanings and summaries appear: italics, size, colour and frame, with a live preview.
+The **Look** section has **Text sizes**: sliders for the whole site and for each kind of text, with a live preview. It also lets you choose the fonts of the first page (English and Kannada, with a preview). It also controls how meanings and summaries appear: italics, size, colour and frame, with a live preview.
 
 ### Files tab
 Upload photos (go to `images/`) or PDFs (go to `kritis/`) and copy the path it shows.

@@ -3,7 +3,7 @@
   "kn": "ಮುಕುಂದ ವಿಠಲ",
   "offering": "ಮಧ್ವಹೃದಿಸ್ಥಿತ ಮುಕುಂದ ಪ್ರೀಯತಾಮ್",
   "tagline": "Small offerings at the feet of Hari.\nWritten with little learning, and much hope.",
-  "footer": "ಮುಕುಂದಾರ್ಪಣಮಸ್ತು • Please forgive any errors • ತಪ್ಪುಗಳನ್ನು ಕ್ಷಮಿಸಿ",
+  "footer": "ಮುಕುಂದಾರ್ಪಣಮಸ್ತು\n\nPlease forgive any errors • ತಪ್ಪುಗಳನ್ನು ಕ್ಷಮಿಸಿ",
   "copyrightYear": "2026",
   "licenseName": "CC BY-NC-ND 4.0",
   "licenseUrl": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
@@ -15,7 +15,7 @@
     "font": "serif",
     "z": {
       "home": 90,
-      "nav": 110,
+      "nav": 160,
       "head": 90,
       "small": 95
     },

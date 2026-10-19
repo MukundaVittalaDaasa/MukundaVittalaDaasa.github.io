@@ -154,7 +154,7 @@ button.danger,.danger{color:var(--bad)}
     <h3>On every page</h3>
     <details class="card" open><summary>Header <small>dedication, name, tagline</small></summary>
       <label>Lines above the name (dedication; several lines allowed)</label><textarea id="p_offering" rows="2"></textarea>
-      <div class="row"><div><label>Name</label><input id="p_name"></div><div><label>Name in Kannada</label><input id="p_kn"></div></div>
+      <label>Name</label><input id="p_name">
       <label>Tagline (several lines allowed)</label><textarea id="p_tagline" rows="3"></textarea>
       <p class="hint">The menu under the header is made from the pages below (Home, About and each section).</p>
     </details>
@@ -183,7 +183,7 @@ button.danger,.danger{color:var(--bad)}
     <button class="btn" id="btnAddType">+ Add a section</button>
 
     <details class="card"><summary>Browser tab and sharing <small>title, description, address</small></summary>
-      <label>Browser tab title</label><input id="p_title" placeholder="Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ">
+      <label>Browser tab title</label><input id="p_title" placeholder="Mukunda Vittala">
       <label>Description (one or two sentences)</label><textarea id="p_desc" rows="3"></textarea>
       <label>Website address</label><input id="p_url" placeholder="https://mukundavittaladaasa.github.io/">
     </details>
@@ -203,7 +203,7 @@ button.danger,.danger{color:var(--bad)}
     <div>
       <details class="card" open><summary>Colours and style</summary>
         <div class="row"><div><label>Accent colour</label><input type="color" id="d_accent" value="#7a2f1f"></div><div><label>Page colour</label><select id="d_paper"><option value="">Default</option><option value="cream">Cream</option><option value="white">White</option><option value="grey">Soft grey</option><option value="sage">Soft green</option></select></div></div>
-        <div class="row"><div><label>Letter style</label><select id="d_font"><option value="serif">Serif (classic)</option><option value="sans">Sans (modern)</option></select></div><div><label>Default language for meanings</label><select id="d_lang"><option value="en">English</option><option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option></select></div></div>
+        <div class="row"><div><label>Letter style</label><select id="d_font"><option value="serif">Serif (classic)</option><option value="sans">Sans (modern)</option></select></div></div>
       </details>
       <h3>Style each piece of text</h3>
       <p class="hint">Open a page, then pick the font, size, weight, slant and capitals for each part. You can also tap any text in the preview to jump straight to it. Leave a setting on “Default” to keep the original.</p>
@@ -409,7 +409,7 @@ function firstOf(w,lay){
 }
 
 var DEFAULT_ABOUT="Devotional compositions in Kannada, in the Haridasa tradition and the Dvaita philosophy of Sri Madhvacharya, offered at the feet of Sri Hari under the ankita **Mukunda Vittala**.";
-var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis",sub:"ಕೃತಿಗಳು"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga",sub:"ಉಗಾಭೋಗ"},{name:"Blog",layout:"article",plural:"Tattva Chintane",sub:"ತತ್ತ್ವ ಚಿಂತನೆ"}];
+var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga"},{name:"Blog",layout:"article",plural:"Tattva Chintane"}];
 
 function meanCss(t,pre){
   t=t||{};pre=pre||"";
@@ -515,7 +515,6 @@ function elDefs(types){
   function add(page,key,label,g,sels,o){D.push(Object.assign({page:page,key:key,label:label,g:g,sels:sels},o||{}));}
   add("Header (same on every page)","h_offer","Dedication line","home",[[".mast .offer",".78rem"]]);
   add("Header (same on every page)","h_name","Name","home",[[".mast h1","clamp(1.35rem,6.2vw,2rem)"]]);
-  add("Header (same on every page)","h_kn","Kannada name","home",[[".mast .knname","1.1rem"]]);
   add("Header (same on every page)","h_tag","Tagline","home",[[".mast .tag",".98rem"]]);
   add("Header (same on every page)","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
   add("Header (same on every page)","n_links","Menu links (About, Kritis…)","nav",[[".nav a",".7rem"]]);
@@ -713,13 +712,11 @@ function toolbar(host,ta,prev){
 
 /* ---------- reusable fields: languages and audio ---------- */
 function langField(host,init,rows,onChange){
-  var tas={};
-  LANGS.forEach(function(l){
-    var w=el("div","lfrow",null,host);el("label","",l[1],w);
-    var ta=el("textarea","",null,w);ta.rows=rows>2?2:rows||2;ta.value=(init&&init[l[0]])||"";
-    ta.oninput=function(){if(onChange)onChange();};tas[l[0]]=ta;
-  });
-  return{get:function(){var o={},any=false;LANGS.forEach(function(l){var v=tas[l[0]].value.trim();if(v){o[l[0]]=v;any=true;}});return any?o:null;}};
+  var extra=Object.assign({},init||{});delete extra.en;   /* older Kannada/Hindi text is kept untouched */
+  var ta=el("textarea","",null,host);ta.rows=rows>2?3:rows||2;ta.value=(init&&init.en)||"";
+  ta.placeholder="Meaning in English";
+  ta.oninput=function(){if(onChange)onChange();};
+  return{get:function(){var v=ta.value.trim(),o=Object.assign({},extra);if(v)o.en=v;return Object.keys(o).length?o:null;}};
 }
 function audioField(host,init,onChange){
   var wrap=el("div","audio",null,host),path=el("input","",null,wrap);
@@ -989,7 +986,7 @@ function buildLabels(){
 }
 function renderPages(){
   var s=site||{};
-  $("p_offering").value=s.offering||"";$("p_name").value=s.name||"";$("p_kn").value=s.kn||"";
+  $("p_offering").value=s.offering||"";$("p_name").value=s.name||"";
   $("p_tagline").value=s.tagline||"";$("p_intro").value=s.intro||"";
   $("p_aboutTitle").value=s.aboutTitle||"";$("p_about").value=s.about||DEFAULT_ABOUT;
   $("p_footer").value=s.footer||"";$("p_year").value=s.copyrightYear||"";
@@ -1034,7 +1031,7 @@ function buildElCards(){
 function renderDesign(){
   var t=(site&&site.theme)||{};
   $("d_accent").value=/^#[0-9a-f]{6}$/i.test(t.accent||"")?t.accent:"#7a2f1f";
-  $("d_paper").value=t.paper||"";$("d_font").value=t.font||"serif";$("d_lang").value=(site&&site.defaultLang)||"en";
+  $("d_paper").value=t.paper||"";$("d_font").value=t.font||"serif";
   var F=t.fonts||{};if(!F.home&&(t.homeFont||t.homeKn))F=Object.assign({},F,{home:{l:t.homeFont,k:t.homeKn}});
   ZDEFS.forEach(function(d){
     var k=d[0],v=zval(t,k);$("z_"+k).value=v;$("zv_"+k).textContent=v+"%";
@@ -1042,7 +1039,7 @@ function renderDesign(){
   });
   $("m_italic").value=t.mItalic||"all";$("m_tone").value=t.mTone||"muted";$("m_frame").value=t.mFrame||"rule";
 }
-["d_accent","d_paper","d_font","d_lang"].forEach(function(id){$(id).addEventListener("input",schedule);});
+["d_accent","d_paper","d_font"].forEach(function(id){$(id).addEventListener("input",schedule);});
 document.querySelectorAll("[data-zp]").forEach(function(b){b.onclick=function(){
   ZDEFS.forEach(function(d){var r=$("z_"+d[0]);r.value=d[0]==="all"?b.dataset.zp:100;$("zv_"+d[0]).textContent=r.value+"%";});schedule();
 };});
@@ -1106,14 +1103,13 @@ function readEl(){
 function readAll(){
   var s=Object.assign({},site);
   function set(k,v){if(v===""||v==null)delete s[k];else s[k]=v;}
-  set("offering",$("p_offering").value.trim());set("name",$("p_name").value.trim());set("kn",$("p_kn").value.trim());
+  set("offering",$("p_offering").value.trim());set("name",$("p_name").value.trim());
   set("tagline",$("p_tagline").value.trim());set("intro",$("p_intro").value.trim());
   set("aboutTitle",$("p_aboutTitle").value.trim());
   var ab=$("p_about").value.trim();set("about",ab===DEFAULT_ABOUT.trim()?"":ab);
   set("footer",$("p_footer").value.trim());set("copyrightYear",$("p_year").value.trim());
   set("licenseName",$("p_lname").value.trim());set("licenseUrl",$("p_lurl").value.trim());set("licenseNote",$("p_lnote").value.trim());
   set("title",$("p_title").value.trim());set("description",$("p_desc").value.trim());set("url",$("p_url").value.trim());
-  set("defaultLang",$("d_lang").value);
   s.types=readTypes();
   var labs={};
   LABEL_DEFS.forEach(function(d){var v=$("lab_"+d[0]).value.trim();if(v&&v!==d[1])labs[d[0]]=v;});
@@ -1220,7 +1216,7 @@ function readAny(path){
 }
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function metaBlock(s){
-  var title=s.title||((s.name||"")+(s.kn?" · "+s.kn:""))||"Kritis";
+  var title=s.title||s.name||"Kritis";
   var desc=s.description||(s.tagline||"").replace(/\s*\n\s*/g," ");
   var url=s.url||(location.protocol==="https:"?location.origin+"/":"");
   var out=["<title>"+esc(title)+"</title>"];

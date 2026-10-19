@@ -209,7 +209,7 @@ function firstOf(w,lay){
 }
 
 var DEFAULT_ABOUT="Devotional compositions in Kannada, in the Haridasa tradition and the Dvaita philosophy of Sri Madhvacharya, offered at the feet of Sri Hari under the ankita **Mukunda Vittala**.";
-var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis",sub:"ಕೃತಿಗಳು"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga",sub:"ಉಗಾಭೋಗ"},{name:"Blog",layout:"article",plural:"Tattva Chintane",sub:"ತತ್ತ್ವ ಚಿಂತನೆ"}];
+var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga"},{name:"Blog",layout:"article",plural:"Tattva Chintane"}];
 
 function meanCss(t,pre){
   t=t||{};pre=pre||"";
@@ -315,7 +315,6 @@ function elDefs(types){
   function add(page,key,label,g,sels,o){D.push(Object.assign({page:page,key:key,label:label,g:g,sels:sels},o||{}));}
   add("Header (same on every page)","h_offer","Dedication line","home",[[".mast .offer",".78rem"]]);
   add("Header (same on every page)","h_name","Name","home",[[".mast h1","clamp(1.35rem,6.2vw,2rem)"]]);
-  add("Header (same on every page)","h_kn","Kannada name","home",[[".mast .knname","1.1rem"]]);
   add("Header (same on every page)","h_tag","Tagline","home",[[".mast .tag",".98rem"]]);
   add("Header (same on every page)","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
   add("Header (same on every page)","n_links","Menu links (About, Kritis…)","nav",[[".nav a",".7rem"]]);
@@ -438,7 +437,6 @@ function header(parent,active){
   var m=el("div","mast",null,parent);
   if(SITE.offering)el("div","offer",SITE.offering,m);
   var h=el("h1","",null,m),a=el("a","",SITE.name||"",h);a.href="#/";
-  if(SITE.kn)el("span","knname",SITE.kn,h);
   if(SITE.tagline)el("p","tag",SITE.tagline,m);
   tabsBar(parent,availableTabs(),active);
 }
@@ -538,7 +536,7 @@ function showWork(w,entry){
   if(w.link){var rb=el("a","readbtn",L("readFull"),app);rb.href=w.link;if(/^https?:/i.test(w.link)){rb.target="_blank";rb.rel="noopener";}}
   var bar=el("div","bar",null,app);
   function langBox(o,box){
-    var avail=LANGS.filter(function(l){return o&&o[l[0]];}),chips=el("div","lchips",null,box),txt=el("div","",null,box);
+    var avail=o&&o.en?[LANGS[0]]:LANGS.filter(function(l){return o&&o[l[0]];}).slice(0,1),chips=el("div","lchips",null,box),txt=el("div","",null,box);
     var btns=avail.map(function(l){
       var b=el("button","lc",l[1],chips);b.type="button";
       b.onclick=function(e){e.stopPropagation();state.lang=l[0];lsSet("kriti-lang",l[0]);refresh.forEach(function(f){f();});};
@@ -648,7 +646,7 @@ function loadAll(){
 }
 loadAll().then(function(){
   state.lang=lsGet("kriti-lang")||SITE.defaultLang||"en";
-  document.title=SITE.title||((SITE.name||"")+(SITE.kn?" · "+SITE.kn:""));
+  document.title=SITE.title||(SITE.name||"");
   applyTheme();
   window.addEventListener("hashchange",route);
   route();
@@ -662,7 +660,7 @@ window.addEventListener("message",function(e){
   PREVIEW=d.works||{};
   state.lang=lsGet("kriti-lang")||SITE.defaultLang||"en";
   applyTheme();
-  document.title=SITE.title||((SITE.name||"")+(SITE.kn?" · "+SITE.kn:""));
+  document.title=SITE.title||(SITE.name||"");
   if(typeof d.hash==="string"&&location.hash!==d.hash&&!(d.hash==="#/"&&location.hash==="")){location.hash=d.hash;}else route();
 });
 document.addEventListener("click",function(e){

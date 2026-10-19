@@ -126,8 +126,7 @@ button.danger,.danger{color:var(--bad)}
   <div class="brand">Mukunda Vittala<small>Studio</small></div>
   <nav id="nav">
     <button class="nb on" data-v="pieces"><i>✎</i>Pieces</button>
-    <button class="nb" data-v="pages"><i>☰</i>Pages</button>
-    <button class="nb" data-v="design"><i>◐</i>Design</button>
+    <button class="nb" data-v="site"><i>☰</i>Site</button>
     <button class="nb" data-v="files"><i>♫</i>Files</button>
     <button class="nb" data-v="conn"><i>⚙</i>Connect</button>
   </nav>
@@ -147,75 +146,13 @@ button.danger,.danger{color:var(--bad)}
     <button class="btn" id="btnMore" hidden>Show more</button>
   </div></section>
 
-  <!-- ============ PAGES ============ -->
-  <section id="v_pages" class="view" hidden><div class="wrap">
-    <p class="hint">Every page of your website, one card each. Changes apply as you type; press <b>Publish</b> (top right) when you are happy.</p>
-
-    <h3>On every page</h3>
-    <details class="card" open><summary>Header <small>dedication, name, tagline</small></summary>
-      <label>Lines above the name (dedication; several lines allowed)</label><textarea id="p_offering" rows="2"></textarea>
-      <label>Name</label><input id="p_name">
-      <label>Tagline (several lines allowed)</label><textarea id="p_tagline" rows="3"></textarea>
-      <p class="hint">The menu under the header is made from the pages below (Home, About and each section).</p>
-    </details>
-    <details class="card"><summary>Footer and licence <small>shown at the bottom of every page</small></summary>
-      <label>Footer lines (several lines allowed)</label><textarea id="p_footer" rows="3"></textarea>
-      <div class="row"><div><label>Copyright since</label><input id="p_year" placeholder="2026"></div><div><label>Licence name</label><input id="p_lname" placeholder="CC BY-NC-ND 4.0"></div></div>
-      <label>Licence link</label><input id="p_lurl" placeholder="https://creativecommons.org/licenses/by-nc-nd/4.0/">
-      <label>Licence note</label><textarea id="p_lnote" rows="2"></textarea>
-    </details>
-
-    <h3>Pages</h3>
-    <details class="card"><summary>Home page <small>an optional short line</small></summary>
-      <label>Introduction (optional; several lines allowed)</label><textarea id="p_intro" rows="3"></textarea>
-    </details>
-
-    <details class="card"><summary>About page <small>your story and understanding</small></summary>
-      <label>Menu name</label><input id="p_aboutTitle" placeholder="About">
-      <label>Text (a blank line starts a new paragraph)</label>
-      <textarea id="p_about" style="min-height:8rem"></textarea>
-      <p class="hint">Keep it short: a few lines are enough.</p>
-    </details>
-
-    <h3>Section pages</h3>
-    <p class="hint">Each section becomes a button on the first page. Kriti-style has pallavi, anupallavi and charanas; Verses has no pallavi (ugabhoga); Article is a blog.</p>
-    <div id="typeCards"></div>
-    <button class="btn" id="btnAddType">+ Add a section</button>
-
-    <details class="card"><summary>Browser tab and sharing <small>title, description, address</small></summary>
-      <label>Browser tab title</label><input id="p_title" placeholder="Mukunda Vittala">
-      <label>Description (one or two sentences)</label><textarea id="p_desc" rows="3"></textarea>
-      <label>Website address</label><input id="p_url" placeholder="https://mukundavittaladaasa.github.io/">
-    </details>
-    <details class="card"><summary>Words and buttons <small>rename any word on the site</small></summary>
-      <p class="hint">Leave a box empty to keep the original (shown faintly).</p>
-      <div id="labels"></div>
-    </details>
-  </div></section>
-
-  <!-- ============ DESIGN ============ -->
-  <section id="v_design" class="view" hidden><div class="wrap wide"><div class="dgrid">
+  <!-- ============ SITE ============ -->
+  <section id="v_site" class="view" hidden><div class="wrap wide"><div class="dgrid">
     <div class="pvcol">
-      <div id="pvPages" class="seg small" style="margin-bottom:.5rem"></div>
-      <div class="phone"><iframe id="pvFrame" title="Live preview"></iframe></div>
-      <p class="hint" style="margin-top:.4rem">Live preview. Tap any text in it to jump to its style controls.</p>
+      <select id="pvPage" aria-label="Page shown in the preview"></select>
+      <div class="phone" style="margin-top:.5rem"><iframe id="pvFrame" title="Live preview"></iframe></div>
     </div>
-    <div>
-      <details class="card" open><summary>Colours and style</summary>
-        <div class="row"><div><label>Accent colour</label><input type="color" id="d_accent" value="#7a2f1f"></div><div><label>Page colour</label><select id="d_paper"><option value="">Default</option><option value="cream">Cream</option><option value="white">White</option><option value="grey">Soft grey</option><option value="sage">Soft green</option></select></div></div>
-        <div class="row"><div><label>Letter style</label><select id="d_font"><option value="serif">Serif (classic)</option><option value="sans">Sans (modern)</option></select></div></div>
-      </details>
-      <h3>Style each piece of text</h3>
-      <p class="hint">Open a page, then pick the font, size, weight, slant and capitals for each part. You can also tap any text in the preview to jump straight to it. Leave a setting on “Default” to keep the original.</p>
-      <div id="elTree"></div>
-      <details class="card"><summary>Broad sizes <small>change a whole group at once</small></summary>
-      <div class="card">
-        <b>Quick size</b>
-        <div class="seg small" style="margin-top:.5rem"><button data-zp="90">Smaller</button><button data-zp="100">Normal</button><button data-zp="115">Larger</button><button data-zp="130">Largest</button><button id="zReset">Reset all</button></div>
-      </div>
-      <div id="elCards"></div>
-      </details>
-    </div>
+    <div class="insp" id="insp"></div>
   </div></div></section>
 
   <!-- ============ FILES ============ -->
@@ -226,6 +163,10 @@ button.danger,.danger{color:var(--bad)}
       <input type="file" id="u_file" multiple accept="audio/*,image/*,.pdf,.txt,.doc,.docx,.mp3,.wav,.m4a,.aac,.ogg,.flac">
       <div style="margin-top:.7rem"><button class="primary" id="btnUpload">Upload</button></div>
       <div id="u_result" style="margin-top:.8rem"></div>
+    </div>
+    <div class="card"><b>Backup</b>
+      <p class="hint">Downloads everything (settings and every piece) as one file. Keep a copy somewhere safe now and then.</p>
+      <button class="btn" id="btnBackup">Download backup</button>
     </div>
     <div class="card"><b>Your files</b> <button class="small btn" id="btnLib" style="float:right">Refresh</button>
       <div id="lib" class="lib" style="margin-top:.7rem"><span class="hint">Press Refresh to list the files in your repository.</span></div>
@@ -330,6 +271,22 @@ button.danger,.danger{color:var(--bad)}
 @media(max-width:560px){.erow .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <style>.lfrow{margin-top:.4rem}.lfrow label{font-size:.78rem;margin:0 0 .15rem}.lfrow textarea{min-height:2.6rem}</style>
+
+<style>
+.insp{position:sticky;top:4.2rem;max-height:calc(100vh - 5.4rem);overflow:auto;padding-right:.2rem}
+.insp h3{margin:.2rem 0 .1rem;font-size:1.15rem}
+.insp h4{margin:1.1rem 0 .3rem;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.insp .crumb{background:none;border:0;color:var(--accent);padding:0;cursor:pointer;font:inherit;font-size:.85rem}
+.insp .sub2{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+.ifield{margin-top:.5rem}.ifield label{display:block;font-size:.8rem;margin-bottom:.15rem}
+.ifield input,.ifield textarea,.ifield select{width:100%}
+.igrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
+.chk{display:flex;gap:.4rem;align-items:center;font-size:.85rem;margin:.2rem 0 .4rem}.chk input{width:auto}
+.srow{display:grid;grid-template-columns:1fr auto;gap:.4rem;align-items:center;margin-top:.4rem}
+.srow .sub3{display:flex;gap:.3rem;grid-column:1/-1}
+.note3{background:var(--soft,rgba(0,0,0,.04));border-radius:10px;padding:.6rem .8rem;font-size:.88rem;color:var(--muted);margin-top:.5rem}
+@media(max-width:900px){.insp{position:static;max-height:none}}
+</style>
 <script>
 var DRAFT_KEY="kriti-draft-v3",GH_KEY="kriti-gh-v1",PAGE=40;
 var LABEL_DEFS=[
@@ -509,7 +466,7 @@ function sizeCss(t,pre){
 }
 
 /* ---------- element catalogue: every piece of text that can be styled on its own ---------- */
-var CASES={u:["uppercase","UPPERCASE"],c:["capitalize","Capitalize Each Word"],l:["lowercase","lowercase"],n:["none","As written"]};
+var CASES={f:["none","Capitalise first letter"],u:["uppercase","UPPERCASE"],c:["capitalize","Capitalise Each Word"],l:["lowercase","lowercase"],n:["none","As written"]};
 function elDefs(types){
   var D=[];
   function add(page,key,label,g,sels,o){D.push(Object.assign({page:page,key:key,label:label,g:g,sels:sels},o||{}));}
@@ -518,6 +475,7 @@ function elDefs(types){
   add("Header (same on every page)","h_tag","Tagline","home",[[".mast .tag",".98rem"]]);
   add("Header (same on every page)","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
   add("Header (same on every page)","n_links","Menu links (About, Kritis…)","nav",[[".nav a",".7rem"]]);
+  add("Home page","h_btn","Menu list","home",[[".landing .menu b","1.2rem"]]);
   add("Home page","h_intro","Introduction","home",[[".landing .intro",".98rem"]]);
   add("Links inside pages","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
   add("About page","a_text","Paragraphs","body",[[".md","1.02rem"]],{sc:"about",dl:0});
@@ -572,24 +530,34 @@ function elCss(t,types,pre){
       var css=body;
       if(sz){var base=p[1]==="MEAN"?meanBase(t):p[1];css+="font-size:calc("+base+"*"+sz+"*var(--z-"+d.g+",1)*var(--z-all,1));";}
       out+=sc+p[0]+"{"+css+"}";
+      if(CASES[o.c])out+=sc+p[0]+"::first-letter{text-transform:"+(o.c==="f"?"uppercase":CASES[o.c][0])+"}";
       if(d.dl&&body)out+=sc+p[0]+" [data-l]{"+body.replace(/font-size:[^;]+;/,"")+"}";
     });
   });
   if(specs.length)loadFonts(specs);
   return out;
 }
-/* which element is under a click? (deepest match wins) */
-function elAt(target,types,ty){
+/* which element is under the pointer? (deepest match wins) */
+function elHit(target,types,ty){
   var best=null,bd=-1;
   elDefs(types).forEach(function(d){
     if(d.sc&&d.sc!==ty)return;
     for(var i=0;i<d.sels.length;i++){
       var c=target.closest(d.sels[i][0]);if(!c)continue;
       var depth=0,n=c;while(n.parentNode){depth++;n=n.parentNode;}
-      if(depth>bd){bd=depth;best=d.key;}
+      if(depth>bd){bd=depth;best={key:d.key,node:c};}
     }
   });
   return best;
+}
+function elAt(target,types,ty){var h=elHit(target,types,ty);return h?h.key:null;}
+function elNodes(key,types,ty){
+  var out=[];
+  elDefs(types).forEach(function(d){
+    if(d.key!==key||(d.sc&&d.sc!==ty))return;
+    d.sels.forEach(function(p){Array.prototype.forEach.call(document.querySelectorAll(p[0]),function(n){out.push(n);});});
+  });
+  return out;
 }
 
 /* one choice sets both the English and the Kannada letters */
@@ -631,13 +599,13 @@ function updateStatus(){
 }
 
 /* ---------- views ---------- */
-var TITLES={pieces:"Pieces",pages:"Pages",design:"Design",files:"Files",conn:"Connect"};
+var TITLES={pieces:"Pieces",site:"Site",files:"Files",conn:"Connect"};
 function showView(v){
   Object.keys(TITLES).forEach(function(k){$("v_"+k).hidden=(k!==v);});
   Array.from($("nav").children).forEach(function(b){b.className="nb"+(b.dataset.v===v?" on":"");});
   $("viewTitle").textContent=TITLES[v];
   window.scrollTo(0,0);
-  if(v==="design")initDesign();
+  if(v==="site")initSite();
 }
 Array.from($("nav").children).forEach(function(b){b.onclick=function(){showView(b.dataset.v);};});
 
@@ -909,7 +877,7 @@ $("btnUploadLink").onclick=function(){
 function pvSend(frame,hash,idx,works){
   if(!frame||!frame.contentWindow)return;
   var w=Object.assign({},dirty,works||{});
-  try{frame.contentWindow.postMessage({kriti:"preview",site:site,index:idx||index,works:w,hash:hash},location.origin);}catch(e){}
+  try{frame.contentWindow.postMessage({kriti:"preview",site:site,index:idx||index,works:w,hash:hash,sel:(frame.id==="pvFrame"?selKey:"")},location.origin);}catch(e){}
 }
 $("btnPv").onclick=function(){
   var w=buildWork();if(!w)return;
@@ -921,242 +889,209 @@ $("btnPv").onclick=function(){
 };
 $("pvClose").onclick=function(){$("pvModal").hidden=true;};
 
-/* ---------- pages (content of every section) ---------- */
-var pageTimer=null;
-function schedule(){clearTimeout(pageTimer);pageTimer=setTimeout(applyAll,250);}
-function applyAll(){
-  readAll();siteDirty=true;persist();updateStatus();
-  var fr=$("pvFrame");if(fr&&fr.getAttribute("src"))pvSend(fr,pvHash);
+/* ---------- site editor: click any text in the preview, edit it in one panel ---------- */
+var selKey="",chT=null;
+function pvPush(){var fr=$("pvFrame");if(fr&&fr.getAttribute("src"))pvSend(fr,pvHash);}
+function flushChange(){if(chT){clearTimeout(chT);chT=null;siteDirty=true;persist();updateStatus();pvPush();}}
+function change(){clearTimeout(chT);chT=setTimeout(function(){chT=null;siteDirty=true;persist();updateStatus();pvPush();},120);}
+function theme(){if(!site.theme)site.theme={};return site.theme;}
+function setSite(k,v){if(v===""||v==null)delete site[k];else site[k]=v;change();}
+function ensureTypes(){if(!site.types||!site.types.length)site.types=JSON.parse(JSON.stringify(DEFAULT_TYPES));return site.types;}
+function defOf(key){return elDefs(types()).filter(function(d){return d.key===key;})[0];}
+function fld(parent,label,val,fn,o){
+  o=o||{};var w=el("div","ifield",null,parent);el("label","",label,w);
+  var i=el(o.multi?"textarea":"input","",null,w);if(o.multi)i.rows=o.rows||3;
+  i.value=val||"";if(o.ph)i.placeholder=o.ph;i.oninput=function(){fn(i.value);};return i;
 }
-function typeCard(t,open){
-  var inUse=index.some(function(e){return e.type===t.name;});
-  var d=el("details","card tcard");if(open)d.open=true;
-  var sm=el("summary","",null,d);
-  var title=el("span","",t.plural||t.name,sm);el("small","",layoutLabel(t.layout),title);
-  var body=el("div","",null,d);
-  var r1=el("div","row",null,body);
-  var a=el("div","",null,r1);el("label","","Button name on the website",a);var inPl=el("input","t_plural",null,a);inPl.value=t.plural||"";inPl.placeholder="e.g. Kritis";
-  var r2=el("div","row",null,body);
-  var c=el("div","",null,r2);el("label","","Kind of page",c);var sel=el("select","t_layout",null,c);
-  LAYOUTS.forEach(function(l){var o=el("option","",l[1],sel);o.value=l[0];});sel.value=t.layout||"kriti";
-  var e=el("div","",null,r2);el("label","","Internal name"+(inUse?" (locked: pieces use it)":""),e);var inName=el("input","t_name",null,e);inName.value=t.name||"";inName.disabled=inUse;inName.placeholder="e.g. Suladi";
-  el("label","","Introduction shown at the top of this page (optional, several lines allowed)",body);
-  var inIntro=el("textarea","t_intro",null,body);inIntro.rows=2;inIntro.value=t.intro||"";
-  var act=el("div","btns",null,body);act.style.cssText="display:flex;gap:.4rem;margin-top:.8rem";
-  var up=el("button","btn small","↑ Move up",act),dn=el("button","btn small","↓ Move down",act),rm=el("button","btn small danger","Remove section",act);
-  up.type=dn.type=rm.type="button";
-  up.onclick=function(){var p=d.parentNode,pr=d.previousElementSibling;if(pr){p.insertBefore(d,pr);schedule();}};
-  dn.onclick=function(){var p=d.parentNode,nx=d.nextElementSibling;if(nx){p.insertBefore(nx,d);schedule();}};
-  rm.onclick=function(){
-    if(inUse){toast("This section still has pieces. Delete or move them first.",true);return;}
-    if(confirm("Remove this section?")){d.parentNode.removeChild(d);schedule();}
-  };
-  inPl.addEventListener("input",function(){title.firstChild.textContent=inPl.value||inName.value||"New section";});
-  sel.addEventListener("change",function(){title.querySelector("small").textContent=layoutLabel(sel.value);});
-  return d;
+function selOf(parent,label,pairs,val,fn){
+  var w=el("div","ifield",null,parent);el("label","",label,w);var s=el("select","",null,w);
+  pairs.forEach(function(p){el("option","",p[1],s).value=p[0];});s.value=val;s.onchange=function(){fn(s.value);};return s;
 }
-function layoutLabel(l){var r=LAYOUTS.filter(function(x){return x[0]===l;})[0];return r?r[1].split(" (")[0]:l;}
-function buildTypeCards(){
-  var box=$("typeCards");box.innerHTML="";
-  types().forEach(function(t){box.appendChild(typeCard(t,false));});
+/* ----- pages in the preview ----- */
+function sampleOf(slugName){
+  var t=types().filter(function(x){return slug(x.name)===slugName;})[0];if(!t)return null;
+  return index.filter(function(e){return e.type===t.name;}).sort(function(a,b){return(b.date||"").localeCompare(a.date||"");})[0]||null;
 }
-$("btnAddType").onclick=function(){
-  var d=typeCard({name:"",layout:"kriti",plural:"",sub:"",intro:""},true);
-  $("typeCards").appendChild(d);d.scrollIntoView({behavior:"smooth",block:"center"});
-};
-function readTypes(){
-  var out=[];
-  Array.from($("typeCards").children).forEach(function(d){
-    var name=d.querySelector(".t_name").value.trim(),pl=d.querySelector(".t_plural").value.trim();
-    if(!name)name=pl;if(!name)return;
-    var o={name:name,layout:d.querySelector(".t_layout").value,plural:pl||name+"s"};
-    var intro=d.querySelector(".t_intro").value.trim();
-    if(intro)o.intro=intro;
-    out.push(o);
+function renderPageSelect(){
+  var sel=$("pvPage");sel.innerHTML="";
+  var g1=el("optgroup","",null,sel);g1.label="Pages";
+  [["Home","#/"],[(site.aboutTitle||"About"),"#/about"]].concat(types().map(function(t){return[t.plural||t.name,"#/t/"+slug(t.name)];})).forEach(function(p){el("option","",p[0],g1).value=p[1];});
+  var g2=el("optgroup","",null,sel);g2.label="A sample piece";var any=false;
+  types().forEach(function(t){var e=sampleOf(slug(t.name));if(e){any=true;el("option","",(t.plural||t.name)+": "+e.title,g2).value="#/"+encodeURIComponent(e.id);}});
+  if(!any)sel.removeChild(g2);
+  sel.value=pvHash;if(sel.value!==pvHash){pvHash="#/";sel.value=pvHash;}
+}
+$("pvPage").onchange=function(){pvHash=$("pvPage").value;pvPush();renderInspector();};
+function pageFor(d){
+  if(!d)return null;
+  if(d.sc==="about")return"#/about";
+  if(d.sc){var id=d.key.slice(d.key.indexOf(".")+1);
+    if(id.indexOf("t_")===0)return"#/t/"+d.sc;
+    var e=sampleOf(d.sc);return e?"#/"+encodeURIComponent(e.id):"#/t/"+d.sc;}
+  if(d.key==="h_intro"||d.key==="h_btn")return"#/";
+  return null;
+}
+function selectKey(key,nav){
+  selKey=key||"";
+  if(nav&&key){var h=pageFor(defOf(key));if(h&&h!==pvHash){pvHash=h;renderPageSelect();}}
+  renderInspector();pvPush();
+}
+/* ----- style controls ----- */
+function targetsOf(def,all){
+  if(!def.sc||!all)return[def.key];
+  var base=def.key.slice(def.key.indexOf(".")+1);
+  return elDefs(types()).filter(function(d){return d.sc&&d.key.slice(d.key.indexOf(".")+1)===base;}).map(function(d){return d.key;});
+}
+function setStyle(def,prop,val,all){
+  if(val==="keep")return;
+  var th=theme(),E=th.el||{};
+  targetsOf(def,all).forEach(function(k){
+    var o=Object.assign({},E[k]||{});
+    if(prop==="f"){if(FONT_SETS[val]){o.f=FONT_SETS[val][1];o.k=FONT_SETS[val][2];}else{delete o.f;delete o.k;}}
+    else if(val===""||val==null||(prop==="s"&&Number(val)===100))delete o[prop];else o[prop]=val;
+    if(Object.keys(o).length)E[k]=o;else delete E[k];
   });
-  return out.length?out:DEFAULT_TYPES;
+  if(Object.keys(E).length)th.el=E;else delete th.el;
+  change();
 }
-function buildLabels(){
-  var box=$("labels");box.innerHTML="";
-  LABEL_DEFS.forEach(function(d){
-    el("label","",d[2],box);
-    var i=el("input","",null,box);i.id="lab_"+d[0];i.placeholder=d[1];
-    i.value=(site.labels&&site.labels[d[0]])||"";
-  });
+function styleBox(parent,def){
+  var o=((theme().el)||{})[def.key]||{};
+  el("h4","","Look",parent);
+  var all=null;
+  if(def.sc){var lab=el("label","chk",null,parent);all=el("input","",null,lab);all.type="checkbox";all.checked=true;lab.appendChild(document.createTextNode("Same in every section"));}
+  function A(){return all?all.checked:false;}
+  var fw=el("div","ifield",null,parent);el("label","","Font",fw);var fp=el("select","",null,fw);
+  el("option","","Default",fp).value="";
+  Object.keys(FONT_SETS).forEach(function(k){el("option","",FONT_SETS[k][0],fp).value=k;});
+  var cur=fontSetOf(o);if(cur==="keep")el("option","","Current mix (kept)",fp).value="keep";fp.value=cur;
+  fp.onchange=function(){setStyle(def,"f",fp.value,A());};
+  var zw=el("div","ifield",null,parent);el("label","","Size",zw);
+  var z=el("div","zline",null,zw),r=el("input","",null,z);r.type="range";r.min=50;r.max=250;r.step=5;r.value=o.s||100;
+  var v=el("b","",(o.s||100)+"%",z);
+  r.oninput=function(){v.textContent=r.value+"%";setStyle(def,"s",Number(r.value),A());};
+  var g=el("div","igrid",null,parent);
+  var sw=selOf(g,"Weight",[["","Default"],["n","Normal"],["b","Bold"]],o.w||"",function(x){setStyle(def,"w",x,A());});
+  var si=selOf(g,"Slant",[["","Default"],["n","Upright"],["i","Italic"]],o.i||"",function(x){setStyle(def,"i",x,A());});
+  var sc=selOf(parent,"Capital letters",[["","Default (first letter capital)"],["f","Capitalise first letter"],["u","UPPERCASE"],["c","Capitalise Each Word"],["l","lowercase"],["n","As written"]],o.c||"",function(x){setStyle(def,"c",x,A());});
+  var rs=el("button","btn small","Reset this text's look",parent);rs.type="button";rs.style.marginTop=".7rem";
+  rs.onclick=function(){["f","s","w","i","c"].forEach(function(p){setStyle(def,p,"",A());});renderInspector();};
 }
-function renderPages(){
-  var s=site||{};
-  $("p_offering").value=s.offering||"";$("p_name").value=s.name||"";
-  $("p_tagline").value=s.tagline||"";$("p_intro").value=s.intro||"";
-  $("p_aboutTitle").value=s.aboutTitle||"";$("p_about").value=s.about||DEFAULT_ABOUT;
-  $("p_footer").value=s.footer||"";$("p_year").value=s.copyrightYear||"";
-  $("p_lname").value=s.licenseName||"";$("p_lurl").value=s.licenseUrl||"";$("p_lnote").value=s.licenseNote||"";
-  $("p_title").value=s.title||"";$("p_desc").value=s.description||"";$("p_url").value=s.url||"";
-  buildTypeCards();buildLabels();
-}
-
-/* ---------- design: size, font and colour for each kind of text ---------- */
-var FONT_NOTE={home:"First page",nav:"Menu",head:"Titles",verse:"Verses",mean:"Meanings",body:"Writings",small:"Small text"};
-function optList(sel,map,defLabel){
-  el("option","",defLabel,sel).value="";
-  Object.keys(map).forEach(function(k){el("option","",map[k][2],sel).value=k;});
-}
-function buildElCards(){
-  var box=$("elCards");box.innerHTML="";
-  ZDEFS.forEach(function(d){
-    var k=d[0],card=el("details","card el");card.id="el_"+k;
-    var sm=el("summary","",null,card),t=el("span","",d[1],sm);el("small","",d[2],t);
-    var z=el("div","zline",null,card);z.style.marginTop=".4rem";
-    var r=el("input","",null,z);r.type="range";r.id="z_"+k;r.min=70;r.max=160;r.step=5;r.value=100;
-    var v=el("b","","100%",z);v.id="zv_"+k;
-    r.oninput=function(){v.textContent=r.value+"%";schedule();};
-    if(k!=="all"){
-      var row=el("div","",null,card);el("label","","Font",row);var fp=el("select","",null,row);fp.id="fp_"+k;
-      el("option","","Default",fp).value="";Object.keys(FONT_SETS).forEach(function(q){el("option","",FONT_SETS[q][0],fp).value=q;});
-      fp.onchange=schedule;
-    }
-    if(k==="mean"){
-      var r2=el("div","row",null,card);
-      var c=el("div","",null,r2);el("label","","Italics",c);var it=el("select","",null,c);it.id="m_italic";
-      [["all","All languages"],["en","English only"],["off","None"]].forEach(function(o){el("option","",o[1],it).value=o[0];});
-      var e=el("div","",null,r2);el("label","","Text colour",e);var tn=el("select","",null,e);tn.id="m_tone";
-      [["muted","Soft grey"],["normal","Same as verses"]].forEach(function(o){el("option","",o[1],tn).value=o[0];});
-      var r3=el("div","",null,card);el("label","","Frame",r3);var fr=el("select","",null,r3);fr.id="m_frame";
-      [["rule","Thin line on the left"],["box","Soft box"],["none","None"]].forEach(function(o){el("option","",o[1],fr).value=o[0];});
-      it.onchange=tn.onchange=fr.onchange=schedule;
-    }
-    box.appendChild(card);
-  });
-}
-function renderDesign(){
-  var t=(site&&site.theme)||{};
-  $("d_accent").value=/^#[0-9a-f]{6}$/i.test(t.accent||"")?t.accent:"#7a2f1f";
-  $("d_paper").value=t.paper||"";$("d_font").value=t.font||"serif";
-  var F=t.fonts||{};if(!F.home&&(t.homeFont||t.homeKn))F=Object.assign({},F,{home:{l:t.homeFont,k:t.homeKn}});
-  ZDEFS.forEach(function(d){
-    var k=d[0],v=zval(t,k);$("z_"+k).value=v;$("zv_"+k).textContent=v+"%";
-    if(k!=="all"){var cs0=fontSetOf(F[k]);$("fp_"+k).value=(cs0==="keep"?"":cs0);}
-  });
-  $("m_italic").value=t.mItalic||"all";$("m_tone").value=t.mTone||"muted";$("m_frame").value=t.mFrame||"rule";
-}
-["d_accent","d_paper","d_font"].forEach(function(id){$(id).addEventListener("input",schedule);});
-document.querySelectorAll("[data-zp]").forEach(function(b){b.onclick=function(){
-  ZDEFS.forEach(function(d){var r=$("z_"+d[0]);r.value=d[0]==="all"?b.dataset.zp:100;$("zv_"+d[0]).textContent=r.value+"%";});schedule();
-};});
-$("zReset").onclick=function(){ZDEFS.forEach(function(d){var r=$("z_"+d[0]);r.value=100;$("zv_"+d[0]).textContent="100%";});schedule();};
-
-/* ---------- style every piece of text (element tree) ---------- */
-var elBuilt=false,elSig="";
-function opts(sel,pairs){pairs.forEach(function(o){el("option","",o[1],sel).value=o[0];});}
-function fontOpts(sel,o){
-  el("option","","Default",sel).value="";
-  Object.keys(FONT_SETS).forEach(function(k){el("option","",FONT_SETS[k][0],sel).value=k;});
-  var cur=fontSetOf(o);
-  if(cur==="keep")el("option","","Current mix (kept)",sel).value="keep";
-  sel.value=cur;sel.dataset.keepF=(o&&o.f)||"";sel.dataset.keepK=(o&&o.k)||"";
-}
-function buildElTree(){
-  var box=$("elTree");box.innerHTML="";
-  var E=((site&&site.theme)||{}).el||{},pages={},order=[];
-  elDefs(types()).forEach(function(d){if(!pages[d.page]){pages[d.page]=[];order.push(d.page);}pages[d.page].push(d);});
-  order.forEach(function(pg,pi){
-    var card=el("details","card pgcard");
-    el("summary","",pg,card);
-    pages[pg].forEach(function(d){
-      var o=E[d.key]||{},row=el("div","erow",null,card);row.id="ee_"+d.key;row.dataset.key=d.key;
-      var hd=el("b","",d.label,row);el("i","","customised",hd);
-      var g=el("div","",null,row);el("label","","Font",g);var fp=el("select","ef",null,g);fontOpts(fp,o);
-      var z=el("div","zline",null,row);z.style.marginTop=".5rem";
-      el("label","","Size",z).style.margin="0";
-      var r=el("input","es",null,z);r.type="range";r.min=50;r.max=250;r.step=5;r.value=o.s||100;
-      var v=el("b","",(o.s||100)+"%",z);
-      var g3=el("div","grid4",null,row);
-      var c1=el("div","",null,g3);el("label","","Weight",c1);var w=el("select","ew",null,c1);opts(w,[["","Default"],["n","Normal"],["b","Bold"]]);w.value=o.w||"";
-      var c2=el("div","",null,g3);el("label","","Slant",c2);var it=el("select","ei",null,c2);opts(it,[["","Default"],["n","Upright"],["i","Italic"]]);it.value=o.i||"";
-      var c3=el("div","",null,g3);el("label","","Capitals",c3);var cs=el("select","ec",null,c3);opts(cs,[["","Default"],["u","UPPERCASE"],["c","Capitalize Each Word"],["l","lowercase"],["n","As written"]]);cs.value=o.c||"";
-      function mark(){row.classList.toggle("set",!!(fp.value||Number(r.value)!==100||w.value||it.value||cs.value));}
-      r.oninput=function(){v.textContent=r.value+"%";mark();schedule();};
-      [fp,w,it,cs].forEach(function(x){x.onchange=function(){mark();schedule();};});
-      var rs=el("button","btn small","Reset this",row);rs.type="button";rs.style.marginTop=".4rem";
-      rs.onclick=function(){fp.value=w.value=it.value=cs.value="";r.value=100;v.textContent="100%";mark();schedule();};
-      mark();
+/* ----- content controls ----- */
+function typeRef(slugName){return ensureTypes().filter(function(t){return slug(t.name)===slugName;})[0];}
+function sectionsEditor(box){
+  fld(box,"About menu name",site.aboutTitle,function(v){setSite("aboutTitle",v);renderPageSelect();},{ph:"About"});
+  var wrap=el("div","",null,box);
+  function draw(){
+    wrap.innerHTML="";
+    ensureTypes().forEach(function(t,i){
+      var inUse=index.some(function(e){return e.type===t.name;});
+      var row=el("div","srow",null,wrap);
+      var inp=el("input","",null,row);inp.value=t.plural||t.name;inp.placeholder="Section name";
+      inp.oninput=function(){t.plural=inp.value;if(!inUse&&inp.value)t.name=inp.value;change();renderPageSelect();};
+      var lay=el("select","",null,row);LAYOUTS.forEach(function(l){el("option","",l[1].split(" (")[0],lay).value=l[0];});lay.value=t.layout||"kriti";
+      lay.onchange=function(){t.layout=lay.value;change();};
+      var bt=el("div","sub3",null,row);
+      var up=el("button","btn small","↑",bt),dn=el("button","btn small","↓",bt),rm=el("button","btn small danger","Remove",bt);
+      up.type=dn.type=rm.type="button";
+      up.onclick=function(){var a=site.types;if(i>0){a.splice(i-1,0,a.splice(i,1)[0]);change();draw();renderPageSelect();}};
+      dn.onclick=function(){var a=site.types;if(i<a.length-1){a.splice(i+1,0,a.splice(i,1)[0]);change();draw();renderPageSelect();}};
+      rm.onclick=function(){
+        if(inUse){toast("This section still has pieces. Delete or move them first.",true);return;}
+        if(site.types.length<2){toast("Keep at least one section.",true);return;}
+        if(confirm("Remove this section?")){site.types.splice(i,1);change();draw();renderPageSelect();}
+      };
     });
-    box.appendChild(card);
-  });
-  elBuilt=true;
+  }
+  draw();
+  var add=el("button","btn small","+ Add a section",box);add.type="button";add.style.marginTop=".6rem";
+  add.onclick=function(){
+    var n=ensureTypes().length+1,nm="Section "+n;
+    site.types.push({name:nm,plural:nm,layout:"kriti"});change();draw();renderPageSelect();
+  };
 }
-function readEl(){
-  var out=Object.assign({},((site&&site.theme)||{}).el||{});
-  if(elBuilt)Array.from(document.querySelectorAll("#elTree .erow")).forEach(function(row){
-    var k=row.dataset.key,o={};
-    var fs=row.querySelector(".ef"),f="",kn="";
-    if(fs.value==="keep"){f=fs.dataset.keepF;kn=fs.dataset.keepK;}else if(FONT_SETS[fs.value]){f=FONT_SETS[fs.value][1];kn=FONT_SETS[fs.value][2];}
-    var sz=Number(row.querySelector(".es").value);
-    var w=row.querySelector(".ew").value,i=row.querySelector(".ei").value,c=row.querySelector(".ec").value;
-    if(f)o.f=f;if(kn)o.k=kn;if(sz!==100)o.s=sz;if(w)o.w=w;if(i)o.i=i;if(c)o.c=c;
-    if(Object.keys(o).length)out[k]=o;else delete out[k];
-  });
-  return out;
+function contentFor(def,box){
+  var s=site,k=def.key,id=def.sc?k.slice(k.indexOf(".")+1):k;
+  var C={
+    h_offer:function(){fld(box,"Dedication (lines above the name)",s.offering,function(v){setSite("offering",v);},{multi:1,rows:2});},
+    h_name:function(){fld(box,"Name",s.name,function(v){setSite("name",v);});},
+    h_tag:function(){fld(box,"Tagline",s.tagline,function(v){setSite("tagline",v);},{multi:1,rows:3});},
+    h_intro:function(){fld(box,"Introduction on the home page",s.intro,function(v){setSite("intro",v);},{multi:1,rows:3});},
+    a_text:function(){fld(box,"About text (a blank line starts a new paragraph)",s.about||DEFAULT_ABOUT,function(v){setSite("about",v.trim()===DEFAULT_ABOUT.trim()?"":v);},{multi:1,rows:8});},
+    f_text:function(){fld(box,"Footer lines",s.footer,function(v){setSite("footer",v);},{multi:1,rows:3});},
+    f_copy:function(){
+      fld(box,"Copyright since (year)",s.copyrightYear,function(v){setSite("copyrightYear",v.trim());},{ph:"2026"});
+      fld(box,"Licence name",s.licenseName,function(v){setSite("licenseName",v.trim());},{ph:"CC BY-NC-ND 4.0"});
+      fld(box,"Licence link",s.licenseUrl,function(v){setSite("licenseUrl",v.trim());});
+      fld(box,"Licence note (optional)",s.licenseNote,function(v){setSite("licenseNote",v);},{multi:1,rows:2});
+    },
+    n_home:function(){fld(box,"Button text",(s.labels&&s.labels.homeBtn)||"",function(v){var l=Object.assign({},s.labels||{});if(v.trim())l.homeBtn=v.trim();else delete l.homeBtn;if(Object.keys(l).length)s.labels=l;else delete s.labels;change();},{ph:"⌂ Home"});},
+    n_links:function(){sectionsEditor(box);},
+    h_btn:function(){sectionsEditor(box);}
+  };
+  if(C[k]){C[k]();return;}
+  if(def.sc&&id==="t_intro"){
+    var t=typeRef(def.sc);
+    if(t){fld(box,"Introduction at the top of this page",t.intro,function(v){if(v.trim())t.intro=v;else delete t.intro;change();},{multi:1,rows:3});return;}
+  }
+  if(def.sc==="about"){el("div","note3",def.key==="a_text"?"":"Headings are written inside the About text with ## and ###.",box);return;}
+  var m=el("div","note3",null,box);
+  if(def.sc&&id.indexOf("p_")===0){
+    m.appendChild(document.createTextNode("This text comes from the piece itself. "));
+    var h=pvHash.match(/^#\/(?!t\/|about)(.+)$/);
+    if(h){var b=el("button","btn small","Edit this piece",m);b.type="button";b.style.marginLeft=".3rem";b.onclick=function(){openForm(decodeURIComponent(h[1]));};}
+  }else if(def.sc){m.appendChild(document.createTextNode("These lines come from your pieces. Edit them in the Pieces tab."));}
+  else if(k==="n_pn"){m.appendChild(document.createTextNode("These are the titles of the previous and next piece."));}
+  else m.appendChild(document.createTextNode("You can change how this looks below."));
 }
-
-/* read every Pages + Design control into `site` */
-function readAll(){
-  var s=Object.assign({},site);
-  function set(k,v){if(v===""||v==null)delete s[k];else s[k]=v;}
-  set("offering",$("p_offering").value.trim());set("name",$("p_name").value.trim());
-  set("tagline",$("p_tagline").value.trim());set("intro",$("p_intro").value.trim());
-  set("aboutTitle",$("p_aboutTitle").value.trim());
-  var ab=$("p_about").value.trim();set("about",ab===DEFAULT_ABOUT.trim()?"":ab);
-  set("footer",$("p_footer").value.trim());set("copyrightYear",$("p_year").value.trim());
-  set("licenseName",$("p_lname").value.trim());set("licenseUrl",$("p_lurl").value.trim());set("licenseNote",$("p_lnote").value.trim());
-  set("title",$("p_title").value.trim());set("description",$("p_desc").value.trim());set("url",$("p_url").value.trim());
-  s.types=readTypes();
-  var labs={};
-  LABEL_DEFS.forEach(function(d){var v=$("lab_"+d[0]).value.trim();if(v&&v!==d[1])labs[d[0]]=v;});
-  if(Object.keys(labs).length)s.labels=labs;else delete s.labels;
-  var old=s.theme||{},th={};
-  Object.keys(old).forEach(function(k){if(["z","fonts","el","homeFont","homeKn","size","accent","paper","font","mItalic","mTone","mFrame"].indexOf(k)<0)th[k]=old[k];});
-  th.accent=$("d_accent").value;if($("d_paper").value)th.paper=$("d_paper").value;th.font=$("d_font").value;
-  var z={},fonts={};
-  ZDEFS.forEach(function(d){
-    var k=d[0],v=Number($("z_"+k).value);if(v!==100)z[k]=v;
-    if(k!=="all"){var fv=$("fp_"+k).value;if(FONT_SETS[fv]){fonts[k]={l:FONT_SETS[fv][1],k:FONT_SETS[fv][2]};}else if(old.fonts&&old.fonts[k]&&fontSetOf(old.fonts[k])==="keep"){fonts[k]=old.fonts[k];}}
-  });
-  if(Object.keys(z).length)th.z=z;if(Object.keys(fonts).length)th.fonts=fonts;
-  var ee=readEl();if(Object.keys(ee).length)th.el=ee;
-  th.mItalic=$("m_italic").value;th.mTone=$("m_tone").value;th.mFrame=$("m_frame").value;
-  s.theme=th;site=s;
+/* ----- the panel ----- */
+function renderInspector(){
+  var box=$("insp");box.innerHTML="";
+  // chooser
+  var cw=el("div","ifield",null,box);var ch=el("select","",null,cw);
+  el("option","","Site settings (colours, sections, other)",ch).value="";
+  var pages={},order=[];
+  elDefs(types()).forEach(function(d){if(!pages[d.page]){pages[d.page]=el("optgroup","",null,ch);pages[d.page].label=d.page;}el("option","",d.label,pages[d.page]).value=d.key;});
+  ch.value=selKey;ch.onchange=function(){selectKey(ch.value,true);};
+  var def=selKey?defOf(selKey):null;
+  if(!def){selKey="";renderSettings(box);return;}
+  var hd=el("h3","",def.label,box);el("p","sub2",def.page,box);
+  var c=el("div","",null,box);el("h4","","Text",c);contentFor(def,c);
+  styleBox(box,def);
 }
-document.getElementById("v_pages").addEventListener("input",schedule);
-document.getElementById("v_pages").addEventListener("change",schedule);
-
-var designReady=false;
-function pvPageChips(){
-  var box=$("pvPages");box.innerHTML="";
-  var first=index.slice().sort(function(a,b){return(b.date||"").localeCompare(a.date||"");})[0];
-  var pages=[["Home","#/"],["About","#/about"]];
-  types().forEach(function(t){pages.push([t.plural||t.name,"#/t/"+slug(t.name)]);});
-  if(first)pages.push(["A piece","#/"+encodeURIComponent(first.id)]);
-  pages.forEach(function(p){
-    var b=el("button",pvHash===p[1]?"on":"",p[0],box);b.type="button";
-    b.onclick=function(){pvHash=p[1];pvPageChips();pvSend($("pvFrame"),pvHash);};
+function renderSettings(box){
+  el("h3","","Site settings",box);
+  el("p","sub2","Click any text in the preview to edit it, or choose it from the list above.",box);
+  el("h4","","Look of the whole site",box);
+  var th=theme();
+  var aw=el("div","ifield",null,box);el("label","","Accent colour",aw);var ac=el("input","",null,aw);ac.type="color";ac.value=/^#[0-9a-f]{6}$/i.test(th.accent||"")?th.accent:"#7a2f1f";
+  ac.oninput=function(){theme().accent=ac.value;change();};
+  selOf(box,"Page colour",[["","Default"],["cream","Cream"],["white","White"],["grey","Soft grey"]],th.paper||"",function(v){if(v)theme().paper=v;else delete theme().paper;change();});
+  var zw=el("div","ifield",null,box);el("label","","Size of all text together",zw);
+  var z=el("div","zline",null,zw),r=el("input","",null,z);r.type="range";r.min=70;r.max=160;r.step=5;r.value=zval(th,"all");
+  var zv=el("b","",r.value+"%",z);
+  r.oninput=function(){zv.textContent=r.value+"%";var t=theme();t.z=Object.assign({},t.z||{});if(Number(r.value)===100)delete t.z.all;else t.z.all=Number(r.value);if(!Object.keys(t.z).length)delete t.z;change();};
+  el("h4","","Menu and sections",box);sectionsEditor(box);
+  var d1=el("details","card",null,box);d1.style.marginTop="1rem";el("summary","","Browser tab and sharing",d1);
+  fld(d1,"Browser tab title",site.title,function(v){setSite("title",v.trim());},{ph:"Mukunda Vittala"});
+  fld(d1,"Description (one or two sentences)",site.description,function(v){setSite("description",v.trim());},{multi:1,rows:3});
+  fld(d1,"Website address",site.url,function(v){setSite("url",v.trim());},{ph:"https://mukundavittaladaasa.github.io/"});
+  var d2=el("details","card",null,box);el("summary","","Other words on the site",d2);
+  el("p","hint","Rename any small word or button. Leave empty to keep the original.",d2);
+  LABEL_DEFS.forEach(function(d){
+    fld(d2,d[2],(site.labels&&site.labels[d[0]])||"",function(v){var l=Object.assign({},site.labels||{});if(v.trim()&&v.trim()!==d[1])l[d[0]]=v.trim();else delete l[d[0]];if(Object.keys(l).length)site.labels=l;else delete site.labels;change();},{ph:d[1]});
   });
+  var rs=el("button","btn small danger","Reset all fonts, sizes and capitals",box);rs.type="button";rs.style.marginTop="1rem";
+  rs.onclick=function(){if(!confirm("Remove every font, size and capital-letter setting?"))return;var t=theme();delete t.el;delete t.z;delete t.fonts;delete t.homeFont;delete t.homeKn;change();renderInspector();};
 }
-function initDesign(){
-  var sig=JSON.stringify(types().map(function(t){return[t.name,t.layout,t.plural];}));
-  if(!elBuilt||sig!==elSig){if(elBuilt)readAll();buildElTree();elSig=sig;}
-  pvPageChips();
+function initSite(){
+  renderPageSelect();renderInspector();
   var fr=$("pvFrame");
-  if(!fr.getAttribute("src")){fr.onload=function(){pvSend(fr,pvHash);};fr.src="index.html";}
-  else pvSend(fr,pvHash);
+  if(!fr.getAttribute("src")){fr.onload=function(){pvPush();};fr.src="index.html";}else pvPush();
 }
 window.addEventListener("message",function(e){
-  var d=e.data;if(e.origin!==location.origin||!d||d.kriti!=="pick")return;
-  showView("design");
-  var c=d.el?$("ee_"+d.el):$("el_"+d.group);if(!c)return;
-  if(d.el&&c.parentNode)c.parentNode.open=true;
-  c.open=true;c.classList.add("flash");c.scrollIntoView({behavior:"smooth",block:"center"});
-  setTimeout(function(){c.classList.remove("flash");},1300);
+  var d=e.data;if(e.origin!==location.origin||!d||d.kriti!=="pick"||!d.el)return;
+  selectKey(d.el,false);
+  var i=$("insp");if(window.innerWidth<=900)i.scrollIntoView({behavior:"smooth",block:"start"});else i.scrollTop=0;
 });
 
 /* ---------- GitHub ---------- */
@@ -1233,7 +1168,7 @@ function indexText(){
 function publish(){
   var g=gh();
   if(!g.owner||!g.repo||!g.token){toast("Connect to GitHub first (Connect tab)",true);showView("conn");return;}
-  clearTimeout(pageTimer);if($("v_pages").hidden===false||$("v_design").hidden===false)readAll();
+  flushChange();
   toast("Publishing…");
   var head,base,tree=[],note="";
   function add(path,text){tree.push({path:path,mode:"100644",type:"blob",content:text});}
@@ -1348,6 +1283,23 @@ function listDir(g,dir){
   return fetch(fileUrl(g,dir)+"?ref="+encodeURIComponent(g.branch)+"&t="+Date.now(),{headers:ghHeaders(g),cache:"no-store"})
     .then(function(r){if(r.status===404)return[];if(!r.ok)throw new Error("Could not list "+dir+" ("+r.status+")");return r.json();});
 }
+$("btnBackup").onclick=function(){
+  toast("Preparing the backup…");
+  var out={saved:new Date().toISOString(),site:site,works:[]},list=index.slice(),i=0;
+  function next(){
+    if(i>=list.length)return Promise.resolve();
+    var batch=list.slice(i,i+6);i+=6;
+    return Promise.all(batch.map(function(e){
+      if(dirty[e.id])return Promise.resolve(dirty[e.id]);
+      return readAny(e.f).then(function(t){return JSON.parse(t);}).catch(function(){return{id:e.id,title:e.title,note:"could not be read"};});
+    })).then(function(r){out.works=out.works.concat(r);}).then(next);
+  }
+  next().then(function(){
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:"application/json"}));
+    a.download="backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();a.remove();
+    toast("Backup downloaded ("+out.works.length+" pieces)");
+  }).catch(function(e){toast(e.message,true);});
+};
 $("btnLib").onclick=function(){
   var g=gh(),box=$("lib");
   if(!g.token){toast("Connect to GitHub first (Connect tab)",true);showView("conn");return;}
@@ -1396,7 +1348,7 @@ function loadRemote(){
 function start(s){
   site=s.site||{};index=s.index||[];dirty=s.dirty||{};deleted=s.deleted||{};fresh=s.fresh||{};legacy=!!s.legacy;siteDirty=!!s.siteDirty;
   shown=PAGE;fType="";
-  buildElCards();buildElTree();renderPages();renderDesign();renderChips();renderList();updateStatus();
+  renderPageSelect();if(!$("v_site").hidden)renderInspector();renderChips();renderList();updateStatus();
 }
 $("btnGh").onclick=function(){saveGh();};
 $("btnTest").onclick=testGh;
@@ -1409,7 +1361,6 @@ $("btnDiscard").onclick=function(){
   var g=gh();
   $("g_owner").value=g.owner;$("g_repo").value=g.repo;$("g_branch").value=g.branch;$("g_token").value=g.token||"";
   setConnNote();
-  buildElCards();
   var draft=null;try{draft=localStorage.getItem(DRAFT_KEY);}catch(e){}
   function noToken(){if(!g.token){showView("conn");toast("Welcome! First connect to GitHub (once), then everything works.");}}
   if(draft){try{start(JSON.parse(draft));toast("Restored your unpublished changes");noToken();return;}catch(e){}}

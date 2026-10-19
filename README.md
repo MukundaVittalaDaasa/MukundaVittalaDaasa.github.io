@@ -5,8 +5,13 @@
 
 ## Updating the site
 1. Open the Admin link above. First time only: Connect tab → paste your GitHub token.
-2. Pieces / Pages / Design / Files: make your changes.
+2. Pieces: your kritis, ugabhoga and blogs. Site: click any text in the preview to edit its words and look. Files: audio, images, backup.
 3. Press **Publish**. The site updates in about a minute.
+
+## How it is organised
+- One small file per piece in `data/<section>/`, one list in `data/index.json`, settings in `data/site.json`. Adding pieces never slows the site, so hundreds or thousands are fine.
+- New section (for example "Stotra")? Pages → Add a section. No code change.
+- Backup: Files → Download backup, now and then.
 
 ## Files
 - `index.html`, `admin.html`: the site and the editor. Replace only when given new ones (delete the old first).

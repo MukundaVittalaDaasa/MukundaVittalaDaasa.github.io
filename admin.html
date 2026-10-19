@@ -166,17 +166,15 @@ button.danger,.danger{color:var(--bad)}
     </details>
 
     <h3>Pages</h3>
-    <details class="card"><summary>Home page <small>introduction and section buttons</small></summary>
+    <details class="card"><summary>Home page <small>an optional short line</small></summary>
       <label>Introduction (optional; several lines allowed)</label><textarea id="p_intro" rows="3"></textarea>
-      <p class="hint">Below it, one button per section appears automatically.</p>
     </details>
 
     <details class="card"><summary>About page <small>your story and understanding</small></summary>
-      <div class="row"><div><label>Button name</label><input id="p_aboutTitle" placeholder="About"></div><div><label>Small line under the button</label><input id="lab_aboutSub" placeholder="ಪರಿಚಯ"></div></div>
-      <label>Text</label><div id="aboutTools"></div>
-      <textarea id="p_about" style="min-height:14rem"></textarea>
-      <div id="aboutPrev" class="preview" hidden></div>
-      <p class="hint">A starter text is filled in for you. Please make it your own.</p>
+      <label>Menu name</label><input id="p_aboutTitle" placeholder="About">
+      <label>Text (a blank line starts a new paragraph)</label>
+      <textarea id="p_about" style="min-height:8rem"></textarea>
+      <p class="hint">Keep it short: a few lines are enough.</p>
     </details>
 
     <h3>Section pages</h3>
@@ -331,6 +329,7 @@ button.danger,.danger{color:var(--bad)}
 .erow.flash{outline:2px solid var(--accent);animation:fl 1.2s}
 @media(max-width:560px){.erow .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
+<style>.lfrow{margin-top:.4rem}.lfrow label{font-size:.78rem;margin:0 0 .15rem}.lfrow textarea{min-height:2.6rem}</style>
 <script>
 var DRAFT_KEY="kriti-draft-v3",GH_KEY="kriti-gh-v1",PAGE=40;
 var LABEL_DEFS=[
@@ -339,7 +338,6 @@ var LABEL_DEFS=[
 ["showMore","Show more","Button that shows more items in a long list"],
 ["aboutEmpty","This page is being written.","Shown on the About page until you write it"],
 ["loading","Loading…","Shown while a piece is loading"],
-["aboutSub","ಪರಿಚಯ","Small line under the About button on the first page"],
 ["search","Search","Search box hint"],
 ["countOne","{n} piece","Shown when there is 1 item ({n} = the number)"],
 ["countMany","{n} pieces","Shown when there are several items"],
@@ -410,7 +408,7 @@ function firstOf(w,lay){
   return String(s||stripMd(w.body||"")).replace(/\s+/g," ").slice(0,150);
 }
 
-var DEFAULT_ABOUT="## About this collection\n\nThis is a humble collection of devotional compositions in Kannada, written in the tradition of the Haridasa sahitya and rooted in the Dvaita (Madhwa) philosophy of Sri Madhvacharya. They are composed under the ankita **Mukunda Vittala** and offered at the feet of Sri Hari.\n\n### The collection\n\n- **Kritis**: songs with pallavi, anupallavi and charanas.\n- **Ugabhoga**: short verses of devotion, without pallavi and anupallavi.\n- **Tattva Chintane**: reflections on tattva, written from experience and understanding.\n\nThe pallavi, charanas and verses can be tapped to read their meaning in English, ಕನ್ನಡ or हिन्दी.\n\n### An offering\n\nThese are small offerings, written with little learning and much hope. Please forgive any errors.\n\nಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು";
+var DEFAULT_ABOUT="Devotional compositions in Kannada, in the Haridasa tradition and the Dvaita philosophy of Sri Madhvacharya, offered at the feet of Sri Hari under the ankita **Mukunda Vittala**.";
 var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis",sub:"ಕೃತಿಗಳು"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga",sub:"ಉಗಾಭೋಗ"},{name:"Blog",layout:"article",plural:"Tattva Chintane",sub:"ತತ್ತ್ವ ಚಿಂತನೆ"}];
 
 function meanCss(t,pre){
@@ -522,18 +520,13 @@ function elDefs(types){
   add("Header (same on every page)","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
   add("Header (same on every page)","n_links","Menu links (About, Kritis…)","nav",[[".nav a",".7rem"]]);
   add("Home page","h_intro","Introduction","home",[[".landing .intro",".98rem"]]);
-  add("Home page","h_btn","Section buttons","home",[[".landing .menu b","1.2rem"]]);
-  add("Home page","h_btnsub","Small line under each button","home",[[".landing .menu small",".8rem"]]);
-  add("Links inside pages","n_back","Back link","nav",[[".back",".82rem"]]);
   add("Links inside pages","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
-  add("About page","a_title","Page title","head",[[".pt","1.7rem"]],{sc:"about"});
   add("About page","a_text","Paragraphs","body",[[".md","1.02rem"]],{sc:"about",dl:0});
   add("About page","a_h2","Large headings","head",[[".md h2","1.4rem"]],{sc:"about"});
   add("About page","a_h3","Small headings","head",[[".md h3",".8rem"]],{sc:"about"});
   (types||[]).forEach(function(t){
     var s=slug(t.name),P=(t.plural||t.name)+" ("+t.name+")",lay=t.layout;
     function a(k,l,g,sels,o){add(P,s+"."+k,l,g,sels,Object.assign({sc:s},o||{}));}
-    a("t_title","List page title","head",[[".pt","1.7rem"]]);
     a("t_intro","List page introduction","body",[[".tintro",".95rem"]]);
     a("t_item","Titles in the list","head",[[".item .title","1.05rem"]]);
     a("t_first","First line shown under each title","small",[[".item .pallavi",".9rem"],[".item .exc",".92rem"]]);
@@ -599,6 +592,18 @@ function elAt(target,types,ty){
   });
   return best;
 }
+
+/* one choice sets both the English and the Kannada letters */
+var FONT_SETS={
+  classic:["Classic serif","source","noto"],
+  elegant:["Elegant","cormorant","tiro"],
+  bookish:["Bookish","garamond","noto"],
+  warm:["Warm","lora","tiro"],
+  modern:["Modern, plain","inter","sans"],
+  display:["High contrast","playfair","hubballi"],
+  carved:["Carved capitals","cinzel","noto"]
+};
+function fontSetOf(o){o=o||{};for(var k in FONT_SETS){if(FONT_SETS[k][1]===o.f&&FONT_SETS[k][2]===o.k)return k;}return(o.f||o.k)?"keep":"";}
 
 
 /* ---------- basics ---------- */
@@ -708,16 +713,13 @@ function toolbar(host,ta,prev){
 
 /* ---------- reusable fields: languages and audio ---------- */
 function langField(host,init,rows,onChange){
-  var vals={},lang="en";
-  LANGS.forEach(function(l){if(init&&init[l[0]])vals[l[0]]=init[l[0]];});
-  var seg=el("div","seg small",null,host),ta=el("textarea","",null,host),btns={};
-  ta.rows=rows||3;
-  function mark(){LANGS.forEach(function(l){btns[l[0]].className=(l[0]===lang?"on ":"")+(vals[l[0]]?"has":"");});}
-  function show(){ta.value=vals[lang]||"";ta.placeholder="Write it in "+LANGS.filter(function(l){return l[0]===lang;})[0][1];mark();}
-  LANGS.forEach(function(l){var b=el("button","",l[1],seg);b.type="button";btns[l[0]]=b;b.onclick=function(){lang=l[0];show();};});
-  ta.oninput=function(){vals[lang]=ta.value;mark();if(onChange)onChange();};
-  show();
-  return{get:function(){var o={},any=false;LANGS.forEach(function(l){var v=(vals[l[0]]||"").trim();if(v){o[l[0]]=v;any=true;}});return any?o:null;}};
+  var tas={};
+  LANGS.forEach(function(l){
+    var w=el("div","lfrow",null,host);el("label","",l[1],w);
+    var ta=el("textarea","",null,w);ta.rows=rows>2?2:rows||2;ta.value=(init&&init[l[0]])||"";
+    ta.oninput=function(){if(onChange)onChange();};tas[l[0]]=ta;
+  });
+  return{get:function(){var o={},any=false;LANGS.forEach(function(l){var v=tas[l[0]].value.trim();if(v){o[l[0]]=v;any=true;}});return any?o:null;}};
 }
 function audioField(host,init,onChange){
   var wrap=el("div","audio",null,host),path=el("input","",null,wrap);
@@ -937,7 +939,6 @@ function typeCard(t,open){
   var body=el("div","",null,d);
   var r1=el("div","row",null,body);
   var a=el("div","",null,r1);el("label","","Button name on the website",a);var inPl=el("input","t_plural",null,a);inPl.value=t.plural||"";inPl.placeholder="e.g. Kritis";
-  var b=el("div","",null,r1);el("label","","Small line under it (Kannada)",b);var inSub=el("input","t_sub",null,b);inSub.value=t.sub||"";inSub.placeholder="ಕೃತಿಗಳು";
   var r2=el("div","row",null,body);
   var c=el("div","",null,r2);el("label","","Kind of page",c);var sel=el("select","t_layout",null,c);
   LAYOUTS.forEach(function(l){var o=el("option","",l[1],sel);o.value=l[0];});sel.value=t.layout||"kriti";
@@ -972,8 +973,8 @@ function readTypes(){
     var name=d.querySelector(".t_name").value.trim(),pl=d.querySelector(".t_plural").value.trim();
     if(!name)name=pl;if(!name)return;
     var o={name:name,layout:d.querySelector(".t_layout").value,plural:pl||name+"s"};
-    var sub=d.querySelector(".t_sub").value.trim(),intro=d.querySelector(".t_intro").value.trim();
-    if(sub)o.sub=sub;if(intro)o.intro=intro;
+    var intro=d.querySelector(".t_intro").value.trim();
+    if(intro)o.intro=intro;
     out.push(o);
   });
   return out.length?out:DEFAULT_TYPES;
@@ -981,12 +982,10 @@ function readTypes(){
 function buildLabels(){
   var box=$("labels");box.innerHTML="";
   LABEL_DEFS.forEach(function(d){
-    if(d[0]==="aboutSub")return;
     el("label","",d[2],box);
     var i=el("input","",null,box);i.id="lab_"+d[0];i.placeholder=d[1];
     i.value=(site.labels&&site.labels[d[0]])||"";
   });
-  $("lab_aboutSub").value=(site.labels&&site.labels.aboutSub)||"";
 }
 function renderPages(){
   var s=site||{};
@@ -998,7 +997,6 @@ function renderPages(){
   $("p_title").value=s.title||"";$("p_desc").value=s.description||"";$("p_url").value=s.url||"";
   buildTypeCards();buildLabels();
 }
-toolbar($("aboutTools"),$("p_about"),$("aboutPrev"));
 
 /* ---------- design: size, font and colour for each kind of text ---------- */
 var FONT_NOTE={home:"First page",nav:"Menu",head:"Titles",verse:"Verses",mean:"Meanings",body:"Writings",small:"Small text"};
@@ -1016,10 +1014,9 @@ function buildElCards(){
     var v=el("b","","100%",z);v.id="zv_"+k;
     r.oninput=function(){v.textContent=r.value+"%";schedule();};
     if(k!=="all"){
-      var row=el("div","row",null,card);
-      var a=el("div","",null,row);el("label","","English letters",a);var fl=el("select","",null,a);fl.id="fl_"+k;optList(fl,HOME_FONTS,"Default");
-      var b=el("div","",null,row);el("label","","ಕನ್ನಡ letters",b);var fk=el("select","",null,b);fk.id="fk_"+k;optList(fk,KN_FONTS,"Default");
-      fl.onchange=fk.onchange=schedule;
+      var row=el("div","",null,card);el("label","","Font",row);var fp=el("select","",null,row);fp.id="fp_"+k;
+      el("option","","Default",fp).value="";Object.keys(FONT_SETS).forEach(function(q){el("option","",FONT_SETS[q][0],fp).value=q;});
+      fp.onchange=schedule;
     }
     if(k==="mean"){
       var r2=el("div","row",null,card);
@@ -1041,7 +1038,7 @@ function renderDesign(){
   var F=t.fonts||{};if(!F.home&&(t.homeFont||t.homeKn))F=Object.assign({},F,{home:{l:t.homeFont,k:t.homeKn}});
   ZDEFS.forEach(function(d){
     var k=d[0],v=zval(t,k);$("z_"+k).value=v;$("zv_"+k).textContent=v+"%";
-    if(k!=="all"){$("fl_"+k).value=(F[k]&&F[k].l)||"";$("fk_"+k).value=(F[k]&&F[k].k)||"";}
+    if(k!=="all"){var cs0=fontSetOf(F[k]);$("fp_"+k).value=(cs0==="keep"?"":cs0);}
   });
   $("m_italic").value=t.mItalic||"all";$("m_tone").value=t.mTone||"muted";$("m_frame").value=t.mFrame||"rule";
 }
@@ -1054,6 +1051,13 @@ $("zReset").onclick=function(){ZDEFS.forEach(function(d){var r=$("z_"+d[0]);r.va
 /* ---------- style every piece of text (element tree) ---------- */
 var elBuilt=false,elSig="";
 function opts(sel,pairs){pairs.forEach(function(o){el("option","",o[1],sel).value=o[0];});}
+function fontOpts(sel,o){
+  el("option","","Default",sel).value="";
+  Object.keys(FONT_SETS).forEach(function(k){el("option","",FONT_SETS[k][0],sel).value=k;});
+  var cur=fontSetOf(o);
+  if(cur==="keep")el("option","","Current mix (kept)",sel).value="keep";
+  sel.value=cur;sel.dataset.keepF=(o&&o.f)||"";sel.dataset.keepK=(o&&o.k)||"";
+}
 function buildElTree(){
   var box=$("elTree");box.innerHTML="";
   var E=((site&&site.theme)||{}).el||{},pages={},order=[];
@@ -1064,9 +1068,7 @@ function buildElTree(){
     pages[pg].forEach(function(d){
       var o=E[d.key]||{},row=el("div","erow",null,card);row.id="ee_"+d.key;row.dataset.key=d.key;
       var hd=el("b","",d.label,row);el("i","","customised",hd);
-      var g=el("div","grid2",null,row);
-      var a=el("div","",null,g);el("label","","English letters",a);var fl=el("select","ef",null,a);optList(fl,HOME_FONTS,"Default");fl.value=o.f||"";
-      var b=el("div","",null,g);el("label","","ಕನ್ನಡ letters",b);var fk=el("select","ek",null,b);optList(fk,KN_FONTS,"Default");fk.value=o.k||"";
+      var g=el("div","",null,row);el("label","","Font",g);var fp=el("select","ef",null,g);fontOpts(fp,o);
       var z=el("div","zline",null,row);z.style.marginTop=".5rem";
       el("label","","Size",z).style.margin="0";
       var r=el("input","es",null,z);r.type="range";r.min=50;r.max=250;r.step=5;r.value=o.s||100;
@@ -1075,11 +1077,11 @@ function buildElTree(){
       var c1=el("div","",null,g3);el("label","","Weight",c1);var w=el("select","ew",null,c1);opts(w,[["","Default"],["n","Normal"],["b","Bold"]]);w.value=o.w||"";
       var c2=el("div","",null,g3);el("label","","Slant",c2);var it=el("select","ei",null,c2);opts(it,[["","Default"],["n","Upright"],["i","Italic"]]);it.value=o.i||"";
       var c3=el("div","",null,g3);el("label","","Capitals",c3);var cs=el("select","ec",null,c3);opts(cs,[["","Default"],["u","UPPERCASE"],["c","Capitalize Each Word"],["l","lowercase"],["n","As written"]]);cs.value=o.c||"";
-      function mark(){row.classList.toggle("set",!!(fl.value||fk.value||Number(r.value)!==100||w.value||it.value||cs.value));}
+      function mark(){row.classList.toggle("set",!!(fp.value||Number(r.value)!==100||w.value||it.value||cs.value));}
       r.oninput=function(){v.textContent=r.value+"%";mark();schedule();};
-      [fl,fk,w,it,cs].forEach(function(x){x.onchange=function(){mark();schedule();};});
+      [fp,w,it,cs].forEach(function(x){x.onchange=function(){mark();schedule();};});
       var rs=el("button","btn small","Reset this",row);rs.type="button";rs.style.marginTop=".4rem";
-      rs.onclick=function(){fl.value=fk.value=w.value=it.value=cs.value="";r.value=100;v.textContent="100%";mark();schedule();};
+      rs.onclick=function(){fp.value=w.value=it.value=cs.value="";r.value=100;v.textContent="100%";mark();schedule();};
       mark();
     });
     box.appendChild(card);
@@ -1090,7 +1092,9 @@ function readEl(){
   var out=Object.assign({},((site&&site.theme)||{}).el||{});
   if(elBuilt)Array.from(document.querySelectorAll("#elTree .erow")).forEach(function(row){
     var k=row.dataset.key,o={};
-    var f=row.querySelector(".ef").value,kn=row.querySelector(".ek").value,sz=Number(row.querySelector(".es").value);
+    var fs=row.querySelector(".ef"),f="",kn="";
+    if(fs.value==="keep"){f=fs.dataset.keepF;kn=fs.dataset.keepK;}else if(FONT_SETS[fs.value]){f=FONT_SETS[fs.value][1];kn=FONT_SETS[fs.value][2];}
+    var sz=Number(row.querySelector(".es").value);
     var w=row.querySelector(".ew").value,i=row.querySelector(".ei").value,c=row.querySelector(".ec").value;
     if(f)o.f=f;if(kn)o.k=kn;if(sz!==100)o.s=sz;if(w)o.w=w;if(i)o.i=i;if(c)o.c=c;
     if(Object.keys(o).length)out[k]=o;else delete out[k];
@@ -1120,7 +1124,7 @@ function readAll(){
   var z={},fonts={};
   ZDEFS.forEach(function(d){
     var k=d[0],v=Number($("z_"+k).value);if(v!==100)z[k]=v;
-    if(k!=="all"){var l=$("fl_"+k).value,kn=$("fk_"+k).value;if(l||kn){fonts[k]={};if(l)fonts[k].l=l;if(kn)fonts[k].k=kn;}}
+    if(k!=="all"){var fv=$("fp_"+k).value;if(FONT_SETS[fv]){fonts[k]={l:FONT_SETS[fv][1],k:FONT_SETS[fv][2]};}else if(old.fonts&&old.fonts[k]&&fontSetOf(old.fonts[k])==="keep"){fonts[k]=old.fonts[k];}}
   });
   if(Object.keys(z).length)th.z=z;if(Object.keys(fonts).length)th.fonts=fonts;
   var ee=readEl();if(Object.keys(ee).length)th.el=ee;

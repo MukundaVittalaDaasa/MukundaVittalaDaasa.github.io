@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!--META-START-->
-<title>Mukunda Vittala · ಮುಕುಂದ ವಿಠಲ</title>
-<meta name="description" content="Small offerings at the feet of Hari. Written with little learning, and much hope.">
+<title>Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ</title>
+<meta name="description" content="Kannada kritis, ugabhogas and reflections on tattva in praise of Hari, with the ankita Mukunda Vittala.">
 <link rel="canonical" href="https://mukundavittaladaasa.github.io/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Mukunda Vittala · ಮುಕುಂದ ವಿಠಲ">
-<meta property="og:description" content="Small offerings at the feet of Hari. Written with little learning, and much hope.">
+<meta property="og:title" content="Mukunda Vittala · ಮುಕುಂದ ವಿಠ್ಠಲ">
+<meta property="og:description" content="Kannada kritis, ugabhogas and reflections on tattva in praise of Hari.">
 <meta property="og:url" content="https://mukundavittaladaasa.github.io/">
 <!--META-END-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +37,7 @@ a{color:var(--accent)}
 .mast .knname{display:block;font-family:var(--kn);font-size:1.1rem;color:var(--accent);margin-top:.25rem}
 .tag{font-style:italic;color:var(--muted);margin:.9rem 0 0;white-space:pre-line;font-size:.98rem}
 .intro{margin:0 0 1.6rem;text-align:center;white-space:pre-line;font-size:.98rem}
-.nav{display:flex;justify-content:center;flex-wrap:wrap;border-top:3px double var(--line);border-bottom:1px solid var(--line);margin:1.5rem 0 2rem}
+.nav{display:flex;justify-content:center;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:1.4rem 0 2rem}
 .nav a{padding:.8rem .6rem;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px}
 .nav a:hover{color:var(--fg)}
 .nav a.homebtn{letter-spacing:.09em}
@@ -50,7 +50,7 @@ a{color:var(--accent)}
 .chip{background:none;border:1px solid var(--line);color:var(--muted);font:inherit;font-size:.78rem;padding:.1rem .75rem;border-radius:2px;cursor:pointer}
 .chip.on{color:var(--accent);border-color:var(--accent)}
 .count{font-size:.78rem;letter-spacing:.06em;color:var(--muted);margin:1.1rem 0 .2rem;text-transform:uppercase}
-.item{display:grid;grid-template-columns:2.1rem 1fr;gap:.1rem .5rem;padding:1rem 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
+.item{display:block;padding:1rem 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
 .item:first-child{border-top:1px solid var(--line)}
 .item:hover .title{color:var(--accent)}
 .num{color:var(--muted);font-size:.78rem;padding-top:.3rem;font-variant-numeric:tabular-nums}
@@ -94,7 +94,7 @@ audio{width:100%;margin-top:1.5rem}
 .md img{max-width:100%}
 .md figure{margin:1.4rem 0}
 .md figcaption{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.4rem}
-.landing{padding-top:.4rem}
+.landing{padding-top:.2rem;min-height:12vh}
 .menu{display:grid;gap:.75rem;width:100%;max-width:20rem;margin:0 auto}
 .menu a{display:block;text-align:center;padding:.9rem 1rem;border:1px solid var(--line);color:var(--fg);text-decoration:none;transition:border-color .15s,background .15s}
 .menu a:hover,.menu a:focus{border-color:var(--accent);background:var(--soft)}
@@ -109,7 +109,7 @@ audio{width:100%;margin-top:1.5rem}
 .more{display:block;margin:1.2rem auto 0}
 .pn{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;font-size:.88rem}
 .pn a{color:var(--muted);text-decoration:none}
-footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:3.2rem;padding-top:1.4rem;border-top:3px double var(--line)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:3.2rem;padding-top:1.4rem;border-top:1px solid var(--line)}
 footer .fnav{display:flex;justify-content:center;flex-wrap:wrap;gap:.2rem 1.1rem;margin-bottom:1rem}
 footer .fnav a{color:var(--muted);text-decoration:none;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase}
 footer .fnav a:hover{color:var(--accent)}
@@ -133,7 +133,6 @@ var LABEL_DEFS=[
 ["showMore","Show more","Button that shows more items in a long list"],
 ["aboutEmpty","This page is being written.","Shown on the About page until you write it"],
 ["loading","Loading…","Shown while a piece is loading"],
-["aboutSub","ಪರಿಚಯ","Small line under the About button on the first page"],
 ["search","Search","Search box hint"],
 ["countOne","{n} piece","Shown when there is 1 item ({n} = the number)"],
 ["countMany","{n} pieces","Shown when there are several items"],
@@ -209,7 +208,7 @@ function firstOf(w,lay){
   return String(s||stripMd(w.body||"")).replace(/\s+/g," ").slice(0,150);
 }
 
-var DEFAULT_ABOUT="## About this collection\n\nThis is a humble collection of devotional compositions in Kannada, written in the tradition of the Haridasa sahitya and rooted in the Dvaita (Madhwa) philosophy of Sri Madhvacharya. They are composed under the ankita **Mukunda Vittala** and offered at the feet of Sri Hari.\n\n### The collection\n\n- **Kritis**: songs with pallavi, anupallavi and charanas.\n- **Ugabhoga**: short verses of devotion, without pallavi and anupallavi.\n- **Tattva Chintane**: reflections on tattva, written from experience and understanding.\n\nThe pallavi, charanas and verses can be tapped to read their meaning in English, ಕನ್ನಡ or हिन्दी.\n\n### An offering\n\nThese are small offerings, written with little learning and much hope. Please forgive any errors.\n\nಶ್ರೀಕೃಷ್ಣಾರ್ಪಣಮಸ್ತು";
+var DEFAULT_ABOUT="Devotional compositions in Kannada, in the Haridasa tradition and the Dvaita philosophy of Sri Madhvacharya, offered at the feet of Sri Hari under the ankita **Mukunda Vittala**.";
 var DEFAULT_TYPES=[{name:"Kriti",layout:"kriti",plural:"Kritis",sub:"ಕೃತಿಗಳು"},{name:"Ugabhoga",layout:"verses",plural:"Ugabhoga",sub:"ಉಗಾಭೋಗ"},{name:"Blog",layout:"article",plural:"Tattva Chintane",sub:"ತತ್ತ್ವ ಚಿಂತನೆ"}];
 
 function meanCss(t,pre){
@@ -321,18 +320,13 @@ function elDefs(types){
   add("Header (same on every page)","n_home","Home button","nav",[[".nav a.homebtn",".7rem"]]);
   add("Header (same on every page)","n_links","Menu links (About, Kritis…)","nav",[[".nav a",".7rem"]]);
   add("Home page","h_intro","Introduction","home",[[".landing .intro",".98rem"]]);
-  add("Home page","h_btn","Section buttons","home",[[".landing .menu b","1.2rem"]]);
-  add("Home page","h_btnsub","Small line under each button","home",[[".landing .menu small",".8rem"]]);
-  add("Links inside pages","n_back","Back link","nav",[[".back",".82rem"]]);
   add("Links inside pages","n_pn","Previous and next titles","nav",[[".pn",".88rem"]]);
-  add("About page","a_title","Page title","head",[[".pt","1.7rem"]],{sc:"about"});
   add("About page","a_text","Paragraphs","body",[[".md","1.02rem"]],{sc:"about",dl:0});
   add("About page","a_h2","Large headings","head",[[".md h2","1.4rem"]],{sc:"about"});
   add("About page","a_h3","Small headings","head",[[".md h3",".8rem"]],{sc:"about"});
   (types||[]).forEach(function(t){
     var s=slug(t.name),P=(t.plural||t.name)+" ("+t.name+")",lay=t.layout;
     function a(k,l,g,sels,o){add(P,s+"."+k,l,g,sels,Object.assign({sc:s},o||{}));}
-    a("t_title","List page title","head",[[".pt","1.7rem"]]);
     a("t_intro","List page introduction","body",[[".tintro",".95rem"]]);
     a("t_item","Titles in the list","head",[[".item .title","1.05rem"]]);
     a("t_first","First line shown under each title","small",[[".item .pallavi",".9rem"],[".item .exc",".92rem"]]);
@@ -399,6 +393,18 @@ function elAt(target,types,ty){
   return best;
 }
 
+/* one choice sets both the English and the Kannada letters */
+var FONT_SETS={
+  classic:["Classic serif","source","noto"],
+  elegant:["Elegant","cormorant","tiro"],
+  bookish:["Bookish","garamond","noto"],
+  warm:["Warm","lora","tiro"],
+  modern:["Modern, plain","inter","sans"],
+  display:["High contrast","playfair","hubballi"],
+  carved:["Carved capitals","cinzel","noto"]
+};
+function fontSetOf(o){o=o||{};for(var k in FONT_SETS){if(FONT_SETS[k][1]===o.f&&FONT_SETS[k][2]===o.k)return k;}return(o.f||o.k)?"keep":"";}
+
 
 function baseTypes(){return(SITE.types&&SITE.types.length)?SITE.types:DEFAULT_TYPES;}
 function types(){
@@ -450,28 +456,22 @@ function footer(parent){
   if(SITE.footer)el("div","ft",SITE.footer,f);
   var start=SITE.copyrightYear||"",now=String(new Date().getFullYear());
   var years=start&&start!==now&&now>start?start+"–"+now:(start||now);
-  el("div","copy","© "+years+" "+(SITE.name||"")+(SITE.kn?" · "+SITE.kn:""),f);
+  var c=el("div","copy","© "+years+" "+(SITE.name||""),f);
   if(SITE.licenseName){
-    var l=el("div","copy","Licensed under ",f);
-    if(SITE.licenseUrl){var a2=el("a","",SITE.licenseName,l);a2.href=SITE.licenseUrl;a2.target="_blank";a2.rel="license noopener";}
-    else l.appendChild(document.createTextNode(SITE.licenseName));
+    c.appendChild(document.createTextNode(" · "));
+    if(SITE.licenseUrl){var a2=el("a","",SITE.licenseName,c);a2.href=SITE.licenseUrl;a2.target="_blank";a2.rel="license noopener";}
+    else c.appendChild(document.createTextNode(SITE.licenseName));
   }
-  if(SITE.licenseNote)el("div","copy note2 ft",SITE.licenseNote,f);
+  if(SITE.licenseNote)el("div","copy note2",SITE.licenseNote,f);
 }
-function item(parent,w,n){
+function item(parent,w){
   var lay=layoutOf(w),a=el("a","item",null,parent);a.href="#/"+encodeURIComponent(w.id);
-  el("div","num",String(n),a);
-  var c=el("div","",null,a);
-  el("div","title",w.title,c);
-  var bits=[lay==="article"?w.date:"",w.status==="draft"?L("inProgress"):"",w.link?L("fullTag"):""].filter(Boolean).join(" · ");
-  if(bits)el("div","meta"+(w.status==="draft"?" draft":""),bits,c);
-  if(w.first){
-    if(lay==="article")el("div","exc",w.first,c);
-    else el("div","pallavi",(lay==="kriti"?L("pallavi")+": ":"")+w.first,c);
-  }
+  el("div","title",w.title,a);
+  var bits=[lay==="article"?w.date:"",w.status==="draft"?L("inProgress"):""].filter(Boolean).join(" · ");
+  if(bits)el("div","meta"+(w.status==="draft"?" draft":""),bits,a);
+  if(w.first)el("div",lay==="article"?"exc":"pallavi",w.first,a);
 }
 function renderAbout(){
-  el("h2","pt",aboutLabel(),app);
   md((SITE.about&&SITE.about.trim())?SITE.about:DEFAULT_ABOUT,el("div","md",null,app));
 }
 function renderHome(tabSlug){
@@ -481,17 +481,13 @@ function renderHome(tabSlug){
   app.innerHTML="";document.body.setAttribute("data-ty",tabSlug);
   if(tabSlug===""){
     header(app,"home");
-    var land=el("div","landing",null,app);
-    if(SITE.intro)el("p","intro",SITE.intro,land);
-    var menu=el("nav","menu",null,land);menu.setAttribute("aria-label","Sections");
-    var items=[{label:aboutLabel(),sub:L("aboutSub"),href:"#/about"}].concat(ts.map(function(t){return{label:t.label,sub:t.sub,href:"#/t/"+t.slug};}));
-    items.forEach(function(it){var a=el("a","",null,menu);a.href=it.href;el("b","",it.label,a);if(it.sub)el("small","",it.sub,a);});
+    if(SITE.intro)el("p","intro",SITE.intro,el("div","landing",null,app));
     footer(app);window.scrollTo(0,0);return;
   }
   header(app,tabSlug);
   if(tabSlug==="about"){renderAbout();footer(app);window.scrollTo(0,0);return;}
   var tab=ts.filter(function(t){return t.slug===tabSlug;})[0],list=ofType(tab.name);
-  el("h2","pt",tab.label,app);if(tab.sub)el("div","sub",tab.sub,app);if(tab.intro)el("p","tintro",tab.intro,app);
+  if(tab.intro)el("p","tintro",tab.intro,app);
   var tagset={};list.forEach(function(w){(w.tags||[]).forEach(function(t){tagset[t]=1;});});
   var names=Object.keys(tagset).sort();
   if(state.tag&&names.indexOf(state.tag)<0)state.tag="";
@@ -501,14 +497,13 @@ function renderHome(tabSlug){
     var c=el("button","chip"+(state.tag===t?" on":""),t,chips);
     c.onclick=function(){state.tag=state.tag===t?"":t;state.shown=PAGE;renderHome(tabSlug);};
   });
-  var count=el("div","count","",app),box=el("div","",null,app),moreWrap=el("div","",null,app);
+  var box=el("div","",null,app),moreWrap=el("div","",null,app);
   function draw(){
     box.innerHTML="";moreWrap.innerHTML="";
     var term=q?state.q.trim().toLowerCase():"";
     var rows=list.filter(function(w){return(!state.tag||(w.tags||[]).indexOf(state.tag)>-1)&&(!term||haystack(w).indexOf(term)>-1);});
-    count.textContent=L(rows.length===1?"countOne":"countMany",{n:rows.length});
     if(!rows.length)el("div","empty",L("empty"),box);
-    rows.slice(0,state.shown).forEach(function(w,i){item(box,w,i+1);});
+    rows.slice(0,state.shown).forEach(function(w,i){item(box,w);});
     if(rows.length>state.shown){var b=el("button","chip more",L("showMore"),moreWrap);b.onclick=function(){state.shown+=PAGE;draw();};}
   }
   if(q)q.oninput=function(){state.q=q.value;state.shown=PAGE;draw();};
@@ -534,12 +529,11 @@ function showWork(w,entry){
   var lay=layoutOf(w),list=ofType(w.type),i=list.indexOf(entry);
   var M=w.meanings||{},A=w.audios||{},refresh=[],panels=[];
   app.innerHTML="";document.body.setAttribute("data-ty",slug(w.type));header(app,slug(w.type));
-  var ti=typeInfo(w.type),back=el("a","back","← "+(ti&&ti.plural?ti.plural:L("back")),app);back.href="#/t/"+slug(w.type);
-  el("div","dt",w.title,app);
-  var meta=[w.type];
-  if(lay!=="article"){if(w.ankita)meta.push(L("ankita")+": "+w.ankita);if(w.raga)meta.push(L("raga")+": "+w.raga);if(w.tala)meta.push(L("tala")+": "+w.tala);}
+    el("div","dt",w.title,app);
+  var meta=[];
+  if(lay!=="article"){if(w.raga)meta.push(L("raga")+": "+w.raga);if(w.tala)meta.push(L("tala")+": "+w.tala);}
   if(w.date)meta.push(w.date);
-  el("div","meta",meta.filter(Boolean).join(" · "),app);
+  if(meta.length)el("div","meta",meta.join(" · "),app);
   if(w.audio){var au=el("audio","",null,app);au.controls=true;au.src=w.audio;}
   if(w.link){var rb=el("a","readbtn",L("readFull"),app);rb.href=w.link;if(/^https?:/i.test(w.link)){rb.target="_blank";rb.rel="noopener";}}
   var bar=el("div","bar",null,app);
@@ -595,7 +589,7 @@ function showWork(w,entry){
   }else{
     md(w.body,el("div","md",null,app));
   }
-  if(panels.length){
+  if(panels.length>1){
     var all=el("button","chip",L("showAll"),bar),open=false;
     all.onclick=function(){open=!open;panels.forEach(function(p){p.hidden=!open;});all.textContent=open?L("hideAll"):L("showAll");};
   }

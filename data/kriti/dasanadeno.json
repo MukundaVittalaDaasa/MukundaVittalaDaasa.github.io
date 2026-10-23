@@ -3,12 +3,12 @@
   "title": "ದಾಸನಾದೆನೋ ಹರಿ ದಾಸನಾದೆ",
   "type": "Kriti",
   "status": "complete",
-  "ankita": "Mukunda Vittala",
   "date": "2026-09-28",
   "tags": [
     "guru-parampara",
     "dasa-sahitya"
   ],
+  "ankita": "Mukunda Vittala",
   "pallavi": "ದಾಸನಾದೆನೋ ಹರಿ ದಾಸನಾದೆ",
   "anupallavi": "ಸಾಸಿರ-ನಾಮನ ಪಾದಕಮಲದ ಲೀಲೆಯ ಸೂಸಿದವರ ಪದದ",
   "charanas": [
@@ -16,5 +16,24 @@
     "||ಭುವಿಗಿಳಿದರು ಪ್ರಹ್ಲಾದ ಮುನಿವರೇಣ್ಯ ಶ್ರೀವ್ಯಾಸ ತೀರ್ಥ\nಭುವಿಪತಿಯ ಕುಹುಯೋಗವ ಗುರುರಾಜನಾಗಿ ಹರಿಸಿದ\nಸವಿಯುತ ಶ್ರೀಕೃಷ್ಣಾಂಕಿತದಿ ವ್ಯಾಸತ್ರಯವ ರಚಿಸಿದ\nರವಿಯಂತೆ ಸಲಹಿದ ವಾದಿರಾಜ ಕನಕ ಪುರಂದರಗೆ||",
     "||ವಿದ್ಯಾನಿಧಿ ಸುಧೀಂದ್ರ ಶಿಷ್ಯ ಪ್ರಹ್ಲಾದರೇ ಪರಿಮಳಾಚಾರ್ಯ\nವೈದ್ಯರು ಭವರೋಗ ಕಳೆವ ಮಂತ್ರಾಲಯದಿ ನೆಲೆಸಿಹ ವೇದ-\n-ವೇದ್ಯ ಮೂಲ ರಾಮರ ಭಕ್ತಿಯ ಸೂಸಿ ಹಾಡಿದ ಗುರುರಾಯ\nವಂದ್ಯರು ಜಗನ್ನಾಥ ವಿಜಯ ಗೋಪಾಲ *ಮುಕುಂದ ವಿಠಲ* ದಾಸರ||"
   ],
+  "meanings": {
+    "pallavi": {
+      "en": "I became a dāsa, O, I became Hari's dāsa"
+    },
+    "anupallavi": {
+      "en": "I became a dāsa, O, I became Hari's dāsa, a dāsa at the feet of those who spread far and wide, the līlās (past times) of the lotus feet of the Thousand-Named One."
+    },
+    "charanas": [
+      {
+        "en": "Born in the asura clan, he worshipped the feet of the foe of the asuras. In envious rage, Hiraṇyaka sought to kill the tender infant, flinging him before elephants and serpents, off the mountain and into the sea, and casting him to poison and fire. Then Nara-siṃha came out of the pillar, hearing Prahlāda's plea\n\nThe closing word ಕೇಳಿ carries the dual meaning when the last half-line is repeated into the pallavi. On its own, the line says Narasiṃha came, having heard Prahlāda's plea. Joined to the pallavi, the converb finishes in ದಾಸನಾದೆ: having heard Prahlāda's plea (his urging of the other asuras to chant Hari's name), I became Hari's dāsa. ಕೇಳಿ also means \"divine sport\", a synonym of ಲೀಲೆ in the anupallavi, so the word echoes the līlā theme as well."
+      },
+      {
+        "en": "Prahlāda descended to earth as the foremost of sages, Śrī Vyāsa Tīrtha. Becoming the guru-king himself, he removed the kuhuyoga that hung over the King. Sweetly, under the aṅkita Śrī Kṛṣṇa, he composed the Vyāsatraya. Like the sun, he nurtured Vādirāja, Kanaka and Purandara.\nThe last line is the one that doubles. On its own, the dative ಪುರಂದರಗೆ sits loosely after ಸಲಹಿದ: like the sun, Vyāsatīrtha nurtured and lit up Vādirāja, Kanaka and Purandara. When the last half-line is repeated into the pallavi, the dative finds its verb: to Vādirāja, Kanaka and Purandara, I became a dāsa, Hari's dāsa."
+      },
+      {
+        "en": "He is the treasury of learning, Sudhīndra's disciple, Prahlāda himself, Parimaḷācārya. He is the physician who removes the disease of worldly existence, dwelling at Mantrālaya. He poured forth and sang devotion to Mūla Rāma, who is Veda-vedya (known through the Vedas), and he is Guru Rāya. The final line calls him worthy of veneration by the dāsas Jagannātha, Vijaya, Gopāla and Mukunda Viṭṭhala's dāsa.\nIn the literal reading, the genitive ದಾಸರ is the agent of ವಂದ್ಯ, so Rāyaru is venerated by these dāsas. ವೇದವೇದ್ಯ describes Mūla Rāma, not Rāyaru, which keeps it a normal epithet for Rāma. Joined to the pallavi, ದಾಸರ becomes possessive: I became the dāsa of the dāsas of Mukunda Viṭṭhala, Hari's dāsa. That is the \"dāsa of dāsas\" posture of humility, and it carries your aṅkita."
+      }
+    ]
+  },
   "notes": "In praise of the avatara traya - Bhaktharaja Prahlada, Shri Vyasathirtha, Shri Raghavendra thirtha."
 }
